@@ -1,6 +1,5 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useState } from "react";
 import { useStorage } from "@plasmohq/storage/dist/hook";
-import { Storage } from "@plasmohq/storage/dist";
 
 // Declare settings context type
 type SettingsContextType = {
