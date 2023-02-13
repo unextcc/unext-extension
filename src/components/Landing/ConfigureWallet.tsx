@@ -1,6 +1,6 @@
 import React from "react";
-import Logo from "~components/logo";
-import { Box, Typography } from "@mui/material";
+import { Logo25, Logo40 } from "~components/logo";
+import { Box, Typography, Grid } from "@mui/material";
 
 interface Props {
   children?: React.ReactNode;
@@ -9,11 +9,14 @@ interface Props {
 const ConfigureWallet = (props: Props) => {
   return (
     <React.Fragment>
-      <Box>
-        <Logo />
-
-        <Typography variant={"h5"}>Configure Wallet</Typography>
-      </Box>
+      <Grid container>
+        <Grid item xs={12} display={"flex"}>
+          <Typography variant={"h6"} color={"darkblue"} style={{ verticalAlign: "middle" }}>Configure Wallet</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography>Configure your wallet here</Typography>
+        </Grid>
+      </Grid>
     </React.Fragment>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Box, Button, Typography } from "@mui/material";
-import Logo from "~components/logo";
+import { Logo60 } from "~components/logo";
 import { SettingsContext } from "~store/settings-context";
 
 interface Props {
@@ -12,10 +12,10 @@ const Landing = (props: Props) => {
   return (
     <React.Fragment>
       <Box>
-        <Logo />
+        <Logo60 />
 
-        <Typography variant="h4">uNeXT Wallet</Typography>
-        <Typography variant="body1" fontWeight="normal">Next step for digital wallets</Typography>
+        <Typography variant="h4" color={"darkblue"} fontWeight={"bold"}>uNeXT Wallet</Typography>
+        <Typography variant="h6" color={"gray"}>Next step for digital wallets</Typography>
       </Box>
 
       <Box width={375}>
