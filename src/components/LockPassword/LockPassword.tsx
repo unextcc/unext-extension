@@ -7,7 +7,7 @@ import {
   Typography
 } from "@mui/material";
 import React, { useContext, useState } from "react";
-import Logo from "~components/logo";
+import { Logo60 } from "~components/logo";
 import * as Yup from "yup";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup"
@@ -54,7 +54,7 @@ const LockPassword: React.FC<Props> = (props) => {
   return (
     <React.Fragment>
       <Box>
-        <Logo />
+        <Logo60 />
 
         <Typography
           variant={"h4"}

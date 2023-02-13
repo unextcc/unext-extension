@@ -1,4 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
+import { useStorage } from "@plasmohq/storage/dist/hook";
+import { Storage } from "@plasmohq/storage/dist";
 
 // Declare settings context type
 type SettingsContextType = {
@@ -16,38 +18,36 @@ interface Props {
 export const SettingsContext = createContext<SettingsContextType>({
   isWalletConfigured: false,
   lockPassword: "",
-  shownPage: "landing",
+  shownPage: "",
   lockPasswordHandler: (password: string) => {},
   shownPageHandler: (page: string) => {}
 })
 
 const SettingsContextProvider: React.FC<Props> = (props) => {
+  // Init storage
+  const [settings, setSettings, {setRenderValue, setStoreValue, remove}] = useStorage(
+    "unext-settings",
+    (v) => v === undefined ? {
+      shownPage: "landing",
+    } : v);
+
   // Define settings states
   const [lockPassword, setLockPassword] = useState<string>("");
-  const [isWalletConfigured, setIsWalletConfigured] = useState<boolean>(true);
-  const [shownPage, setShownPage] = useState<string>("");
+  const [isWalletConfigured, setIsWalletConfigured] = useState<boolean>(false);
+
 
   const lockPasswordHandler = (password: string) => {
     setLockPassword(password);
   };
 
-  const shownPageHandler = (page: string) => {
-    console.log(shownPage);
-    setShownPage(page);
+  const shownPageHandler = async (page: string) => {
+    await setSettings({shownPage: page});
   };
-
-  useEffect(() => {
-    if (!isWalletConfigured) {
-      setShownPage('landing');
-    } else {
-      setShownPage('landing');
-    }
-  }, [isWalletConfigured]);
 
   const settingsContextValue: SettingsContextType = {
     isWalletConfigured: isWalletConfigured,
     lockPassword: lockPassword,
-    shownPage: shownPage,
+    shownPage: settings.shownPage,
     lockPasswordHandler: lockPasswordHandler,
     shownPageHandler: shownPageHandler
   };
