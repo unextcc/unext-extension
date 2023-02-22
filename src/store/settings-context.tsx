@@ -1,11 +1,9 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useState } from "react";
 import { useStorage } from "@plasmohq/storage/dist/hook";
-import { Storage } from "@plasmohq/storage/dist";
 
 // Declare settings context type
 type SettingsContextType = {
   shownPage: string;
-  isWalletConfigured: boolean;
   lockPassword: string;
   lockPasswordHandler: (password: string) => void;
   shownPageHandler: (page: string) => void;
@@ -16,7 +14,6 @@ interface Props {
 }
 
 export const SettingsContext = createContext<SettingsContextType>({
-  isWalletConfigured: false,
   lockPassword: "",
   shownPage: "",
   lockPasswordHandler: (password: string) => {},
@@ -25,29 +22,24 @@ export const SettingsContext = createContext<SettingsContextType>({
 
 const SettingsContextProvider: React.FC<Props> = (props) => {
   // Init storage
-  const [settings, setSettings, {setRenderValue, setStoreValue, remove}] = useStorage(
-    "unext-settings",
-    (v) => v === undefined ? {
-      shownPage: "landing",
-    } : v);
+  const [shownPage, setShownPage] = useState<string>("dashboard");
 
-  // Define settings states
-  const [lockPassword, setLockPassword] = useState<string>("");
-  const [isWalletConfigured, setIsWalletConfigured] = useState<boolean>(false);
+  // Define lock password
+  const [lockPassword, setLockPassword] = useStorage<string>(
+    "lock-password", (v) => typeof v === "undefined" ? "": v
+  );
 
-
-  const lockPasswordHandler = (password: string) => {
-    setLockPassword(password);
+  const lockPasswordHandler = async (password: string) => {
+    await setLockPassword(password);
   };
 
   const shownPageHandler = async (page: string) => {
-    await setSettings({shownPage: page});
+    await setShownPage(page);
   };
 
   const settingsContextValue: SettingsContextType = {
-    isWalletConfigured: isWalletConfigured,
     lockPassword: lockPassword,
-    shownPage: settings.shownPage,
+    shownPage: shownPage,
     lockPasswordHandler: lockPasswordHandler,
     shownPageHandler: shownPageHandler
   };
