@@ -36,7 +36,9 @@ const LockPassword: React.FC<Props> = (props) => {
     reset: resetLockPassword,
     handleSubmit: handleSubmitLockPassword,
     formState: formStateLockPassword
-  } = useForm<lockPasswordFormType>({ resolver: yupResolver(lockPasswordFormSchema), mode: "onChange" });
+  } = useForm<lockPasswordFormType>(
+    {resolver: yupResolver(lockPasswordFormSchema), mode: "onChange" }
+  );
 
   const lockPasswordOnSubmit = async (data: lockPasswordFormType) => {
     settingsContext.lockPasswordHandler(data.lockPasswordInput.toString().trim());
