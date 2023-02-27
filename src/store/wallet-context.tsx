@@ -6,18 +6,17 @@ type walletType = {
   id: number,
   address: string,
   chain: string,
-  currency: string,
   encryptedPrivateKey: string,
   network: string,
-  tokens: []
-}[];
+  tokens: number[]
+};
 
 
 type WalletContextType = {
   getPrivateKey: (walletId: number, lockPassword: string) => string;
   isWalletConfigured: boolean;
   saveWallet: (wallet: walletType) => void;
-  wallets: walletType[];
+  wallets: walletType;
 }
 
 interface Props {
@@ -28,15 +27,23 @@ export const WalletContext = createContext<WalletContextType>({
   getPrivateKey(walletId: number, lockPassword: string): string {return "";},
   isWalletConfigured: false,
   saveWallet(wallet: walletType): void {},
-  wallets: []
+  wallets: {} as walletType
 });
 
 const WalletContextProvider: React.FC<Props> = (props) => {
   const [wallets, setWallets] = useStorage(
     "wallets",
-    (v) => v === "undefined" ? "wallets" : v);
+    (v) => typeof v === "undefined" ? [] : v);
 
-  const [isWalletConfigured, setIsWalletConfigured] = useState<boolean>(true);
+  const [isWalletConfigured, setIsWalletConfigured] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (wallets.length !==0) {
+      if (wallets.length > 0) {
+        setIsWalletConfigured(true);
+      }
+    }
+  },[wallets])
 
   // Get privateKeys
   const getPrivateKey = (walletId: number, lockPassword: string): string => {

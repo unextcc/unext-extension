@@ -44,7 +44,6 @@ const LockPassword: React.FC<Props> = (props) => {
 
   const lockPasswordOnSubmit = async (data: lockPasswordFormType) => {
     settingsContext.lockPasswordHandler(data.lockPasswordInput.toString().trim(), date.getTime());
-    console.log(JSON.stringify(data, null, 2));
   }
 
   const togglePasswordHandler = () => {
@@ -57,7 +56,7 @@ const LockPassword: React.FC<Props> = (props) => {
 
   return (
     <React.Fragment>
-      <Grid container display={"block"}>
+      <Grid container display={"block"} >
         <Grid item height={160}>
           <Logo60 />
 
@@ -74,7 +73,12 @@ const LockPassword: React.FC<Props> = (props) => {
           </Typography>
         </Grid>
 
-        <Grid container item display={"block"} marginTop={10}>
+        <Grid
+          container
+          item
+          display={"block"}
+          marginTop={10}
+        >
           <Typography textAlign={"left"} fontWeight={"bold"}>
             Unlock with wallet password
           </Typography>

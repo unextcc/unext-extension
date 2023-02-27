@@ -14,13 +14,8 @@ const App = () => {
   const settingsContext = useContext(SettingsContext);
   const walletContext = useContext(WalletContext);
 
-  console.log(settingsContext.lockPassword.password);
-
   const isLockPasswordSet =
     settingsContext.lockPassword.password !== undefined && settingsContext.lockPassword.password !== '';
-
-
-  console.log(isLockPasswordSet);
 
   const shownPageIgnoreList: string[] = [
     "configureWallet","createNewWallet","importWallet"

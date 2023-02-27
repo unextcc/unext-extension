@@ -9,6 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useWeb3CreateAccount } from "~hooks/use-web3";
 import { config } from "~contents/config";
 import { Storage } from "@plasmohq/storage";
+import { WalletContext } from "~store/wallet-context";
 
 interface Props {
   children?: React.ReactNode;
@@ -22,6 +23,7 @@ type formType = {
 
 const CreateNewWallet = () => {
   const settingsContext = useContext(SettingsContext);
+  const walletContext = useContext(WalletContext);
 
   const storage = new Storage();
 
@@ -60,8 +62,15 @@ const CreateNewWallet = () => {
   }
 
   const createWalletHandler = async () => {
-    await storage.set("privateKey", account.privateKey);
-  }
+    await walletContext.saveWallet([{
+      id: 0,
+      address: account.address,
+      chain: "ETH",
+      network: 'ethereum',
+      encryptedPrivateKey: account.encryptedPrivateKey,
+      tokens: [0, 1]
+    }]);
+  };
 
   const togglePasswordHandler = () => {
     if (togglePassword) {
@@ -226,10 +235,17 @@ const CreateNewWallet = () => {
 
         <Grid item xs={6} textAlign={"right"}>
           <Button variant={"outlined"} onClick={() => {
+            walletContext.removeWallet();
+          }}>
+            REMOVE WALLET
+          </Button>
+
+          <Button variant={"outlined"} onClick={() => {
             console.log(settingsContext.lockPassword);
           }}>
             GET PASSWORD
           </Button>
+
           <Button variant={"outlined"} onClick={async () => {
             await createWalletHandler();
           }}>
