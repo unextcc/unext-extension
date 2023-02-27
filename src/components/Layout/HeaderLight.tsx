@@ -8,7 +8,7 @@ interface Props {
 
 const HeaderLight = (props: Props) => {
   return (
-    <Box>
+    <Box height={60}>
       <Logo25 />
       <Typography variant="h6" color={"darkblue"} fontWeight={"bold"}>{props.title}</Typography>
     </Box>

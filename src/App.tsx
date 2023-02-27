@@ -14,21 +14,39 @@ const App = () => {
   const settingsContext = useContext(SettingsContext);
   const walletContext = useContext(WalletContext);
 
+  console.log(settingsContext.lockPassword.password);
+
+  const isLockPasswordSet =
+    settingsContext.lockPassword.password !== undefined && settingsContext.lockPassword.password !== '';
+
+
+  console.log(isLockPasswordSet);
+
   const shownPageIgnoreList: string[] = [
     "configureWallet","createNewWallet","importWallet"
   ]
 
   return (
     <Container style={{ margin: 0, padding: 0 }}>
-      <Grid container margin={0} border={0} spacing={1} padding={1} height={580} width={375}>
+      <Grid
+        container
+        margin={0}
+        border={0}
+        spacing={0}
+        padding={1}
+        minWidth={375}
+        maxWidth={720}
+        minHeight={580}
+        maxHeight={1080}
+      >
         {
           !walletContext.isWalletConfigured &&
           !shownPageIgnoreList.includes(settingsContext.shownPage) ? <Landing /> :
-          !settingsContext.lockPassword ? <LockPassword /> :
-          settingsContext.shownPage === 'configureWallet' && <ConfigureWallet /> ||
-          settingsContext.shownPage === 'createNewWallet' && <CreateNewWallet /> ||
-          settingsContext.shownPage === 'dashboard' && <Dashboard /> ||
-          settingsContext.shownPage === 'settings' && <Settings />
+            (!isLockPasswordSet && settingsContext.lockPassword.password !== undefined) ? <LockPassword /> :
+            settingsContext.shownPage === 'configureWallet' && <ConfigureWallet /> ||
+            settingsContext.shownPage === 'createNewWallet' && <CreateNewWallet /> ||
+            settingsContext.shownPage === 'dashboard' && <Dashboard /> ||
+            settingsContext.shownPage === 'settings' && <Settings />
         }
       </Grid>
     </Container>

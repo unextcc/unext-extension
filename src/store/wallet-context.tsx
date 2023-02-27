@@ -2,20 +2,22 @@ import React, { createContext, useEffect, useState } from "react";
 import { useStorage } from "@plasmohq/storage/dist/hook";
 import {decryptAES} from "~utils/encryption";
 
+type walletType = {
+  id: number,
+  address: string,
+  chain: string,
+  currency: string,
+  encryptedPrivateKey: string,
+  network: string,
+  tokens: []
+}[];
+
 
 type WalletContextType = {
   getPrivateKey: (walletId: number, lockPassword: string) => string;
   isWalletConfigured: boolean;
-  saveWallet: (wallet: object) => void;
-  wallets: {
-    address: string,
-    chain: string,
-    currency: string,
-    encryptedPrivateKey: string,
-    id: number,
-    network: string,
-    tokens: {id: number, decimal: number, name: string, symbol: string}[]
-  }[];
+  saveWallet: (wallet: walletType) => void;
+  wallets: walletType[];
 }
 
 interface Props {
@@ -25,24 +27,24 @@ interface Props {
 export const WalletContext = createContext<WalletContextType>({
   getPrivateKey(walletId: number, lockPassword: string): string {return "";},
   isWalletConfigured: false,
-  saveWallet(wallet: object): void {},
+  saveWallet(wallet: walletType): void {},
   wallets: []
 });
 
 const WalletContextProvider: React.FC<Props> = (props) => {
   const [wallets, setWallets] = useStorage(
-    "unext-wallets",
-    (v) => v === "undefined" ? "wallet" : v);
+    "wallets",
+    (v) => v === "undefined" ? "wallets" : v);
 
-  const [isWalletConfigured, setIsWalletConfigured] = useState<boolean>(false);
+  const [isWalletConfigured, setIsWalletConfigured] = useState<boolean>(true);
 
   // Get privateKeys
   const getPrivateKey = (walletId: number, lockPassword: string): string => {
     return decryptAES(wallets[walletId].encryptedPrivateKey, lockPassword);
   }
 
-  const saveWallet = async (wallet: object) => {
-    await setWallets(wallet);
+  const saveWallet = async (wallet: walletType) => {
+    await setWallets([...wallets, wallet]);
   }
 
   const walletContextValue: WalletContextType = {
