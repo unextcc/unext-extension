@@ -12,6 +12,9 @@ import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup"
 import { SettingsContext } from "~store/settings-context";
+import Header from "~components/Layout/Header";
+import { verifyPassword } from "~utils/encryption";
+import walletContext, { WalletContext } from "~store/wallet-context";
 
 interface Props {
   children?: React.ReactNode;
@@ -23,7 +26,13 @@ type lockPasswordFormType = {
 
 const LockPassword: React.FC<Props> = (props) => {
   const [togglePassword, setTogglePassword] = useState<boolean>(false);
-  const settingsContext = useContext(SettingsContext)
+
+  const settingsContext = useContext(SettingsContext);
+  const walletContext = useContext(WalletContext);
+
+
+  // @ts-ignore
+  const wallet = walletContext.wallets[0][0];
 
   const lockPasswordFormSchema = Yup.object().shape({
     lockPasswordInput: Yup.string()
@@ -43,7 +52,15 @@ const LockPassword: React.FC<Props> = (props) => {
   const date: Date = new Date()
 
   const lockPasswordOnSubmit = async (data: lockPasswordFormType) => {
-    settingsContext.lockPasswordHandler(data.lockPasswordInput.toString().trim(), date.getTime());
+    const isPasswordCorrect = verifyPassword(wallet.encryptedPrivateKey, data.lockPasswordInput)
+
+    if (isPasswordCorrect) {
+      settingsContext.lockPasswordHandler(data.lockPasswordInput.toString().trim(), date.getTime());
+    } else {
+      setErrorLockPassword('lockPasswordInput', {type: "custom", message: "Incorrect password"})
+    }
+
+    return false;
   }
 
   const togglePasswordHandler = () => {
@@ -57,33 +74,23 @@ const LockPassword: React.FC<Props> = (props) => {
   return (
     <React.Fragment>
       <Grid container display={"block"} >
-        <Grid item height={160}>
-          <Logo60 />
-
-          <Typography
-            variant={"h4"}
-            marginTop={2}
-            color={"darkblue"}
-            fontWeight={"bold"}>
-            uNeXT Wallet
-          </Typography>
-
-          <Typography color={"gray"} variant={"h6"}>
-            Next Step for Digital Wallets
-          </Typography>
-        </Grid>
+        <Header title={"uNeXT Wallet"} subTitle={"Next Step for Digital Wallets"} />
 
         <Grid
           container
           item
-          display={"block"}
-          marginTop={10}
+          display={"flex"}
+          height={410}
+          direction={"row"}
+          textAlign={"end"}
+          alignItems={"end"}
+          justifyContent={"end"}
         >
-          <Typography textAlign={"left"} fontWeight={"bold"}>
-            Unlock with wallet password
-          </Typography>
+          <form onSubmit={handleSubmitLockPassword(lockPasswordOnSubmit)} style={{ width: "100%" }}>
+            <Typography textAlign={"left"} fontWeight={"bold"}>
+              Unlock with wallet password
+            </Typography>
 
-          <form onSubmit={handleSubmitLockPassword(lockPasswordOnSubmit)}>
             <TextField
               id="lock-password-input"
               label="Enter Wallet Password"

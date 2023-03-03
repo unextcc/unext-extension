@@ -9,7 +9,7 @@ type walletType = {
   encryptedPrivateKey: string,
   network: string,
   tokens: number[]
-};
+}[];
 
 
 type WalletContextType = {
@@ -27,7 +27,7 @@ export const WalletContext = createContext<WalletContextType>({
   getPrivateKey(walletId: number, lockPassword: string): string {return "";},
   isWalletConfigured: false,
   saveWallet(wallet: walletType): void {},
-  wallets: {} as walletType
+  wallets: [] as walletType
 });
 
 const WalletContextProvider: React.FC<Props> = (props) => {

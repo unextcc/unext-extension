@@ -8,10 +8,9 @@ interface Props {
 
 const HeaderLight = (props: Props) => {
   return (
-    <Box height={60}>
-      <Logo25 />
+    <Grid item height={40} xs={12}>
       <Typography variant="h6" color={"darkblue"} fontWeight={"bold"}>{props.title}</Typography>
-    </Box>
+    </Grid>
   );
 };
 

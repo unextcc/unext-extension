@@ -14,8 +14,7 @@ const App = () => {
   const settingsContext = useContext(SettingsContext);
   const walletContext = useContext(WalletContext);
 
-  const isLockPasswordSet =
-    settingsContext.lockPassword.password !== undefined && settingsContext.lockPassword.password !== '';
+  let isLockPasswordSet = settingsContext.lockPassword.password !== '';
 
   const shownPageIgnoreList: string[] = [
     "configureWallet","createNewWallet","importWallet"
@@ -31,13 +30,12 @@ const App = () => {
         padding={1}
         minWidth={375}
         maxWidth={720}
-        minHeight={580}
-        maxHeight={1080}
+        height={580}
       >
         {
           !walletContext.isWalletConfigured &&
           !shownPageIgnoreList.includes(settingsContext.shownPage) ? <Landing /> :
-            (!isLockPasswordSet && settingsContext.lockPassword.password !== undefined) ? <LockPassword /> :
+            !isLockPasswordSet ? <LockPassword /> :
             settingsContext.shownPage === 'configureWallet' && <ConfigureWallet /> ||
             settingsContext.shownPage === 'createNewWallet' && <CreateNewWallet /> ||
             settingsContext.shownPage === 'dashboard' && <Dashboard /> ||
