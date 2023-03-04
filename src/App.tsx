@@ -9,6 +9,7 @@ import Settings from "~components/Settings/Settings";
 import Dashboard from "~components/Dashboard/Dashboard";
 import settings from "~components/Settings/Settings";
 import CreateNewWallet from "~components/Landing/CreateNewWallet";
+import Transactions from "~components/Transaction/Transactions";
 
 const App = () => {
   const settingsContext = useContext(SettingsContext);
@@ -39,6 +40,7 @@ const App = () => {
             settingsContext.shownPage === 'configureWallet' && <ConfigureWallet /> ||
             settingsContext.shownPage === 'createNewWallet' && <CreateNewWallet /> ||
             settingsContext.shownPage === 'dashboard' && <Dashboard /> ||
+            settingsContext.shownPage === 'transactions' && <Transactions /> ||
             settingsContext.shownPage === 'settings' && <Settings />
         }
       </Grid>

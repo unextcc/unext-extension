@@ -1,17 +1,43 @@
-import { Box, Grid, Typography } from "@mui/material";
-import { Logo25 } from "~components/logo";
+import * as React from 'react';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import CssBaseline from '@mui/material/CssBaseline';
+import useScrollTrigger from '@mui/material/useScrollTrigger';
 
 interface Props {
-  children?: React.ReactNode;
   title: string;
 }
 
-const HeaderLight = (props: Props) => {
-  return (
-    <Grid item height={40} xs={12}>
-      <Typography variant="h6" color={"darkblue"} fontWeight={"bold"}>{props.title}</Typography>
-    </Grid>
-  );
-};
+const ElevationScrollFooter = (props: { children: React.ReactElement }) => {
+  const { children } = props;
 
-export default HeaderLight;
+  const trigger = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: 0,
+  });
+
+  return React.cloneElement(children, {
+    elevation: trigger ? 4 : 0,
+  });
+}
+
+const HeaderBar = (props: Props) => {
+  return (
+    <React.Fragment>
+      <CssBaseline />
+      <ElevationScrollFooter {...props}>
+        <AppBar color={"default"} sx={{borderBottom: 1, borderColor: "lightgray", backgroundColor: "white"}}>
+          <Toolbar>
+            <Typography variant="h6" component="div">
+              {props.title}
+            </Typography>
+          </Toolbar>
+        </AppBar>
+      </ElevationScrollFooter>
+      <Toolbar />
+    </React.Fragment>
+  );
+}
+
+export default HeaderBar;
