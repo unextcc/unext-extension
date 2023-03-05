@@ -7,7 +7,6 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { SettingsContext } from "~store/settings-context";
 
 const FooterBar = () => {
-  const [value, setValue] = useState();
   const settingsContext = useContext(SettingsContext);
 
   return (
@@ -20,7 +19,9 @@ const FooterBar = () => {
           left: 0,
           right: 0,
           borderTop: 1,
-          borderColor: "lightgray"
+          borderColor: "lightgray",
+          marginLeft: -1,
+          marginRight: -1
         }}
       >
         <BottomNavigation showLabels>

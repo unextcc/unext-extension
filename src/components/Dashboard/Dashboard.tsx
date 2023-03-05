@@ -15,7 +15,7 @@ const Dashboard = (props: Props) => {
     <React.Fragment>
       <HeaderLight title={"Dashboard"} />
 
-      <Grid item height={480} xs={12}>
+      <Grid item height={480} xs={12} marginTop={8}>
         <Button
           variant={"contained"}
           onClick={()=> {settingsContext.lockPasswordHandler("", 0)}}

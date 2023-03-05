@@ -73,68 +73,69 @@ const LockPassword: React.FC<Props> = (props) => {
 
   return (
     <React.Fragment>
-      <Grid container display={"block"} >
-        <Header title={"uNeXT Wallet"} subTitle={"Next Step for Digital Wallets"} />
+      <Header title={"uNeXT Wallet"} subTitle={"Next Step for Digital Wallets"} />
 
-        <Grid
-          container
-          item
-          display={"flex"}
-          height={410}
-          direction={"row"}
-          textAlign={"end"}
-          alignItems={"end"}
-          justifyContent={"end"}
+      <Grid
+        container
+        item
+        display={"flex"}
+        height={410}
+        direction={"row"}
+        textAlign={"end"}
+        alignItems={"end"}
+        justifyContent={"end"}
+      >
+        <form
+          onSubmit={handleSubmitLockPassword(lockPasswordOnSubmit)}
+          style={{ width: "359px", margin: 0 }}
         >
-          <form onSubmit={handleSubmitLockPassword(lockPasswordOnSubmit)} style={{ width: "100%" }}>
-            <Typography textAlign={"left"} fontWeight={"bold"}>
-              Unlock with wallet password
-            </Typography>
+          <Typography textAlign={"left"} fontWeight={"bold"}>
+            Unlock with wallet password
+          </Typography>
 
-            <TextField
-              id="lock-password-input"
-              label="Enter Wallet Password"
-              autoComplete="on"
-              fullWidth
-              type={togglePassword ? "text" : "password"}
-              style={{ marginTop: 10 }}
-              color={"info"}
-              {...registerLockPassword('lockPasswordInput')}
-              error={
-                formStateLockPassword.touchedFields.lockPasswordInput &&
-                !formStateLockPassword.isValid
-              }
-              helperText={
-                formStateLockPassword.errors.lockPasswordInput &&
-                formStateLockPassword.errors.lockPasswordInput?.message
-              }
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position={"end"}>
-                    {togglePassword ? (
-                      <Visibility
-                        style={{ cursor: "pointer" }}
-                        onClick={() => togglePasswordHandler()}
-                      />
-                    ) : (
-                      <VisibilityOff
-                        style={{ cursor: "pointer" }}
-                        onClick={() => togglePasswordHandler()}
-                      />
-                    )}
-                  </InputAdornment>
-                )
-              }}
-            />
-            <Button
-              variant={"outlined"}
-              fullWidth={true}
-              style={{ marginTop: 10 }}
-              type={"submit"}>
-              Unlock Wallet
-            </Button>
-          </form>
-        </Grid>
+          <TextField
+            id="lock-password-input"
+            label="Enter Wallet Password"
+            autoComplete="on"
+            fullWidth
+            type={togglePassword ? "text" : "password"}
+            style={{ marginTop: 10 }}
+            color={"info"}
+            {...registerLockPassword('lockPasswordInput')}
+            error={
+              formStateLockPassword.touchedFields.lockPasswordInput &&
+              !formStateLockPassword.isValid
+            }
+            helperText={
+              formStateLockPassword.errors.lockPasswordInput &&
+              formStateLockPassword.errors.lockPasswordInput?.message
+            }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position={"end"}>
+                  {togglePassword ? (
+                    <Visibility
+                      style={{ cursor: "pointer" }}
+                      onClick={() => togglePasswordHandler()}
+                    />
+                  ) : (
+                    <VisibilityOff
+                      style={{ cursor: "pointer" }}
+                      onClick={() => togglePasswordHandler()}
+                    />
+                  )}
+                </InputAdornment>
+              )
+            }}
+          />
+          <Button
+            variant={"outlined"}
+            fullWidth={true}
+            style={{ marginTop: 10 }}
+            type={"submit"}>
+            Unlock Wallet
+          </Button>
+        </form>
       </Grid>
     </React.Fragment>
   );

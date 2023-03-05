@@ -11,6 +11,7 @@ import settings from "~components/Settings/Settings";
 import CreateNewWallet from "~components/Landing/CreateNewWallet";
 import Transactions from "~components/Transaction/Transactions";
 
+
 const App = () => {
   const settingsContext = useContext(SettingsContext);
   const walletContext = useContext(WalletContext);
@@ -25,9 +26,7 @@ const App = () => {
     <Container style={{ margin: 0, padding: 0 }}>
       <Grid
         container
-        margin={0}
         border={0}
-        spacing={0}
         padding={1}
         minWidth={375}
         maxWidth={720}
