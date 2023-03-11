@@ -10,6 +10,7 @@ import Dashboard from "~components/Dashboard/Dashboard";
 import settings from "~components/Settings/Settings";
 import CreateNewWallet from "~components/Landing/CreateNewWallet";
 import Transactions from "~components/Transaction/Transactions";
+import ShowPrivateKey from "~components/Settings/ShowPrivateKey";
 
 
 const App = () => {
@@ -40,7 +41,8 @@ const App = () => {
             settingsContext.shownPage === 'createNewWallet' && <CreateNewWallet /> ||
             settingsContext.shownPage === 'dashboard' && <Dashboard /> ||
             settingsContext.shownPage === 'transactions' && <Transactions /> ||
-            settingsContext.shownPage === 'settings' && <Settings />
+            settingsContext.shownPage === 'settings' && <Settings /> ||
+            settingsContext.shownPage === 'showPrivateKey' && <ShowPrivateKey />
         }
       </Grid>
     </Container>

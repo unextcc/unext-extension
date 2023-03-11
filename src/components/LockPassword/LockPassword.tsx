@@ -85,10 +85,7 @@ const LockPassword: React.FC<Props> = (props) => {
         alignItems={"end"}
         justifyContent={"end"}
       >
-        <form
-          onSubmit={handleSubmitLockPassword(lockPasswordOnSubmit)}
-          style={{ width: "359px", margin: 0 }}
-        >
+        <form onSubmit={handleSubmitLockPassword(lockPasswordOnSubmit)}>
           <Typography textAlign={"left"} fontWeight={"bold"}>
             Unlock with wallet password
           </Typography>

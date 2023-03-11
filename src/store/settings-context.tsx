@@ -29,7 +29,7 @@ const SettingsContextProvider: React.FC<Props> = (props) => {
   );
 
   // Init storage
-  const [shownPage, setShownPage] = useState<string>("dashboard");
+  const [shownPage, setShownPage] = useState<string>("settings");
 
   const lockPasswordHandler = async (password: string, timeStamp: number) => {
     await setLockPassword({password: password, timeStamp: timeStamp});

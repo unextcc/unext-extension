@@ -4,10 +4,22 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import CssBaseline from '@mui/material/CssBaseline';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
+import { useContext } from "react";
+import { SettingsContext } from "~store/settings-context";
+import { IconButton } from "@mui/material";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 interface Props {
-  title: string;
+  title?: string;
+  goBackPage?: string;
+  goBackPageTitle?: string;
 }
+
+const defaultProps = {
+  title: "",
+  goBackPage: "",
+  goBackPageTitle: "",
+} as Props
 
 const ElevationScroll = (props: { children: React.ReactElement }) => {
   const { children } = props;
@@ -22,13 +34,11 @@ const ElevationScroll = (props: { children: React.ReactElement }) => {
   });
 }
 
-const styles = {
-  customizeToolbar: {
-    minHeight: 36
-  }
-};
-
 const HeaderBar = (props: Props) => {
+  props = { ...defaultProps, ...props }
+
+  const settingsContext = useContext(SettingsContext);
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -38,9 +48,18 @@ const HeaderBar = (props: Props) => {
           sx={{borderBottom: 1, borderColor: "lightgray", backgroundColor: "white"}}
         >
           <Toolbar>
-            <Typography variant="h6" component="div">
+            {(props.title) &&
+            <Typography variant="h6" component="div" color={"#1976d2"}>
               {props.title}
-            </Typography>
+            </Typography>}
+
+            {(props.goBackPage) &&
+            <Typography variant="h6" component="div" color={"#1976d2"}>
+              <IconButton onClick={() => {settingsContext.shownPageHandler(props.goBackPage!)}}>
+                <ArrowBackIcon />
+              </IconButton>
+              {props.goBackPageTitle}
+            </Typography>}
           </Toolbar>
         </AppBar>
       </ElevationScroll>

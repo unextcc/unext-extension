@@ -9,6 +9,8 @@ import { SettingsContext } from "~store/settings-context";
 const FooterBar = () => {
   const settingsContext = useContext(SettingsContext);
 
+  const [value, setValue] = useState(0);
+
   return (
     <React.Fragment>
       <Paper
@@ -26,29 +28,43 @@ const FooterBar = () => {
       >
         <BottomNavigation showLabels>
           <BottomNavigationAction
+            disableRipple
+            disableTouchRipple
+            aria-disabled
             label="Dashboard"
-            icon={<DashboardIcon />}
+            icon={<DashboardIcon
+              sx={{color: "#1976d2", "& :hover": { color: "darkblue" } }}
+            />}
             onClick={() => {
               settingsContext.shownPageHandler("dashboard");
             }}
           />
           <BottomNavigationAction
+            disableRipple
+            disableTouchRipple
+            aria-disabled
             label="Transactions"
-            icon={<ReceiptIcon />}
+            icon={<ReceiptIcon sx={{color: "#1976d2", "& :hover": { color: "darkblue" } }} />}
             onClick={()=> {
               settingsContext.shownPageHandler("transactions");
             }}
           />
           <BottomNavigationAction
+            disableRipple
+            disableTouchRipple
+            aria-disabled
             label="Settings"
-            icon={<SettingsIcon />}
+            icon={<SettingsIcon sx={{color: "#1976d2", "& :hover": { color: "darkblue" } }} />}
             onClick={()=> {
               settingsContext.shownPageHandler("settings");
             }}
           />
           <BottomNavigationAction
+            disableRipple
+            disableTouchRipple
+            aria-disabled
             label="Lock"
-            icon={<LockIcon />}
+            icon={<LockIcon sx={{color: "#1976d2", "& :hover": { color: "darkblue" } }} />}
             onClick={()=> {
               settingsContext.lockPasswordHandler("", 0);
             }}

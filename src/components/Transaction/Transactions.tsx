@@ -98,7 +98,7 @@ const Transactions = () => {
         <TableContainer sx={{ maxHeight: 475, overflowX: "hidden",
           "&::-webkit-scrollbar": {width: 2},
           "&::-webkit-scrollbar-track": {backgroundColor: "lightgray"},
-          "&::-webkit-scrollbar-thumb": {backgroundColor: "gray", borderRadius: 2},
+          "&::-webkit-scrollbar-thumb": {backgroundColor: "gray", borderRadius: 0},
         }}
         >
           <Table stickyHeader aria-label="sticky table">
