@@ -39,7 +39,6 @@ const ShowPrivateKey = (props: Props) => {
   const {
     register: registerPassword,
     setError: setErrorPassword,
-    reset: resetPassword,
     handleSubmit: handleSubmitPassword,
     getValues,
     formState: formStatePassword
@@ -73,7 +72,8 @@ const ShowPrivateKey = (props: Props) => {
 
   const passwordStep = (
     <Grid container item xs={12} display={"flex"} direction={"row"} alignItems={"stretch"}
-          marginTop={7}>
+          marginTop={7}
+    >
       <Grid item xs={12} padding={1}>
         <Typography variant={"h5"} fontWeight={"bold"}>
           Show secret private key

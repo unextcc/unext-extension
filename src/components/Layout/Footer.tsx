@@ -9,8 +9,6 @@ import { SettingsContext } from "~store/settings-context";
 const FooterBar = () => {
   const settingsContext = useContext(SettingsContext);
 
-  const [value, setValue] = useState(0);
-
   return (
     <React.Fragment>
       <Paper

@@ -13,6 +13,7 @@ type walletType = {
 
 
 type WalletContextType = {
+  deleteWallet: () => void;
   getPrivateKey: (walletId: number, lockPassword: string) => string;
   isWalletConfigured: boolean;
   saveWallet: (wallet: walletType) => void;
@@ -24,6 +25,7 @@ interface Props {
 }
 
 export const WalletContext = createContext<WalletContextType>({
+  deleteWallet(): void {},
   getPrivateKey(walletId: number, lockPassword: string): string {return "";},
   isWalletConfigured: false,
   saveWallet(wallet: walletType): void {},
@@ -31,7 +33,7 @@ export const WalletContext = createContext<WalletContextType>({
 });
 
 const WalletContextProvider: React.FC<Props> = (props) => {
-  const [wallets, setWallets] = useStorage(
+  const [wallets, setWallets, {remove}] = useStorage(
     "wallets",
     (v) => typeof v === "undefined" ? [] : v);
 
@@ -54,7 +56,12 @@ const WalletContextProvider: React.FC<Props> = (props) => {
     await setWallets([...wallets, wallet]);
   }
 
+  const deleteWallet = async () => {
+    await setWallets([])
+  }
+
   const walletContextValue: WalletContextType = {
+    deleteWallet: deleteWallet,
     getPrivateKey: getPrivateKey,
     isWalletConfigured: isWalletConfigured,
     saveWallet: saveWallet,

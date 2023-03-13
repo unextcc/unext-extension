@@ -11,11 +11,14 @@ import settings from "~components/Settings/Settings";
 import CreateNewWallet from "~components/Landing/CreateNewWallet";
 import Transactions from "~components/Transaction/Transactions";
 import ShowPrivateKey from "~components/Settings/ShowPrivateKey";
+import Logout from "~components/Settings/Logout";
 
 
 const App = () => {
   const settingsContext = useContext(SettingsContext);
   const walletContext = useContext(WalletContext);
+
+  console.log(walletContext.wallets);
 
   let isLockPasswordSet = settingsContext.lockPassword.password !== '';
 
@@ -42,7 +45,8 @@ const App = () => {
             settingsContext.shownPage === 'dashboard' && <Dashboard /> ||
             settingsContext.shownPage === 'transactions' && <Transactions /> ||
             settingsContext.shownPage === 'settings' && <Settings /> ||
-            settingsContext.shownPage === 'showPrivateKey' && <ShowPrivateKey />
+            settingsContext.shownPage === 'showPrivateKey' && <ShowPrivateKey /> ||
+            settingsContext.shownPage === 'logout' && <Logout />
         }
       </Grid>
     </Container>
