@@ -70,6 +70,8 @@ const CreateNewWallet = () => {
       encryptedPrivateKey: account.encryptedPrivateKey,
       tokens: [0, 1]
     }]);
+
+    await window.location.reload();
   };
 
   const togglePasswordHandler = () => {
@@ -234,22 +236,10 @@ const CreateNewWallet = () => {
         </Grid>
 
         <Grid item xs={6} textAlign={"right"}>
-          <Button variant={"outlined"} onClick={() => {
-            walletContext.removeWallet();
-          }}>
-            REMOVE WALLET
-          </Button>
-
-          <Button variant={"outlined"} onClick={() => {
-            console.log(settingsContext.lockPassword);
-          }}>
-            GET PASSWORD
-          </Button>
-
           <Button variant={"outlined"} onClick={async () => {
             await createWalletHandler();
           }}>
-            CREATE WALLET
+            Create Wallet
           </Button>
         </Grid>
       </Grid>

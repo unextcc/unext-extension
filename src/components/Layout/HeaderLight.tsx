@@ -48,17 +48,17 @@ const HeaderBar = (props: Props) => {
           sx={{borderBottom: 1, borderColor: "lightgray", backgroundColor: "white"}}
         >
           <Toolbar>
-            {(props.title) &&
-            <Typography variant="h6" component="div" color={"#1976d2"}>
-              {props.title}
-            </Typography>}
-
             {(props.goBackPage) &&
             <Typography variant="h6" component="div" color={"#1976d2"}>
               <IconButton onClick={() => {settingsContext.shownPageHandler(props.goBackPage!)}}>
                 <ArrowBackIcon />
               </IconButton>
               {props.goBackPageTitle}
+            </Typography>}
+
+            {(props.title) &&
+            <Typography variant="h6" component="div" color={"#1976d2"}>
+              {props.title}
             </Typography>}
           </Toolbar>
         </AppBar>

@@ -129,7 +129,7 @@ const Settings = (props: Props) => {
               settingsContext.shownPageHandler("logout");
             }}
           >
-            Logout
+            Sign Out
           </Button>
         </Grid>
 

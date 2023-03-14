@@ -38,13 +38,13 @@ const Logout = (props: Props) => {
   const onSubmit = async (data: formType) => {
     walletContext.deleteWallet();
     settingsContext.shownPageHandler("settings");
-
+    window.location.reload();
     return false;
   }
 
   return (
     <React.Fragment>
-      <HeaderLight goBackPage={"settings"} />
+      <HeaderLight goBackPage={"settings"} title="Log out" />
 
       <Grid container item xs={12} display={"flex"} direction={"row"} alignItems={"stretch"} marginTop={7}>
         <Grid item xs={12} alignItems="center" alignContent="center" textAlign="center">
@@ -91,10 +91,10 @@ const Logout = (props: Props) => {
 
           <Grid item xs={12} textAlign="center" paddingLeft={3} paddingRight={3} marginTop={3}>
             <Button
-              fullWidth variant="outlined" color="info" type="submit"
+              fullWidth variant="outlined" color="error" type="submit"
               disabled={!formState.isValid}
             >
-              Sign out
+              Log out
             </Button>
           </Grid>
         </form>

@@ -75,10 +75,6 @@ const ShowPrivateKey = (props: Props) => {
           marginTop={7}
     >
       <Grid item xs={12} padding={1}>
-        <Typography variant={"h5"} fontWeight={"bold"}>
-          Show secret private key
-        </Typography>
-
         <Typography marginTop={3}>
           Please enter your wallet password to show your secret private key.
           Turn off screen sharing. Don't share it with anyone.
@@ -194,7 +190,7 @@ const ShowPrivateKey = (props: Props) => {
 
   return (
     <React.Fragment>
-      <HeaderLight goBackPage={"settings"} />
+      <HeaderLight goBackPage={"settings"} title={"Show secret private key"} />
 
       {step === "passwordStep" && passwordStep}
       {step === "showPrivateKeyStep" && showPrivateKeyStep}
