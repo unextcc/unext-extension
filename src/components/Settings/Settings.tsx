@@ -73,7 +73,7 @@ const Settings = (props: Props) => {
         <Typography variant={"h6"} marginLeft={2}>Security</Typography>
 
         <MenuList>
-          <MenuItem>
+          <MenuItem onClick={() => settingsContext.shownPageHandler('lockPasswordTtl')}>
             <ListItemText>Security Lock</ListItemText>
             <Typography variant={"body2"} color={"text.secondary"}>{"24 hours >"}</Typography>
           </MenuItem>
