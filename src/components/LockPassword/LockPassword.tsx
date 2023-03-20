@@ -7,14 +7,13 @@ import {
   Typography
 } from "@mui/material";
 import React, { useContext, useState } from "react";
-import { Logo60 } from "~components/logo";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup"
 import { SettingsContext } from "~store/settings-context";
 import Header from "~components/Layout/Header";
 import { verifyPassword } from "~utils/encryption";
-import walletContext, { WalletContext } from "~store/wallet-context";
+import { WalletContext } from "~store/wallet-context";
 
 interface Props {
   children?: React.ReactNode;
@@ -29,10 +28,6 @@ const LockPassword: React.FC<Props> = (props) => {
 
   const settingsContext = useContext(SettingsContext);
   const walletContext = useContext(WalletContext);
-
-
-  // @ts-ignore
-  const wallet = walletContext.wallets[0][0];
 
   const lockPasswordFormSchema = Yup.object().shape({
     lockPasswordInput: Yup.string()
@@ -52,7 +47,7 @@ const LockPassword: React.FC<Props> = (props) => {
   const date: Date = new Date()
 
   const lockPasswordOnSubmit = async (data: lockPasswordFormType) => {
-    const isPasswordCorrect = verifyPassword(wallet.encryptedPrivateKey, data.lockPasswordInput)
+    const isPasswordCorrect = verifyPassword(walletContext.encryptedPrivateKey, data.lockPasswordInput);
 
     if (isPasswordCorrect) {
       settingsContext.lockPasswordHandler(data.lockPasswordInput.toString().trim(), date.getTime());

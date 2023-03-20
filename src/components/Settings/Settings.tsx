@@ -50,11 +50,6 @@ const Settings = (props: Props) => {
             </ListItemText>
             <Typography variant={"body2"} color={"text.secondary"}>{">"}</Typography>
           </MenuItem>
-
-          <MenuItem>
-            <ListItemText>Show Secret Recovery Phrase</ListItemText>
-            <Typography variant={"body2"} color={"text.secondary"}>{">"}</Typography>
-          </MenuItem>
         </MenuList>
 
         <Divider />
@@ -75,10 +70,13 @@ const Settings = (props: Props) => {
         <MenuList>
           <MenuItem onClick={() => settingsContext.shownPageHandler('lockPasswordTtl')}>
             <ListItemText>Security Lock</ListItemText>
-            <Typography variant={"body2"} color={"text.secondary"}>{"24 hours >"}</Typography>
+            <Typography variant={"body2"} color={"text.secondary"}>
+              {settingsContext.lockPasswordTimeToLive / 60}
+              {settingsContext.lockPasswordTimeToLive < 120 ? ` hour` : ` hours`}
+            </Typography>
           </MenuItem>
 
-          <MenuItem>
+          <MenuItem onClick={() => settingsContext.shownPageHandler('changeWalletPassword')}>
             <ListItemText>Change password</ListItemText>
             <Typography variant={"body2"} color={"text.secondary"}>{">"}</Typography>
           </MenuItem>

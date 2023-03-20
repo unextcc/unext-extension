@@ -37,6 +37,8 @@ const Logout = (props: Props) => {
 
   const onSubmit = async (data: formType) => {
     walletContext.deleteWallet();
+    walletContext.saveEncryptedPrivateKey("");
+    settingsContext.lockPasswordRemove();
     settingsContext.shownPageHandler("settings");
     window.location.reload();
     return false;

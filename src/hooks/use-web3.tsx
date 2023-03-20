@@ -21,6 +21,7 @@ export const useWeb3CreateAccount = () => {
     try {
       const web3 = await new Web3(new Web3.providers.HttpProvider(providerUrl));
       const createAccount = await web3.eth.accounts.create();
+      console.log(password);
       const encryptedPrivateKey = encryptAES(createAccount.privateKey, password);
 
       setAccount({

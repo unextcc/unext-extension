@@ -13,13 +13,15 @@ import Transactions from "~components/Transaction/Transactions";
 import ShowPrivateKey from "~components/Settings/ShowPrivateKey";
 import Logout from "~components/Settings/Logout";
 import LockPasswordTtl from "~components/Settings/LockPasswordTtl";
+import ChangeWalletPassword from "~components/Settings/ChangeWalletPassword";
 
 
 const App = () => {
   const settingsContext = useContext(SettingsContext);
   const walletContext = useContext(WalletContext);
 
-  console.log(settingsContext.lockPasswordTimeToLive);
+  console.log(walletContext.encryptedPrivateKey);
+  console.log(settingsContext.lockPassword);
 
   let isLockPasswordSet = settingsContext.lockPassword.password !== '';
 
@@ -48,7 +50,8 @@ const App = () => {
             settingsContext.shownPage === 'settings' && <Settings /> ||
             settingsContext.shownPage === 'showPrivateKey' && <ShowPrivateKey /> ||
             settingsContext.shownPage === 'logout' && <Logout /> ||
-            settingsContext.shownPage === 'lockPasswordTtl' && <LockPasswordTtl />
+            settingsContext.shownPage === 'lockPasswordTtl' && <LockPasswordTtl /> ||
+            settingsContext.shownPage === 'changeWalletPassword' && <ChangeWalletPassword />
         }
       </Grid>
     </Container>

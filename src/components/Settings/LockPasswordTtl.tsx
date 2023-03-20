@@ -6,8 +6,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import HeaderLight from "~components/Layout/HeaderLight";
 import { Button, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import Footer from "~components/Layout/Footer";
-import configureWallet from "~components/Landing/ConfigureWallet";
-import * as constants from "constants";
 
 type formType = {
   lockPasswordTimeToLive: number;

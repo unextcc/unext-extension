@@ -47,7 +47,7 @@ const HeaderBar = (props: Props) => {
           color={"default"}
           sx={{borderBottom: 1, borderColor: "lightgray", backgroundColor: "white"}}
         >
-          <Toolbar>
+          <Toolbar disableGutters>
             {(props.goBackPage) &&
             <Typography variant="h6" component="div" color={"#1976d2"}>
               <IconButton onClick={() => {settingsContext.shownPageHandler(props.goBackPage!)}}>
@@ -57,7 +57,7 @@ const HeaderBar = (props: Props) => {
             </Typography>}
 
             {(props.title) &&
-            <Typography variant="h6" component="div" color={"#1976d2"}>
+            <Typography variant="h6" component="div" color={"#1976d2"} paddingLeft={2}>
               {props.title}
             </Typography>}
           </Toolbar>

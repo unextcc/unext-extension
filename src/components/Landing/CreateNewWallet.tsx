@@ -4,11 +4,9 @@ import { Alert, Button, Grid, InputAdornment, TextField, Typography } from "@mui
 import { CopyAll, Visibility, VisibilityOff } from "@mui/icons-material";
 import {useForm} from "react-hook-form";
 import * as Yup from 'yup';
-import { SettingsContext } from "~store/settings-context";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useWeb3CreateAccount } from "~hooks/use-web3";
 import { config } from "~contents/config";
-import { Storage } from "@plasmohq/storage";
 import { WalletContext } from "~store/wallet-context";
 
 interface Props {
@@ -18,14 +16,11 @@ interface Props {
 type formType = {
   password: string;
   confirmPassword: string;
-  confirmCreateWallet: boolean
+  confirmCreateWallet: boolean;
 }
 
 const CreateNewWallet = () => {
-  const settingsContext = useContext(SettingsContext);
   const walletContext = useContext(WalletContext);
-
-  const storage = new Storage();
 
   const [step, setStep] = useState('passwordStep');
   const [togglePassword, setTogglePassword] = useState<boolean>(false);
@@ -55,7 +50,7 @@ const CreateNewWallet = () => {
 
   const onSubmit = async (data: formType) => {
     // create account
-    await createAccount(getValues("password"), config.tokens[0].providerUrl);
+    await createAccount(data.password, config.tokens[0].providerUrl);
 
     // set step
     setStep('createWalletStep');
@@ -67,9 +62,10 @@ const CreateNewWallet = () => {
       address: account.address,
       chain: "ETH",
       network: 'ethereum',
-      encryptedPrivateKey: account.encryptedPrivateKey,
       tokens: [0, 1]
     }]);
+
+    await walletContext.saveEncryptedPrivateKey(account.encryptedPrivateKey)
 
     await window.location.reload();
   };
