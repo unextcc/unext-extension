@@ -9,10 +9,21 @@ import Settings from "~components/Settings/Settings";
 import Dashboard from "~components/Dashboard/Dashboard";
 import settings from "~components/Settings/Settings";
 import CreateNewWallet from "~components/Landing/CreateNewWallet";
+import Transactions from "~components/Transaction/Transactions";
+import ShowPrivateKey from "~components/Settings/ShowPrivateKey";
+import Logout from "~components/Settings/Logout";
+import LockPasswordTtl from "~components/Settings/LockPasswordTtl";
+import ChangeWalletPassword from "~components/Settings/ChangeWalletPassword";
+
 
 const App = () => {
   const settingsContext = useContext(SettingsContext);
   const walletContext = useContext(WalletContext);
+
+  console.log(walletContext.encryptedPrivateKey);
+  console.log(settingsContext.lockPassword);
+
+  let isLockPasswordSet = settingsContext.lockPassword.password !== '';
 
   const shownPageIgnoreList: string[] = [
     "configureWallet","createNewWallet","importWallet"
@@ -20,15 +31,27 @@ const App = () => {
 
   return (
     <Container style={{ margin: 0, padding: 0 }}>
-      <Grid container margin={0} border={0} spacing={1} padding={1} height={580} width={375}>
+      <Grid
+        container
+        border={0}
+        padding={1}
+        minWidth={375}
+        maxWidth={720}
+        height={580}
+      >
         {
           !walletContext.isWalletConfigured &&
           !shownPageIgnoreList.includes(settingsContext.shownPage) ? <Landing /> :
-          !settingsContext.lockPassword ? <LockPassword /> :
-          settingsContext.shownPage === 'configureWallet' && <ConfigureWallet /> ||
-          settingsContext.shownPage === 'createNewWallet' && <CreateNewWallet /> ||
-          settingsContext.shownPage === 'dashboard' && <Dashboard /> ||
-          settingsContext.shownPage === 'settings' && <Settings />
+            !isLockPasswordSet ? <LockPassword /> :
+            settingsContext.shownPage === 'configureWallet' && <ConfigureWallet /> ||
+            settingsContext.shownPage === 'createNewWallet' && <CreateNewWallet /> ||
+            settingsContext.shownPage === 'dashboard' && <Dashboard /> ||
+            settingsContext.shownPage === 'transactions' && <Transactions /> ||
+            settingsContext.shownPage === 'settings' && <Settings /> ||
+            settingsContext.shownPage === 'showPrivateKey' && <ShowPrivateKey /> ||
+            settingsContext.shownPage === 'logout' && <Logout /> ||
+            settingsContext.shownPage === 'lockPasswordTtl' && <LockPasswordTtl /> ||
+            settingsContext.shownPage === 'changeWalletPassword' && <ChangeWalletPassword />
         }
       </Grid>
     </Container>

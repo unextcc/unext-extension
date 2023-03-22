@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { Logo60 } from "~components/logo";
 
 interface Props {
@@ -9,12 +9,12 @@ interface Props {
 
 const Header = (props: Props) => {
   return (
-    <Box>
+    <Grid item xs={12} height={160}>
       <Logo60 />
 
       <Typography variant="h4" color={"darkblue"} fontWeight={"bold"}>{props.title}</Typography>
       <Typography variant="h6" color={"gray"}>{props.subTitle}</Typography>
-    </Box>
+    </Grid>
   );
 };
 

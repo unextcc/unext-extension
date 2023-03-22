@@ -13,3 +13,8 @@
   text-decoration: none;
   width: 100%;
 }
+
+body {
+  margin-left: 0;
+  margin-right: 0;
+}

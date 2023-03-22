@@ -1,9 +1,17 @@
-import React, { useContext } from "react";
-import { Box, Button, Container, Grid, Typography } from "@mui/material";
+import React, { useContext, useState } from "react";
+import {
+  Button,
+  Grid,
+  Typography,
+  MenuList,
+  ListItemText,
+  MenuItem,
+  Divider
+} from "@mui/material";
 import { SettingsContext } from "~store/settings-context";
-import LockPassword from "~components/LockPassword/LockPassword";
-import Landing from "~components/Landing/Landing";
-import ConfigureWallet from "~components/Landing/ConfigureWallet";
+import HeaderLight from "~components/Layout/HeaderLight";
+import Footer from "~components/Layout/Footer";
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 interface Props {
   children?: React.ReactNode;
@@ -13,25 +21,120 @@ const Settings = (props: Props) => {
   const settingsContext = useContext(SettingsContext);
 
   return (
-    <Container style={{ margin: 0, padding: 0 }}>
-      <Grid container spacing={1} margin={0} paddingTop={1} paddingBottom={1} paddingLeft={1}
-            paddingRight={1} border={1} height={580} width={375}>
-        <Box>
-          <Typography
-            variant={"h5"}
-            marginTop={0}
-            color={"darkblue"}
-            fontWeight={"bold"}>
-            Settings
-          </Typography>
+    <Grid
+      container
+      item
+      xs={12}
+      display={"block"}
+      direction={"row"}
+      alignItems={"start"}
+      marginBottom={6}
+    >
+      <HeaderLight title={"Settings"} />
 
-          <Button variant={"outlined"} onClick={() => {settingsContext.lockPasswordHandler("")}}>
-            Clear Password
+      <Grid
+        item maxHeight={475} xs={12}
+        sx={{
+          maxHeight: 475, overflowX: "hidden",
+          "&::-webkit-scrollbar": {width: 2},
+          "&::-webkit-scrollbar-track": {backgroundColor: "lightgray"},
+          "&::-webkit-scrollbar-thumb": {backgroundColor: "gray", borderRadius: 0},
+        }}
+      >
+        <Typography variant={"h6"} marginLeft={2}>Wallet</Typography>
+
+        <MenuList>
+          <MenuItem onClick={() => settingsContext.shownPageHandler('showPrivateKey')}>
+            <ListItemText>
+              Show Secret Private Key
+            </ListItemText>
+            <Typography variant={"body2"} color={"text.secondary"}>{">"}</Typography>
+          </MenuItem>
+        </MenuList>
+
+        <Divider />
+
+        <Typography variant={"h6"} marginLeft={2}>General</Typography>
+
+        <MenuList>
+          <MenuItem>
+            <ListItemText>Manage notifications</ListItemText>
+            <Typography variant={"body2"} color={"text.secondary"}>{">"}</Typography>
+          </MenuItem>
+        </MenuList>
+
+        <Divider />
+
+        <Typography variant={"h6"} marginLeft={2}>Security</Typography>
+
+        <MenuList>
+          <MenuItem onClick={() => settingsContext.shownPageHandler('lockPasswordTtl')}>
+            <ListItemText>Security Lock</ListItemText>
+            <Typography variant={"body2"} color={"text.secondary"}>
+              {settingsContext.lockPasswordTimeToLive / 60}
+              {settingsContext.lockPasswordTimeToLive < 120 ? ` hour` : ` hours`}
+            </Typography>
+          </MenuItem>
+
+          <MenuItem onClick={() => settingsContext.shownPageHandler('changeWalletPassword')}>
+            <ListItemText>Change password</ListItemText>
+            <Typography variant={"body2"} color={"text.secondary"}>{">"}</Typography>
+          </MenuItem>
+        </MenuList>
+
+        <Divider />
+
+        <Typography variant={"h6"} marginLeft={2}>About</Typography>
+
+        <MenuList>
+          <MenuItem>
+            <ListItemText>Help</ListItemText>
+            <Typography variant={"body2"} color={"text.secondary"}>
+              <OpenInNewIcon />
+            </Typography>
+          </MenuItem>
+
+          <MenuItem>
+            <ListItemText>Terms of service</ListItemText>
+            <Typography variant={"body2"} color={"text.secondary"}>
+              <OpenInNewIcon />
+            </Typography>
+          </MenuItem>
+
+          <MenuItem>
+            <ListItemText>Version</ListItemText>
+            <Typography variant={"body2"} color={"text.secondary"}>{"0.0.1"}</Typography>
+          </MenuItem>
+        </MenuList>
+
+        <Grid item xs={12} textAlign="center" marginTop={2} paddingLeft={3} paddingRight={3}>
+          <Button
+            fullWidth variant="outlined" color="info"
+            onClick={()=> {
+              settingsContext.lockPasswordHandler("", 0);
+            }}
+          >
+            Lock Wallet
           </Button>
-        </Box>
-      </Grid>
-    </Container>
+        </Grid>
 
+        <Grid item xs={12} textAlign="center" marginTop={1} marginBottom={5} paddingLeft={3} paddingRight={3}>
+          <Button
+            fullWidth
+            variant="contained"
+            color="error"
+            onClick={()=> {
+              settingsContext.shownPageHandler("logout");
+            }}
+          >
+            Sign Out
+          </Button>
+        </Grid>
+
+      </Grid>
+
+      <Footer />
+    </Grid>
   );
 };
 

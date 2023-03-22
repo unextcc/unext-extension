@@ -1,11 +1,13 @@
 import React, { useContext, useState } from "react";
 import HeaderLight from "~components/Layout/HeaderLight";
-import { Alert, Button, Divider, Grid, TextField, Typography } from "@mui/material";
-import { CopyAll } from "@mui/icons-material";
+import { Alert, Button, Grid, InputAdornment, TextField, Typography } from "@mui/material";
+import { CopyAll, Visibility, VisibilityOff } from "@mui/icons-material";
 import {useForm} from "react-hook-form";
 import * as Yup from 'yup';
-import { SettingsContext } from "~store/settings-context";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useWeb3CreateAccount } from "~hooks/use-web3";
+import { config } from "~contents/config";
+import { WalletContext } from "~store/wallet-context";
 
 interface Props {
   children?: React.ReactNode;
@@ -14,13 +16,16 @@ interface Props {
 type formType = {
   password: string;
   confirmPassword: string;
-  confirmCreateWallet: boolean
+  confirmCreateWallet: boolean;
 }
 
 const CreateNewWallet = () => {
-  const settingsContext = useContext(SettingsContext);
+  const walletContext = useContext(WalletContext);
 
   const [step, setStep] = useState('passwordStep');
+  const [togglePassword, setTogglePassword] = useState<boolean>(false);
+
+  const { account, error, isError, status, createAccount } = useWeb3CreateAccount()
 
   const formSchema = Yup.object().shape({
     password: Yup.string()
@@ -39,44 +44,134 @@ const CreateNewWallet = () => {
     getValues,
     handleSubmit,
     formState,
-  } = useForm<formType>({resolver: yupResolver(formSchema), mode: "onChange"});
+  } = useForm<formType>({ resolver: yupResolver(formSchema), mode: "onChange" });
 
   const { errors } = formState;
 
   const onSubmit = async (data: formType) => {
-    console.log(JSON.stringify(data, null, 2));
+    // create account
+    await createAccount(data.password, config.tokens[0].providerUrl);
+
+    // set step
+    setStep('createWalletStep');
   }
+
+  const createWalletHandler = async () => {
+    await walletContext.saveWallet([{
+      id: 0,
+      address: account.address,
+      chain: "ETH",
+      network: 'ethereum',
+      tokens: [0, 1]
+    }]);
+
+    await walletContext.saveEncryptedPrivateKey(account.encryptedPrivateKey)
+
+    await window.location.reload();
+  };
+
+  const togglePasswordHandler = () => {
+    if (togglePassword) {
+      setTogglePassword(false);
+    } else {
+      setTogglePassword(true);
+    }
+  }
+
+  // steps
+  // 1. passwordStep: ask password from user
+  // 2. createWalletStep: creates the account, privateKey and wallet to secure storage
 
   const passwordStep = (
     <Grid container>
-      <Grid item display={"block"}>
-        <Typography style={{marginBottom: 5}}>
-          Choose a wallet password that will be used to unlock this application.
-          While the application is locked, the secret recovery phrase will be encrypted,
-          which prevents sending/receiving funds and managing accounts.
-        </Typography>
+      <Grid item container height={465}>
+        <Grid item
+              container
+              display={"flex"}
+              alignItems={"center"}
+              direction={"row"}
+        >
+          <Typography>
+            Choose a wallet password that will be used to unlock this application.
+            While the application is locked, the secret recovery phrase will be encrypted,
+            which prevents sending/receiving funds and managing accounts.
+          </Typography>
+        </Grid>
 
-        <Typography fontWeight={"bold"}>
-          For the safety of your funds, use a secure password (the bar should be green).
-        </Typography>
+        <Grid item container xs={12}>
+          <Grid item xs={12}>
+            <TextField
+              id={"password-input"}
+              label={"New Wallet Password"}
+              type={togglePassword ? "text" : "password"}
+              color={"info"}
+              variant={"outlined"}
+              fullWidth
+              {...register('password')}
+              error={formState.touchedFields.password && !formState.isValid}
+              helperText={formState.errors.password && formState.errors.password?.message}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position={"end"}>
+                    {togglePassword ? (
+                      <Visibility
+                        style={{ cursor: "pointer" }}
+                        onClick={() => togglePasswordHandler()}
+                      />
+                    ) : (
+                      <VisibilityOff
+                        style={{ cursor: "pointer" }}
+                        onClick={() => togglePasswordHandler()}
+                      />
+                    )}
+                  </InputAdornment>
+                )
+              }}
+            />
+          </Grid>
+
+          <Grid item xs={12} marginTop={1}>
+            <TextField
+              id={"confirm-password-input"}
+              label={"Confirm New Wallet Password"}
+              type={togglePassword ? "text" : "password"}
+              color={"info"}
+              variant={"outlined"}
+              fullWidth
+              {...register('confirmPassword')}
+              error={formState.touchedFields.confirmPassword && !formState.isValid}
+              helperText={formState.errors.confirmPassword && formState.errors.confirmPassword?.message}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position={"end"}>
+                    {togglePassword ? (
+                      <Visibility
+                        style={{ cursor: "pointer" }}
+                        onClick={() => togglePasswordHandler()}
+                      />
+                    ) : (
+                      <VisibilityOff
+                        style={{ cursor: "pointer" }}
+                        onClick={() => togglePasswordHandler()}
+                      />
+                    )}
+                  </InputAdornment>
+                )
+              }}
+            />
+          </Grid>
+        </Grid>
       </Grid>
 
-      <Grid item container xs={12} marginTop={5} marginBottom={5}>
-        <Grid item xs={12}>
-          <TextField color={"info"} variant={"filled"} label={"Password"} fullWidth />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField color={"info"} variant={"filled"} label={"Confirm Password"} fullWidth />
-        </Grid>
-      </Grid>
-      <Grid item container xs={12}>
+      <Grid item container xs={12} height={40}>
         <Grid item xs={6} textAlign={"left"}>
           <Button variant={"outlined"}>BACK</Button>
         </Grid>
         <Grid item xs={6} textAlign={"right"}>
           <Button
             variant={"outlined"}
-            onClick={() => {setStep("createWalletStep")}}
+            disabled={!formState.isValid}
+            type={"submit"}
           >
             NEXT
           </Button>
@@ -87,55 +182,60 @@ const CreateNewWallet = () => {
 
   const createWalletStep = (
     <Grid container>
-      <Grid item xs={12} textAlign={"justify"}>
-        <Typography>
-          Please take some time to backup the secret recovery private key, to be able to access this
-          wallet in the future.
-        </Typography>
+      <Grid item container xs={12} height={465}>
+        <Grid item
+              container
+              display={"flex"}
+              alignItems={"center"}
+              direction={"row"}
+        >
+          <Alert variant={"filled"} severity={"warning"}>
+            <Typography>
+              Make sure to write down your secret private key or save it somewhere safe, and never share
+              it with anyone!
+            </Typography>
 
-        <Alert variant={"filled"} severity={"warning"}>
-          Make sure to write down your secret private key or save it somewhere safe, and never share
-          it with anyone! It is the master key to all of your accounts, and the only way to recover your funds in an emergency.
-        </Alert>
+            <Typography>
+              It is the master key to all of your accounts, and the only way to recover your funds in an emergency.
+            </Typography>
+          </Alert>
+        </Grid>
+
+        <Grid item xs={12}>
+          <Typography variant={"body1"} sx={{ fontWeight: "bold" }}>Secret Private Key: </Typography>
+          <div style={{ overflow: "auto", maxWidth: 700, marginBottom: "8px", marginTop: '8px' }}>
+            <Typography width={360}>
+              {account.privateKey}
+            </Typography>
+          </div>
+          <Button
+            variant="outlined"
+            size="medium"
+            startIcon={<CopyAll />}
+            onClick={() => navigator.clipboard.writeText(account.privateKey)}
+          >
+            COPY SECRET PRIVATE KEY
+          </Button>
+        </Grid>
       </Grid>
 
-      <Divider />
-      <Grid item xs={12} display={"block"} marginTop={5} marginBottom={5} textAlign={"justify"}>
-        <Typography variant={"body1"} sx={{fontWeight: "bold"}}>Secret Private Key: </Typography>
-        <Typography sx={{
-          overflow: "auto",
-          textOverflow: 'ellipsis',
-          display: '-webkit-box',
-          WebkitLineClamp: '2',
-          WebkitBoxOrient: 'vertical'}}
-        >
-          0x64478e2091394c9139b04c56eb88597b9a4f787829b1fa7207675616fda705f4
-        </Typography>
-        <Button
-          variant="outlined"
-          size="medium"
-          startIcon={<CopyAll />}
-          onClick={() => navigator.clipboard.writeText("0x64478e2091394c9139b04c56eb88597b9a4f787829b1fa7207675616fda705f4")}
-        >
-          COPY SECRET PRIVATE KEY
-        </Button>
-      </Grid>
-
-      <Grid item container xs={12}>
+      <Grid item container xs={12} height={40}>
         <Grid item xs={6} textAlign={"left"}>
           <Button
             variant={"outlined"}
-            onClick={() => { setStep("passwordStep") }}
+            onClick={() => {
+              setStep("passwordStep")
+            }}
           >
             BACK
           </Button>
         </Grid>
+
         <Grid item xs={6} textAlign={"right"}>
-          <Button
-            variant={"outlined"}
-            onClick={() => {setStep("createWalletStep")}}
-          >
-            NEXT
+          <Button variant={"outlined"} onClick={async () => {
+            await createWalletHandler();
+          }}>
+            Create Wallet
           </Button>
         </Grid>
       </Grid>
@@ -144,11 +244,13 @@ const CreateNewWallet = () => {
 
   return (
     <React.Fragment>
-      <HeaderLight title={"Create New Wallet"} />
-
-      {step === 'passwordStep' && passwordStep}
-      {step === 'createWalletStep' && createWalletStep}
-
+      <Grid container>
+        <HeaderLight title={"Create New Wallet"} />
+        <form onSubmit={handleSubmit(onSubmit)}>
+          {step === 'passwordStep' && passwordStep}
+          {step === 'createWalletStep' && createWalletStep}
+        </form>
+      </Grid>
     </React.Fragment>
   );
 };

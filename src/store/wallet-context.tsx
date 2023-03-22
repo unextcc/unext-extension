@@ -1,21 +1,29 @@
 import React, { createContext, useEffect, useState } from "react";
 import { useStorage } from "@plasmohq/storage/dist/hook";
-import {decryptAES} from "~utils/encryption";
+import { decryptAES, encryptAES } from "~utils/encryption";
+
+type walletType = {
+  id: number,
+  address: string,
+  chain: string,
+  network: string,
+  tokens: number[]
+}[];
 
 
 type WalletContextType = {
-  getPrivateKey: (walletId: number, lockPassword: string) => string;
+  encryptedPrivateKey: string;
+  changeWalletPassword: (
+    currentEncryptedPrivateKey: string,
+    currentLockPassword: string,
+    newLockPassword: string
+  ) => void;
+  deleteWallet: () => void;
+  getPrivateKey: (encryptedPrivateKey: string, lockPassword: string) => string;
   isWalletConfigured: boolean;
-  saveWallet: (wallet: object) => void;
-  wallets: {
-    address: string,
-    chain: string,
-    currency: string,
-    encryptedPrivateKey: string,
-    id: number,
-    network: string,
-    tokens: {id: number, decimal: number, name: string, symbol: string}[]
-  }[];
+  saveWallet: (wallet: walletType) => void;
+  saveEncryptedPrivateKey: (encryptedPrivateKey: string) => void;
+  wallets: walletType;
 }
 
 interface Props {
@@ -23,32 +31,74 @@ interface Props {
 }
 
 export const WalletContext = createContext<WalletContextType>({
-  getPrivateKey(walletId: number, lockPassword: string): string {return "";},
+  encryptedPrivateKey: "",
+  changeWalletPassword(currentLockPassword, newLockPassword): void {},
+  deleteWallet(): void {},
+  getPrivateKey(encryptedPrivateKey, lockPassword): string {return "";},
   isWalletConfigured: false,
-  saveWallet(wallet: object): void {},
-  wallets: []
+  saveWallet(wallet: walletType): void {},
+  saveEncryptedPrivateKey(encryptedPrivateKey: string): void {},
+  wallets: [] as walletType
 });
 
 const WalletContextProvider: React.FC<Props> = (props) => {
   const [wallets, setWallets] = useStorage(
-    "unext-wallets",
-    (v) => v === "undefined" ? "wallet" : v);
+    "wallets",
+    (v) => typeof v === "undefined" ? [] : v);
+
+  const [encryptedPrivateKey, setEncryptedPrivateKey] = useStorage(
+    "encrypted-private-key",
+    (v) => typeof v === "undefined" ? "" : v);
 
   const [isWalletConfigured, setIsWalletConfigured] = useState<boolean>(false);
 
+  useEffect(() => {
+    if (wallets.length !==0) {
+      if (wallets.length > 0) {
+        setIsWalletConfigured(true);
+      }
+    }
+  },[wallets])
+
+
   // Get privateKeys
-  const getPrivateKey = (walletId: number, lockPassword: string): string => {
-    return decryptAES(wallets[walletId].encryptedPrivateKey, lockPassword);
+  const getPrivateKey = (encryptedPrivateKey: string, lockPassword: string): string => {
+    return decryptAES(encryptedPrivateKey, lockPassword);
+  };
+
+  const saveEncryptedPrivateKey = async (encryptedPrivateKey: string) => {
+    await setEncryptedPrivateKey(encryptedPrivateKey);
+  };
+
+  const saveWallet = async (wallet: walletType) => {
+    console.log(wallets);
+
+    await setWallets([wallet]);
+  };
+
+  const changeWalletPassword = async (
+    currentEncryptedPrivateKey: string,
+    currentLockPassword: string,
+    newLockPassword: string
+  ) => {
+    const privateKey = getPrivateKey(currentEncryptedPrivateKey, currentLockPassword);
+    const newEncryptedPrivateKey = encryptAES(privateKey, newLockPassword);
+
+    await setEncryptedPrivateKey(newEncryptedPrivateKey);
   }
 
-  const saveWallet = async (wallet: object) => {
-    await setWallets(wallet);
+  const deleteWallet = async () => {
+    await setWallets([])
   }
 
   const walletContextValue: WalletContextType = {
+    encryptedPrivateKey: encryptedPrivateKey,
+    changeWalletPassword: changeWalletPassword,
+    deleteWallet: deleteWallet,
     getPrivateKey: getPrivateKey,
     isWalletConfigured: isWalletConfigured,
     saveWallet: saveWallet,
+    saveEncryptedPrivateKey: saveEncryptedPrivateKey,
     wallets: wallets
   }
 

@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
-import { Box, Button, Grid, Typography } from "@mui/material";
-import { Logo60 } from "~components/logo";
+import { Button, Grid } from "@mui/material";
 import { SettingsContext } from "~store/settings-context";
 import Header from "~components/Layout/Header";
 

@@ -1,17 +1,19 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Box,
-  Button,
+  Button, Grid,
   InputAdornment,
   TextField,
   Typography
 } from "@mui/material";
 import React, { useContext, useState } from "react";
-import { Logo60 } from "~components/logo";
 import * as Yup from "yup";
-import {useForm} from "react-hook-form";
-import {yupResolver} from "@hookform/resolvers/yup"
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup"
 import { SettingsContext } from "~store/settings-context";
+import Header from "~components/Layout/Header";
+import { verifyPassword } from "~utils/encryption";
+import { WalletContext } from "~store/wallet-context";
 
 interface Props {
   children?: React.ReactNode;
@@ -23,7 +25,9 @@ type lockPasswordFormType = {
 
 const LockPassword: React.FC<Props> = (props) => {
   const [togglePassword, setTogglePassword] = useState<boolean>(false);
-  const settingsContext = useContext(SettingsContext)
+
+  const settingsContext = useContext(SettingsContext);
+  const walletContext = useContext(WalletContext);
 
   const lockPasswordFormSchema = Yup.object().shape({
     lockPasswordInput: Yup.string()
@@ -40,9 +44,18 @@ const LockPassword: React.FC<Props> = (props) => {
     {resolver: yupResolver(lockPasswordFormSchema), mode: "onChange" }
   );
 
+  const date: Date = new Date()
+
   const lockPasswordOnSubmit = async (data: lockPasswordFormType) => {
-    settingsContext.lockPasswordHandler(data.lockPasswordInput.toString().trim());
-    console.log(JSON.stringify(data, null, 2));
+    const isPasswordCorrect = verifyPassword(walletContext.encryptedPrivateKey, data.lockPasswordInput);
+
+    if (isPasswordCorrect) {
+      settingsContext.lockPasswordHandler(data.lockPasswordInput.toString().trim(), date.getTime());
+    } else {
+      setErrorLockPassword('lockPasswordInput', {type: "error", message: "Incorrect password"})
+    }
+
+    return false;
   }
 
   const togglePasswordHandler = () => {
@@ -55,31 +68,24 @@ const LockPassword: React.FC<Props> = (props) => {
 
   return (
     <React.Fragment>
-      <Box>
-        <Logo60 />
+      <Header title={"uNeXT Wallet"} subTitle={"Next Step for Digital Wallets"} />
 
-        <Typography
-          variant={"h4"}
-          marginTop={2}
-          color={"darkblue"}
-          fontWeight={"bold"}>
-          uNeXT Wallet
-        </Typography>
-
-        <Typography color={"gray"} variant={"h6"}>
-          Next Step for Digital Wallets
-        </Typography>
-      </Box>
-
-      <Box marginTop={30} alignContent={"center"} textAlign={"center"}>
-        <Typography textAlign={"left"} fontWeight={"bold"}>
-          Unlock with wallet password
-        </Typography>
-
+      <Grid
+        container
+        item
+        display={"flex"}
+        height={410}
+        direction={"row"}
+        textAlign={"end"}
+        alignItems={"end"}
+        justifyContent={"end"}
+      >
         <form onSubmit={handleSubmitLockPassword(lockPasswordOnSubmit)}>
+          <Typography textAlign={"left"} fontWeight={"bold"}>
+            Unlock with wallet password
+          </Typography>
+
           <TextField
-            //@ts-ignore
-            name="lockPasswordInput"
             id="lock-password-input"
             label="Enter Wallet Password"
             autoComplete="on"
@@ -92,7 +98,11 @@ const LockPassword: React.FC<Props> = (props) => {
               formStateLockPassword.touchedFields.lockPasswordInput &&
               !formStateLockPassword.isValid
             }
-            helperText={formStateLockPassword.errors.lockPasswordInput && formStateLockPassword.errors.lockPasswordInput?.message}
+            helperText={
+              formStateLockPassword.errors.lockPasswordInput &&
+              !formStateLockPassword.isValid &&
+              formStateLockPassword.errors.lockPasswordInput?.message
+            }
             InputProps={{
               endAdornment: (
                 <InputAdornment position={"end"}>
@@ -119,7 +129,7 @@ const LockPassword: React.FC<Props> = (props) => {
             Unlock Wallet
           </Button>
         </form>
-      </Box>
+      </Grid>
     </React.Fragment>
   );
 };

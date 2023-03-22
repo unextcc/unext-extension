@@ -1,23 +1,30 @@
-import React from "react";
-import { Box, Button, Typography } from "@mui/material";
+import React, { useContext } from "react";
+import { Box, Button, Grid, Typography } from "@mui/material";
+import { SettingsContext } from "~store/settings-context";
+import HeaderLight from "~components/Layout/HeaderLight";
+import Footer from "~components/Layout/Footer";
 
 interface Props {
   children?: React.ReactNode;
 }
 
 const Dashboard = (props: Props) => {
+  const settingsContext = useContext(SettingsContext);
 
   return (
     <React.Fragment>
-      <Box>
-        <Typography
-          variant={"h5"}
-          marginTop={0}
-          color={"darkblue"}
-          fontWeight={"bold"}>
-          Dashboard
-        </Typography>
-      </Box>
+      <HeaderLight title={"Dashboard"} />
+
+      <Grid item height={480} xs={12} marginTop={8}>
+        <Button
+          variant={"contained"}
+          onClick={()=> {settingsContext.lockPasswordHandler("", 0)}}
+        >
+          CLEAR PASSWORD
+        </Button>
+      </Grid>
+
+      <Footer />
     </React.Fragment>
   )
 }

@@ -3,6 +3,8 @@ import App from "~App";
 import SettingsContextProvider from "~store/settings-context";
 import WalletContextProvider from "~store/wallet-context";
 
+import "./style.css"
+
 function IndexPopup(): JSX.Element {
   return (
     <SettingsContextProvider>
