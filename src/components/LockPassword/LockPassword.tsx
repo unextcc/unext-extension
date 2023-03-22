@@ -52,7 +52,7 @@ const LockPassword: React.FC<Props> = (props) => {
     if (isPasswordCorrect) {
       settingsContext.lockPasswordHandler(data.lockPasswordInput.toString().trim(), date.getTime());
     } else {
-      setErrorLockPassword('lockPasswordInput', {type: "custom", message: "Incorrect password"})
+      setErrorLockPassword('lockPasswordInput', {type: "error", message: "Incorrect password"})
     }
 
     return false;
@@ -100,6 +100,7 @@ const LockPassword: React.FC<Props> = (props) => {
             }
             helperText={
               formStateLockPassword.errors.lockPasswordInput &&
+              !formStateLockPassword.isValid &&
               formStateLockPassword.errors.lockPasswordInput?.message
             }
             InputProps={{
