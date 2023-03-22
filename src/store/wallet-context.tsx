@@ -81,7 +81,7 @@ const WalletContextProvider: React.FC<Props> = (props) => {
     currentLockPassword: string,
     newLockPassword: string
   ) => {
-    const privateKey = getPrivateKey(currentEncryptedPrivateKey ,currentLockPassword);
+    const privateKey = getPrivateKey(currentEncryptedPrivateKey, currentLockPassword);
     const newEncryptedPrivateKey = encryptAES(privateKey, newLockPassword);
 
     await setEncryptedPrivateKey(newEncryptedPrivateKey);

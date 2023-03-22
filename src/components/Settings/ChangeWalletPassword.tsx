@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import HeaderLight from "~components/Layout/HeaderLight";
 import Footer from "~components/Layout/Footer";
-import { Button, Divider, Grid, InputAdornment, TextField, Typography } from "@mui/material";
+import { Alert, Button, Grid, InputAdornment, TextField, Typography } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
@@ -54,22 +54,30 @@ const ChangeWalletPassword = () => {
   const { errors } = formState;
 
   const onSubmit = async (data: formType) => {
-    setSaveState('saving');
+    setSaveState("saving");
 
+    // check if password is correct
     const isPasswordCorrect = verifyPassword(walletContext.encryptedPrivateKey, data.currentPasswordInput);
 
     if (!isPasswordCorrect) {
-      setError('currentPasswordInput', {type: "custom", message: "Incorrect password"});
-      setSaveState('error');
+      // incorrect password state
+      setError('currentPasswordInput', {type: "error", message: "Incorrect password"});
+      setSaveState("error");
       return false
     } {
+      // changes the wallet lock password
       walletContext.changeWalletPassword(walletContext.encryptedPrivateKey, data.currentPasswordInput, data.newPasswordInput);
 
-      setSaveState('saved');
+      // waiting for user notification
+      await new Promise(resolve => setTimeout(resolve, 1500));
 
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // clearing wallet lock password
+      settingsContext.lockPasswordHandler("", 0);
 
-      settingsContext.shownPageHandler('settings');
+      setSaveState("saved");
+
+      // reload page after password change
+      window.location.reload();
     }
   }
 
@@ -80,6 +88,8 @@ const ChangeWalletPassword = () => {
       setTogglePassword(true);
     }
   }
+
+  console.log("saveState: "+saveSate);
 
   return (
     <React.Fragment>
@@ -203,14 +213,21 @@ const ChangeWalletPassword = () => {
             }}
           />
 
+          {(saveSate !== "error" && saveSate === "saving") &&
+            <Grid item xs={12} marginTop={2}>
+            <Alert severity="success">
+              Password changed successfully! Reloading...
+            </Alert>
+          </Grid>}
+
           <Button
             variant={"outlined"}
             fullWidth
-            style={{ marginTop: 32 }}
-            disabled={saveSate === "saving"}
+            style={{ marginTop: 16 }}
+            disabled={saveSate !== "error" && saveSate === "saving"}
             type={"submit"}
           >
-            {saveSate === "saving" ? "Saving" : "Change Wallet Password"}
+            Change Wallet Password
           </Button>
         </form>
       </Grid>
