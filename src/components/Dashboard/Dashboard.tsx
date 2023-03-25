@@ -7,6 +7,7 @@ import {ShoppingCartCheckout, ArrowDownwardOutlined, MoreHorizOutlined} from "@m
 import HeaderLight from "~components/Layout/HeaderLight";
 import Footer from "~components/Layout/Footer";
 import TabPanel from "~components/Dashboard/TabPanel";
+import Spend from "~components/Dashboard/Spend";
 
 const iconButtonStyle = {
   color: "info",
@@ -38,9 +39,9 @@ const Dashboard = (props: Props) => {
     <React.Fragment>
       <HeaderLight title={"Dashboard"} />
 
-      <Grid container item height={480} marginTop={8} display="block" alignItems="flex-start">
+      <Grid container item height={480} marginTop={7} display="block" alignItems="flex-start">
         <Grid item xs={12} textAlign="left">
-          <Typography variant="h4" textAlign="left" marginTop={1} marginBottom={1}>
+          <Typography variant="h6" textAlign="left" marginTop={1} marginBottom={1}>
             US$100.23
           </Typography>
         </Grid>
@@ -48,7 +49,7 @@ const Dashboard = (props: Props) => {
         <Grid container item xs={12} display="flex" alignItems="flex-start" justifyContent={"flex-start"}>
           <Grid item xs={2} textAlign={"left"}>
             <IconButton sx={iconButtonStyle}>
-              <AddIcon color="info" />
+              <AddIcon color={"info"} />
             </IconButton>
             <Typography fontSize={12} textAlign="left" paddingLeft={1}>Add</Typography>
           </Grid>
@@ -104,7 +105,7 @@ const Dashboard = (props: Props) => {
             </Box>
 
             <TabPanel value={value} index={0}>
-              Spend
+              <Spend />
             </TabPanel>
 
             <TabPanel value={value} index={1}>
