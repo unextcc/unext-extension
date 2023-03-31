@@ -8,6 +8,8 @@ import HeaderLight from "~components/Layout/HeaderLight";
 import Footer from "~components/Layout/Footer";
 import TabPanel from "~components/Dashboard/TabPanel";
 import Spend from "~components/Dashboard/Spend";
+import Transactions from "~components/Transaction/Transactions";
+import RecentTransactions from "~components/Dashboard/RecentTransactions";
 
 const iconButtonStyle = {
   color: "info",
@@ -36,12 +38,12 @@ const Dashboard = (props: Props) => {
   };
 
   return (
-    <React.Fragment>
+    <Grid container item xs={12} overflow="hidden">
       <HeaderLight title={"Dashboard"} />
 
       <Grid container item height={480} marginTop={7} display="block" alignItems="flex-start">
         <Grid item xs={12} textAlign="left">
-          <Typography variant="h6" textAlign="left" marginTop={1} marginBottom={1}>
+          <Typography variant="h6" textAlign="left" marginTop={1} marginBottom={1} marginLeft={1}>
             US$100.23
           </Typography>
         </Grid>
@@ -97,10 +99,6 @@ const Dashboard = (props: Props) => {
                   label="Transactions" {...a11yProps(1)}
                   sx={{textTransform: 'none', fontSize: 14, alignItems: 'self-start', justifySelf: 'flex-start'}}
                 />
-                <Tab
-                  label="Assets" {...a11yProps(4)}
-                  sx={{textTransform: 'none', fontSize: 16, alignItems: 'self-start', justifySelf: 'flex-start'}}
-                />
               </Tabs>
             </Box>
 
@@ -109,18 +107,15 @@ const Dashboard = (props: Props) => {
             </TabPanel>
 
             <TabPanel value={value} index={1}>
-              Transactions
+              <RecentTransactions />
             </TabPanel>
 
-            <TabPanel value={value} index={2}>
-              Assets
-            </TabPanel>
           </Box>
         </Grid>
       </Grid>
 
       <Footer />
-    </React.Fragment>
+    </Grid>
   )
 }
 
