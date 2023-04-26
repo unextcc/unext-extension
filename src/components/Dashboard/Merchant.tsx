@@ -13,10 +13,10 @@ const Merchant = (props: Props) => {
     <React.Fragment>
       <Card sx={{display: 'flex', marginBottom: 1}} variant="outlined">
         <Box display="flex" flexDirection="column" padding={1}>
-          <Typography component="div" variant="body1">
+          <Typography component="span" variant="body1">
             <Link href={props.link} target="_blank">{props.title}</Link>
           </Typography>
-          <Typography component="div" variant="subtitle1" color="tex.secondary">
+          <Typography component="span" variant="subtitle1" color="tex.secondary">
             {props.description}
           </Typography>
         </Box>

@@ -20,9 +20,6 @@ const App = () => {
   const settingsContext = useContext(SettingsContext);
   const walletContext = useContext(WalletContext);
 
-  console.log(walletContext.encryptedPrivateKey);
-  console.log(settingsContext.lockPassword);
-
   let isLockPasswordSet = settingsContext.lockPassword.password !== '';
 
   const shownPageIgnoreList: string[] = [

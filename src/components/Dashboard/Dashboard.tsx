@@ -10,6 +10,9 @@ import TabPanel from "~components/Dashboard/TabPanel";
 import Spend from "~components/Dashboard/Spend";
 import Transactions from "~components/Transaction/Transactions";
 import RecentTransactions from "~components/Dashboard/RecentTransactions";
+import {useWeb3TokenBalance} from "~hooks/use-web3";
+import { WalletContext } from "~store/wallet-context";
+import { config } from "~contents/config";
 
 const iconButtonStyle = {
   color: "info",
@@ -30,8 +33,24 @@ function a11yProps(index: number) {
 
 const Dashboard = (props: Props) => {
   const settingsContext = useContext(SettingsContext);
+  const walletContext = useContext(WalletContext);
 
   const [value, setValue] = React.useState(0);
+
+  const wallets = walletContext.wallets[0];
+
+  const {
+    balance,
+    isError,
+    isLoaded,
+    error,
+  } = useWeb3TokenBalance(
+    // @ts-ignore
+    wallets[0].address,
+    config.tokens[0].contractAddress,
+    config.tokens[0].decimals,
+    config.tokens[0].providerUrl,
+  );
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -43,9 +62,15 @@ const Dashboard = (props: Props) => {
 
       <Grid container item height={480} marginTop={7} display="block" alignItems="flex-start">
         <Grid item xs={12} textAlign="left">
-          <Typography variant="h6" textAlign="left" marginTop={1} marginBottom={1} marginLeft={1}>
-            US$100.23
-          </Typography>
+          {isLoaded ?
+            <Typography variant="h6" textAlign="left" marginTop={1} marginBottom={1} marginLeft={1}>
+              US${balance}
+            </Typography>
+            :
+            <Typography variant="h6" textAlign="left" marginTop={1} marginBottom={1} marginLeft={1}>
+              Loading...
+            </Typography>
+          }
         </Grid>
 
         <Grid container item xs={12} display="flex" alignItems="flex-start" justifyContent={"flex-start"}>
