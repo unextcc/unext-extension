@@ -81,7 +81,7 @@ const dev = <envType>({
       network: "mumbai",
       symbol: 'USDC',
       scannerUrl: 'https://mumbai.polygonscan.com/',
-      providerUrl: 'https://polygon-mumbai.infura.io/v3/b401a8aed4fd4473aa9442f1b4c5cf98',
+      providerUrl: 'http://localhost:8000/infura',
     },
     {
       id: 1,
@@ -97,8 +97,8 @@ const dev = <envType>({
       name: 'Euro Coin',
       network: "mumbai",
       symbol: 'EUROC',
-      scannerUrl: 'https://goerli.etherscan.io',
-      providerUrl: 'https://goerli.infura.io/v3/b401a8aed4fd4473aa9442f1b4c5cf98',
+      scannerUrl: 'https://mumbai.polygonscan.com/',
+      providerUrl: 'http://localhost:8000/infura',
     }
   ]
 });

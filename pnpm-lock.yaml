@@ -19,6 +19,7 @@ specifiers:
   alchemy-sdk: ^2.4.3
   crypto-js: ^4.1.1
   hook: link:@plasmohq/storage/hook
+  human-standard-token-abi: ^2.0.0
   plasmo: 0.64.5
   prettier: 2.8.3
   react: 18.2.0
@@ -26,6 +27,7 @@ specifiers:
   react-hook-form: ^7.43.1
   typescript: 4.9.4
   web3: ^1.8.2
+  web3-utils: ^1.9.0
   yup: ^1.0.0
 
 dependencies:
@@ -42,11 +44,13 @@ dependencies:
   alchemy-sdk: 2.4.3
   crypto-js: 4.1.1
   hook: link:@plasmohq/storage/hook
+  human-standard-token-abi: 2.0.0
   plasmo: 0.64.5_biqbaboplfbrettd7655fr4n2y
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-hook-form: 7.43.1_react@18.2.0
   web3: 1.8.2
+  web3-utils: 1.9.0
   yup: 1.0.0
 
 devDependencies:
@@ -5072,6 +5076,10 @@ packages:
     engines: {node: '>=10.17.0'}
     dev: false
 
+  /human-standard-token-abi/2.0.0:
+    resolution: {integrity: sha512-m1f5DiIvqaNmpgphNqx2OziyTCj4Lvmmk28uMSxGWrOc9/lMpAKH8UcMPhvb13DMNZPzxn07WYFhxOGKuPLryg==}
+    dev: false
+
   /iconv-lite/0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
     engines: {node: '>=0.10.0'}
@@ -7814,6 +7822,19 @@ packages:
 
   /web3-utils/1.8.2:
     resolution: {integrity: sha512-v7j6xhfLQfY7xQDrUP0BKbaNrmZ2/+egbqP9q3KYmOiPpnvAfol+32slgL0WX/5n8VPvKCK5EZ1HGrAVICSToA==}
+    engines: {node: '>=8.0.0'}
+    dependencies:
+      bn.js: 5.2.1
+      ethereum-bloom-filters: 1.0.10
+      ethereumjs-util: 7.1.5
+      ethjs-unit: 0.1.6
+      number-to-bn: 1.7.0
+      randombytes: 2.1.0
+      utf8: 3.0.0
+    dev: false
+
+  /web3-utils/1.9.0:
+    resolution: {integrity: sha512-p++69rCNNfu2jM9n5+VD/g26l+qkEOQ1m6cfRQCbH8ZRrtquTmrirJMgTmyOoax5a5XRYOuws14aypCOs51pdQ==}
     engines: {node: '>=8.0.0'}
     dependencies:
       bn.js: 5.2.1

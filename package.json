@@ -23,6 +23,7 @@
     "alchemy-sdk": "^2.4.3",
     "crypto-js": "^4.1.1",
     "hook": "link:@plasmohq/storage/hook",
+    "human-standard-token-abi": "^2.0.0",
     "plasmo": "0.64.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
