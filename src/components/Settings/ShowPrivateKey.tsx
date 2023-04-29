@@ -26,8 +26,6 @@ const ShowPrivateKey = (props: Props) => {
   const settingsContext = useContext(SettingsContext);
   const walletContext = useContext(WalletContext);
 
-  // @ts-ignore
-  const wallet = walletContext.wallets[0][0];
 
   const passwordFormSchema = Yup.object().shape({
     passwordInput: Yup.string()
@@ -40,7 +38,6 @@ const ShowPrivateKey = (props: Props) => {
     register: registerPassword,
     setError: setErrorPassword,
     handleSubmit: handleSubmitPassword,
-    getValues,
     formState: formStatePassword
   } = useForm<passwordFormType>(
     {resolver: yupResolver(passwordFormSchema), mode: "onChange" }
@@ -49,16 +46,15 @@ const ShowPrivateKey = (props: Props) => {
   const date: Date = new Date()
 
   const passwordOnSubmit = async (data: passwordFormType) => {
-    const isPasswordCorrect = verifyPassword(wallet.encryptedPrivateKey, data.passwordInput)
+
+    const isPasswordCorrect = verifyPassword(walletContext.encryptedPrivateKey, data.passwordInput);
 
     if (isPasswordCorrect) {
-      setPrivateKey(decryptAES(wallet.encryptedPrivateKey, getValues('passwordInput')));
+      setPrivateKey(decryptAES(walletContext.encryptedPrivateKey, data.passwordInput));
       setStep("showPrivateKeyStep")
     } else {
       setErrorPassword('passwordInput', {type: "custom", message: "Incorrect password"})
     }
-
-    return false;
   }
 
   const [togglePassword, setTogglePassword] = useState<boolean>(false);
