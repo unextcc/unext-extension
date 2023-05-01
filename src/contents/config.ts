@@ -23,6 +23,21 @@ type envType = {
     scannerUrl: string;
     providerUrl: string;
   }[];
+  cryptoTokens: {
+    id: number;
+    alchemyApiKey: string;
+    alchemyNetwork: string;
+    alchemyMaxRetries: number;
+    blockchain: string;
+    contractAddress: string;
+    decimals: number;
+    enabled: boolean;
+    name: string;
+    network: string;
+    symbol: string;
+    scannerUrl: string;
+    providerUrl: string;
+  }[]
 }
 
 const prod = <envType>({
@@ -62,6 +77,23 @@ const prod = <envType>({
       providerUrl: 'https://mainnet.infura.io/v3/b401a8aed4fd4473aa9442f1b4c5cf98',
     }
   ],
+  cryptoTokens: [
+    {
+      id: 0,
+      alchemyApiKey: 'vvihhyWLDnyBDx_UEdaB0f24ItIbeMyn',
+      alchemyNetwork: Network.MATIC_MAINNET,
+      alchemyMaxRetries: 1,
+      blockchain: "polygon",
+      contractAddress: "0x0000000000000000000000000000000000001010",
+      decimals: 18,
+      enabled: true,
+      name: "Matic",
+      network: "mainnet",
+      symbol: "MATIC",
+      scannerUrl: "https://polygonscan.com",
+      providerUrl: "https://polygon-mainnet.unext.cc",
+    }
+  ]
 });
 
 const dev = <envType>({
@@ -72,7 +104,7 @@ const dev = <envType>({
       alchemyNetwork: Network.MATIC_MUMBAI,
       alchemyMaxRetries: 1,
       blockchain: 'polygon',
-      contractAddress: "0x992d00C09E1162Bda6D556A15d83e5050d300908",
+      contractAddress: "0x0FA8781a83E46826621b3BC094Ea2A0212e71B23",
       decimals: 6,
       enabled: true,
       fiat: 'USD',
@@ -80,15 +112,15 @@ const dev = <envType>({
       name: 'USD Coin',
       network: "mumbai",
       symbol: 'USDC',
-      scannerUrl: 'https://mumbai.polygonscan.com/',
-      providerUrl: 'http://localhost:8000/infura',
+      scannerUrl: 'https://mumbai.polygonscan.com',
+      providerUrl: 'http://localhost:8000/infura-mumbai',
     },
     {
       id: 1,
       alchemyApiKey: 'zFXR_i23EsYS1DJ13gb3IOXrf7iR82kR',
       alchemyNetwork: Network.ETH_GOERLI,
       alchemyMaxRetries: 1,
-      blockchain: 'ethereum',
+      blockchain: 'polygon',
       contractAddress: "0xA683d909e996052955500DDc45CA13E25c76e286",
       decimals: 6,
       enabled: true,
@@ -98,7 +130,24 @@ const dev = <envType>({
       network: "mumbai",
       symbol: 'EUROC',
       scannerUrl: 'https://mumbai.polygonscan.com/',
-      providerUrl: 'http://localhost:8000/infura',
+      providerUrl: 'http://localhost:8000/infura-mumbai',
+    }
+  ],
+  cryptoTokens: [
+    {
+      id: 0,
+      alchemyApiKey: 'vvihhyWLDnyBDx_UEdaB0f24ItIbeMyn',
+      alchemyNetwork: Network.MATIC_MUMBAI,
+      alchemyMaxRetries: 1,
+      blockchain: "polygon",
+      contractAddress: "0x0000000000000000000000000000000000001010",
+      decimals: 18,
+      enabled: true,
+      name: "Matic",
+      network: "mumbai",
+      symbol: "MATIC",
+      scannerUrl: "https://mumbai.polygonscan.com",
+      providerUrl: "http://localhost:8000/infura-mumbai",
     }
   ]
 });

@@ -1,18 +1,22 @@
-import React, { useContext } from "react";
-import { Box, Grid, IconButton, Tab, Tabs, Typography } from "@mui/material";
-import { SettingsContext } from "~store/settings-context";
-import AddIcon from '@mui/icons-material/Add';
-import AutorenewIcon from '@mui/icons-material/Autorenew';
-import {ShoppingCartCheckout, ArrowDownwardOutlined, MoreHorizOutlined} from "@mui/icons-material";
+import type React from "react";
+import { Grid, IconButton, Tab, Tabs, Typography, Paper } from "@mui/material";
 import HeaderLight from "~components/Layout/HeaderLight";
 import Footer from "~components/Layout/Footer";
+import AddIcon from "@mui/icons-material/Add";
+import AutorenewIcon from "@mui/icons-material/Autorenew";
+import { ArrowDownwardOutlined, MoreHorizOutlined, ShoppingCartCheckout } from "@mui/icons-material";
 import TabPanel from "~components/Dashboard/TabPanel";
 import Spend from "~components/Dashboard/Spend";
 import RecentTransactions from "~components/Dashboard/RecentTransactions";
-import {useWeb3TokenBalance} from "~hooks/use-web3";
-import { WalletContext } from "~store/wallet-context";
+import { useWeb3TokenBalance } from "~hooks/use-web3";
 import { config } from "~contents/config";
+import { useContext } from "react";
+import { WalletContext } from "~store/wallet-context";
 import AccountBalanceItem from "~components/Account/AccountBalanceItem";
+
+interface Props {
+  children?: React.ReactNode;
+}
 
 const iconButtonStyle = {
   color: "info",
@@ -20,30 +24,15 @@ const iconButtonStyle = {
   sx: {border: 1, marginBottom: 1}
 }
 
-interface Props {
-  children?: React.ReactNode;
-}
-
-function a11yProps(index: number) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-}
-
-const Dashboard = (props: Props) => {
-  const settingsContext = useContext(SettingsContext);
+const Account = (props: Props) => {
   const walletContext = useContext(WalletContext);
-
-  const [value, setValue] = React.useState(0);
-
   const wallets = walletContext.wallets[0];
 
   const {
-    balance,
-    isError,
-    isLoaded,
-    error,
+    balance: balanceUSDC,
+    isError: isErrorUSDC,
+    isLoaded: isLoadedUSDC,
+    error: errorUSDC,
   } = useWeb3TokenBalance(
     // @ts-ignore
     wallets[0].address,
@@ -52,20 +41,35 @@ const Dashboard = (props: Props) => {
     config.tokens[0].providerUrl,
   );
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
+  const {
+    balance: balanceMATIC,
+    isError: isErrorMATIC,
+    isLoaded: isLoadedMATIC,
+    error: errorMATIC,
+  } = useWeb3TokenBalance(
+    // @ts-ignore
+    wallets[0].address,
+    config.cryptoTokens[0].contractAddress,
+    config.cryptoTokens[0].decimals,
+    config.cryptoTokens[0].providerUrl,
+  );
 
   return (
-    <Grid container item xs={12} overflow="hidden">
-      <HeaderLight title={"Dashboard"} />
+    <Grid container item xs={12}>
+      <HeaderLight title={"Accounts"} />
 
       <Grid container item height={480} marginTop={7.5} display="block" alignItems="flex-start">
-        <Grid item xs={12} textAlign="left">
+
+        <Grid container item xs={12} display="flex" spacing={1}>
           <AccountBalanceItem
-            title="USD"
-            balance={isLoaded ? balance : "Loading..."}
+            title={"USD"}
+            balance={isLoadedUSDC ? balanceUSDC : "Loading..."}
             accountPageName="accountUSDC"
+          />
+          <AccountBalanceItem
+            title={"MATIC"}
+            balance={isLoadedMATIC ? balanceMATIC : "Loading"}
+            accountPageName="accountMATIC"
           />
         </Grid>
 
@@ -107,37 +111,10 @@ const Dashboard = (props: Props) => {
 
           <Grid item xs={2}></Grid>
         </Grid>
-
-        <Grid container item xs={12} marginTop={2}>
-          <Box sx={{ width: '100%' }}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-              <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                <Tab
-                  label="Spend" {...a11yProps(0)}
-                  sx={{textTransform: 'none', fontSize: 14, alignItems: 'self-start', justifySelf: 'flex-start'}}
-                />
-                <Tab
-                  label="Transactions" {...a11yProps(1)}
-                  sx={{textTransform: 'none', fontSize: 14, alignItems: 'self-start', justifySelf: 'flex-start'}}
-                />
-              </Tabs>
-            </Box>
-
-            <TabPanel value={value} index={0}>
-              <Spend />
-            </TabPanel>
-
-            <TabPanel value={value} index={1}>
-              <RecentTransactions />
-            </TabPanel>
-
-          </Box>
-        </Grid>
       </Grid>
 
       <Footer />
     </Grid>
   )
 }
-
-export default Dashboard
+export default Account;
