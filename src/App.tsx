@@ -14,6 +14,9 @@ import ShowPrivateKey from "~components/Settings/ShowPrivateKey";
 import Logout from "~components/Settings/Logout";
 import LockPasswordTtl from "~components/Settings/LockPasswordTtl";
 import ChangeWalletPassword from "~components/Settings/ChangeWalletPassword";
+import Account from "~components/Account/Account";
+import AccountUSDC from "~components/Account/AccountUSDC";
+import AccountMATIC from "~components/Account/AccountMATIC";
 
 
 const App = () => {
@@ -48,7 +51,10 @@ const App = () => {
             settingsContext.shownPage === 'showPrivateKey' && <ShowPrivateKey /> ||
             settingsContext.shownPage === 'logout' && <Logout /> ||
             settingsContext.shownPage === 'lockPasswordTtl' && <LockPasswordTtl /> ||
-            settingsContext.shownPage === 'changeWalletPassword' && <ChangeWalletPassword />
+            settingsContext.shownPage === 'changeWalletPassword' && <ChangeWalletPassword /> ||
+            settingsContext.shownPage === 'account' && <Account /> ||
+            settingsContext.shownPage === 'accountUSDC' && <AccountUSDC /> ||
+            settingsContext.shownPage === 'accountMATIC' && <AccountMATIC />
         }
       </Grid>
     </Container>

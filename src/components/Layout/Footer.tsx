@@ -41,10 +41,10 @@ const FooterBar = () => {
             disableRipple
             disableTouchRipple
             aria-disabled
-            label="Transactions"
+            label="Accounts"
             icon={<ReceiptIcon sx={{color: "#1976d2", "& :hover": { color: "darkblue" } }} />}
             onClick={()=> {
-              settingsContext.shownPageHandler("transactions");
+              settingsContext.shownPageHandler("account");
             }}
           />
           <BottomNavigationAction
