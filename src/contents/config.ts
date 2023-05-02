@@ -57,7 +57,7 @@ const prod = <envType>({
       network: "mainnet",
       symbol: 'USDC',
       scannerUrl: 'https://polygonscan.com',
-      providerUrl: ''
+      providerUrl: 'https://polygon-mainnet.unext.cc'
     },
     {
       id: 1,
@@ -74,7 +74,7 @@ const prod = <envType>({
       network: "mainnet",
       symbol: 'EUROC',
       scannerUrl: 'https://etherscan.io',
-      providerUrl: '',
+      providerUrl: 'https://ethereum-mainnet.unext.cc',
     }
   ],
   cryptoTokens: [
@@ -130,7 +130,7 @@ const dev = <envType>({
       network: "mumbai",
       symbol: 'EUROC',
       scannerUrl: 'https://mumbai.polygonscan.com/',
-      providerUrl: 'http://localhost:8000/infura-polygon-mumbai',
+      providerUrl: 'http://localhost:8000/infura-ethereum-mumbai',
     }
   ],
   cryptoTokens: [
