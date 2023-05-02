@@ -57,7 +57,7 @@ const prod = <envType>({
       network: "mainnet",
       symbol: 'USDC',
       scannerUrl: 'https://polygonscan.com',
-      providerUrl: 'https://polygon-mainnet.infura.io/v3/b401a8aed4fd4473aa9442f1b4c5cf98'
+      providerUrl: ''
     },
     {
       id: 1,
@@ -74,7 +74,7 @@ const prod = <envType>({
       network: "mainnet",
       symbol: 'EUROC',
       scannerUrl: 'https://etherscan.io',
-      providerUrl: 'https://mainnet.infura.io/v3/b401a8aed4fd4473aa9442f1b4c5cf98',
+      providerUrl: '',
     }
   ],
   cryptoTokens: [
@@ -113,7 +113,7 @@ const dev = <envType>({
       network: "mumbai",
       symbol: 'USDC',
       scannerUrl: 'https://mumbai.polygonscan.com',
-      providerUrl: 'http://localhost:8000/infura-mumbai',
+      providerUrl: 'http://localhost:8000/infura-polygon-mumbai',
     },
     {
       id: 1,
@@ -130,7 +130,7 @@ const dev = <envType>({
       network: "mumbai",
       symbol: 'EUROC',
       scannerUrl: 'https://mumbai.polygonscan.com/',
-      providerUrl: 'http://localhost:8000/infura-mumbai',
+      providerUrl: 'http://localhost:8000/infura-polygon-mumbai',
     }
   ],
   cryptoTokens: [
@@ -147,7 +147,7 @@ const dev = <envType>({
       network: "mumbai",
       symbol: "MATIC",
       scannerUrl: "https://mumbai.polygonscan.com",
-      providerUrl: "http://localhost:8000/infura-mumbai",
+      providerUrl: "http://localhost:8000/infura-polygon-mumbai",
     }
   ]
 });

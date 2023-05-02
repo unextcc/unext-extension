@@ -1,32 +1,34 @@
-import React, { useContext, useEffect } from "react";
-import { SettingsContext } from "~store/settings-context";
-import { Container, Grid } from "@mui/material";
-import LockPassword from "~components/LockPassword/LockPassword";
-import Landing from "~components/Landing/Landing";
-import ConfigureWallet from "~components/Landing/ConfigureWallet";
-import { WalletContext } from "~store/wallet-context";
-import Settings from "~components/Settings/Settings";
-import Dashboard from "~components/Dashboard/Dashboard";
-import settings from "~components/Settings/Settings";
-import CreateNewWallet from "~components/Landing/CreateNewWallet";
-import Transactions from "~components/Transaction/Transactions";
-import ShowPrivateKey from "~components/Settings/ShowPrivateKey";
-import Logout from "~components/Settings/Logout";
-import LockPasswordTtl from "~components/Settings/LockPasswordTtl";
-import ChangeWalletPassword from "~components/Settings/ChangeWalletPassword";
-import Account from "~components/Account/Account";
-import AccountUSDC from "~components/Account/AccountUSDC";
-import AccountMATIC from "~components/Account/AccountMATIC";
+import { Container, Grid } from "@mui/material"
+import React, { useContext, useEffect } from "react"
 
+import Account from "~components/Account/Account"
+import AccountMATIC from "~components/Account/AccountMATIC"
+import AccountUSDC from "~components/Account/AccountUSDC"
+import Dashboard from "~components/Dashboard/Dashboard"
+import ConfigureWallet from "~components/Landing/ConfigureWallet"
+import CreateNewWallet from "~components/Landing/CreateNewWallet"
+import Landing from "~components/Landing/Landing"
+import LockPassword from "~components/LockPassword/LockPassword"
+import ChangeWalletPassword from "~components/Settings/ChangeWalletPassword"
+import LockPasswordTtl from "~components/Settings/LockPasswordTtl"
+import Logout from "~components/Settings/Logout"
+import Settings from "~components/Settings/Settings"
+import settings from "~components/Settings/Settings"
+import ShowPrivateKey from "~components/Settings/ShowPrivateKey"
+import Transactions from "~components/Transaction/Transactions"
+import { SettingsContext } from "~store/settings-context"
+import { WalletContext } from "~store/wallet-context"
 
 const App = () => {
-  const settingsContext = useContext(SettingsContext);
-  const walletContext = useContext(WalletContext);
+  const settingsContext = useContext(SettingsContext)
+  const walletContext = useContext(WalletContext)
 
-  let isLockPasswordSet = settingsContext.lockPassword.password !== '';
+  let isLockPasswordSet = settingsContext.lockPassword.password !== ""
 
   const shownPageIgnoreList: string[] = [
-    "configureWallet","createNewWallet","importWallet"
+    "configureWallet",
+    "createNewWallet",
+    "importWallet"
   ]
 
   return (
@@ -37,28 +39,39 @@ const App = () => {
         padding={1}
         minWidth={375}
         maxWidth={720}
-        height={580}
-      >
-        {
-          !walletContext.isWalletConfigured &&
-          !shownPageIgnoreList.includes(settingsContext.shownPage) ? <Landing /> :
-            !isLockPasswordSet ? <LockPassword /> :
-            settingsContext.shownPage === 'configureWallet' && <ConfigureWallet /> ||
-            settingsContext.shownPage === 'createNewWallet' && <CreateNewWallet /> ||
-            settingsContext.shownPage === 'dashboard' && <Dashboard /> ||
-            settingsContext.shownPage === 'transactions' && <Transactions /> ||
-            settingsContext.shownPage === 'settings' && <Settings /> ||
-            settingsContext.shownPage === 'showPrivateKey' && <ShowPrivateKey /> ||
-            settingsContext.shownPage === 'logout' && <Logout /> ||
-            settingsContext.shownPage === 'lockPasswordTtl' && <LockPasswordTtl /> ||
-            settingsContext.shownPage === 'changeWalletPassword' && <ChangeWalletPassword /> ||
-            settingsContext.shownPage === 'account' && <Account /> ||
-            settingsContext.shownPage === 'accountUSDC' && <AccountUSDC /> ||
-            settingsContext.shownPage === 'accountMATIC' && <AccountMATIC />
-        }
+        height={580}>
+        {!walletContext.isWalletConfigured &&
+        !shownPageIgnoreList.includes(settingsContext.shownPage) ? (
+          <Landing />
+        ) : !isLockPasswordSet ? (
+          <LockPassword />
+        ) : (
+          (settingsContext.shownPage === "configureWallet" && (
+            <ConfigureWallet />
+          )) ||
+          (settingsContext.shownPage === "createNewWallet" && (
+            <CreateNewWallet />
+          )) ||
+          (settingsContext.shownPage === "dashboard" && <Dashboard />) ||
+          (settingsContext.shownPage === "transactions" && <Transactions />) ||
+          (settingsContext.shownPage === "settings" && <Settings />) ||
+          (settingsContext.shownPage === "showPrivateKey" && (
+            <ShowPrivateKey />
+          )) ||
+          (settingsContext.shownPage === "logout" && <Logout />) ||
+          (settingsContext.shownPage === "lockPasswordTtl" && (
+            <LockPasswordTtl />
+          )) ||
+          (settingsContext.shownPage === "changeWalletPassword" && (
+            <ChangeWalletPassword />
+          )) ||
+          (settingsContext.shownPage === "account" && <Account />) ||
+          (settingsContext.shownPage === "accountUSDC" && <AccountUSDC />) ||
+          (settingsContext.shownPage === "accountMATIC" && <AccountMATIC />)
+        )}
       </Grid>
     </Container>
-  );
-};
+  )
+}
 
-export default App;
+export default App
