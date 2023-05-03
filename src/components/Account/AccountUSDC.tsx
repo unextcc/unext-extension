@@ -105,11 +105,9 @@ const AccountUSDC = (props: Props) => {
     config.tokens[0].providerUrl
   )
 
-  console.log(error)
-
   return (
     <Grid container item xs={12}>
-      <HeaderLight title={"USDC Account"} />
+      <HeaderLight goBackPage="account" title={"USDC Account"} />
 
       <Grid
         container
