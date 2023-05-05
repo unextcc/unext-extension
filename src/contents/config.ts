@@ -2,14 +2,11 @@ import {Network} from "alchemy-sdk";
 
 type envType = {
   providerUrl: string;
-  alchemyApiKey: string;
-  alchemyNetwork: string;
-  alchemyMaxRetries: number;
   etherScanUrl: string;
   tokens: {
     id: number;
     alchemyApiKey: string;
-    alchemyNetwork: string;
+    alchemyNetwork: Network;
     alchemyMaxRetries: number;
     blockchain: string;
     contractAddress: string;
@@ -44,7 +41,7 @@ const prod = <envType>({
   tokens: [
     {
       id: 0,
-      alchemyApiKey: 'vvihhyWLDnyBDx_UEdaB0f24ItIbeMyn',
+      alchemyApiKey: '',
       alchemyNetwork: Network.MATIC_MAINNET,
       alchemyMaxRetries: 1,
       blockchain: 'polygon',
@@ -57,11 +54,11 @@ const prod = <envType>({
       network: "mainnet",
       symbol: 'USDC',
       scannerUrl: 'https://polygonscan.com',
-      providerUrl: 'https://polygon-mainnet.unext.cc'
+      providerUrl: 'https://infura-polygon-mainnet.unext.cc'
     },
     {
       id: 1,
-      alchemyApiKey: '4RXAc01ERD8TgwdOzJknjQSmU5fxCAKP',
+      alchemyApiKey: '',
       alchemyNetwork: Network.ETH_MAINNET,
       alchemyMaxRetries: 1,
       blockchain: 'ethereum',
@@ -74,13 +71,13 @@ const prod = <envType>({
       network: "mainnet",
       symbol: 'EUROC',
       scannerUrl: 'https://etherscan.io',
-      providerUrl: 'https://ethereum-mainnet.unext.cc',
+      providerUrl: 'https://infura-ethereum-mainnet.unext.cc',
     }
   ],
   cryptoTokens: [
     {
       id: 0,
-      alchemyApiKey: 'vvihhyWLDnyBDx_UEdaB0f24ItIbeMyn',
+      alchemyApiKey: '',
       alchemyNetwork: Network.MATIC_MAINNET,
       alchemyMaxRetries: 1,
       blockchain: "polygon",
@@ -117,7 +114,7 @@ const dev = <envType>({
     },
     {
       id: 1,
-      alchemyApiKey: 'zFXR_i23EsYS1DJ13gb3IOXrf7iR82kR',
+      alchemyApiKey: '',
       alchemyNetwork: Network.ETH_GOERLI,
       alchemyMaxRetries: 1,
       blockchain: 'polygon',
@@ -129,14 +126,14 @@ const dev = <envType>({
       name: 'Euro Coin',
       network: "mumbai",
       symbol: 'EUROC',
-      scannerUrl: 'https://mumbai.polygonscan.com/',
+      scannerUrl: 'https://goerli.etherscan.com',
       providerUrl: 'http://localhost:8000/infura-ethereum-mumbai',
     }
   ],
   cryptoTokens: [
     {
       id: 0,
-      alchemyApiKey: 'vvihhyWLDnyBDx_UEdaB0f24ItIbeMyn',
+      alchemyApiKey: 'l1pSvMC4vAu8hap2qu5cN6nsuTnryRkT',
       alchemyNetwork: Network.MATIC_MUMBAI,
       alchemyMaxRetries: 1,
       blockchain: "polygon",

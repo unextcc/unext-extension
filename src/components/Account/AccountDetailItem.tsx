@@ -1,17 +1,16 @@
-import type React from "react";
-import { Button, Grid, Link, Paper, Typography } from "@mui/material";
-import { CopyAll } from "@mui/icons-material";
-import { useState } from "react";
+import { Grid, Link, Paper, Typography } from "@mui/material"
+import type React from "react"
+import { useState } from "react"
 
 interface Props {
-  accountAddress: string;
-  balance: string;
-  children?: React.ReactNode;
-  title: string;
+  accountAddress: string
+  balance: string
+  children?: React.ReactNode
+  title: string
 }
 
 const AccountDetailItem = (props: Props) => {
-  const [isCopied, setIsCopied] = useState<boolean>(false);
+  const [isCopied, setIsCopied] = useState<boolean>(false)
 
   return (
     <Grid item>
@@ -21,9 +20,8 @@ const AccountDetailItem = (props: Props) => {
           p: 1,
           display: "block",
           height: "120px"
-        }}
-      >
-        <Typography component="p" color="primary" sx={{fontSize: 12}}>
+        }}>
+        <Typography component="p" color="primary" sx={{ fontSize: 12 }}>
           {props.title}
         </Typography>
 
@@ -31,22 +29,22 @@ const AccountDetailItem = (props: Props) => {
           {props.balance}
         </Typography>
 
-        <Typography color="primary" sx={{fontSize: 12, marginTop: 1}}>
-          Account Address
-          (<Link
-            sx={{cursor: "pointer"}}
-            onClick={
-              () => {
-                navigator.clipboard.writeText(props.accountAddress);
-                setIsCopied(true);
-                setTimeout(() => {setIsCopied(false)}, 1000);
-              }
-            }
-          >
-          {isCopied ? "Address Copied!" : "Copy Address"}
-          </Link>):
+        <Typography color="primary" sx={{ fontSize: 12, marginTop: 1 }}>
+          Account Address (
+          <Link
+            sx={{ cursor: "pointer" }}
+            onClick={() => {
+              navigator.clipboard.writeText(props.accountAddress)
+              setIsCopied(true)
+              setTimeout(() => {
+                setIsCopied(false)
+              }, 1000)
+            }}>
+            {isCopied ? "Address Copied!" : "Copy Address"}
+          </Link>
+          ):
         </Typography>
-        <Typography overflow="auto" sx={{fontSize: 14}}>
+        <Typography overflow="auto" sx={{ fontSize: 14 }}>
           {props.accountAddress}
         </Typography>
       </Paper>
@@ -54,4 +52,4 @@ const AccountDetailItem = (props: Props) => {
   )
 }
 
-export default AccountDetailItem;
+export default AccountDetailItem

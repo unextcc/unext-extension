@@ -13,12 +13,13 @@ import TableContainer from "@mui/material/TableContainer"
 import TableHead from "@mui/material/TableHead"
 import TableRow from "@mui/material/TableRow"
 import type React from "react"
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 
 import AccountDetailItem from "~components/Account/AccountDetailItem"
 import Footer from "~components/Layout/Footer"
 import HeaderLight from "~components/Layout/HeaderLight"
 import { config } from "~contents/config"
+import { useAlchemyGetAssetTransfers } from "~hooks/use-alchemy"
 import { useWeb3TokenBalance } from "~hooks/use-web3"
 import { WalletContext } from "~store/wallet-context"
 
@@ -105,6 +106,15 @@ const AccountUSDC = (props: Props) => {
     config.tokens[0].providerUrl
   )
 
+  const {
+    error: errorTransactions,
+    isLoaded: isLoadedTransactions,
+    isLoading: isLoadingTransactions,
+    transactions
+  } = useAlchemyGetAssetTransfers(wallet.address, [
+    config.tokens[0].contractAddress
+  ])
+
   return (
     <Grid container item xs={12}>
       <HeaderLight goBackPage="account" title={"USDC Account"} />
@@ -116,9 +126,10 @@ const AccountUSDC = (props: Props) => {
         marginTop={7.5}
         display="block"
         alignItems="flex-start">
-        {error && (
+        {(error || errorTransactions) && (
           <Alert variant="outlined" severity="error">
             {error}
+            {errorTransactions}
           </Alert>
         )}
 
@@ -183,10 +194,14 @@ const AccountUSDC = (props: Props) => {
           <Grid item xs={2}></Grid>
         </Grid>
 
-        <Grid item maxHeight={280} xs={12} sx={{ overflow: "hidden" }}>
+        <Typography color="primary" sx={{ fontSize: 12, marginTop: 1 }}>
+          Recent Transactions
+        </Typography>
+
+        <Grid item maxHeight={268} xs={12} sx={{ overflow: "hidden" }}>
           <TableContainer
             sx={{
-              maxHeight: 280,
+              maxHeight: 268,
               overflowX: "hidden",
               "&::-webkit-scrollbar": { width: 2 },
               "&::-webkit-scrollbar-track": { backgroundColor: "lightgray" },
@@ -198,37 +213,28 @@ const AccountUSDC = (props: Props) => {
             <Table stickyHeader aria-label="sticky table" size="small">
               <TableHead>
                 <TableRow>
-                  {columns.map((column) => (
-                    <TableCell
-                      key={column.id}
-                      align={column.align}
-                      style={{ minWidth: column.minWidth }}>
-                      {column.label}
-                    </TableCell>
-                  ))}
+                  <TableCell key="date" align="left" style={{ minWidth: 170 }}>
+                    Date
+                  </TableCell>
+                  <TableCell
+                    key="amount"
+                    align="right"
+                    style={{ minWidth: 170 }}>
+                    Amount
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => {
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row.code}>
-                      {columns.map((column) => {
-                        const value = row[column.id]
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            {column.format && typeof value === "number"
-                              ? column.format(value)
-                              : value}
-                          </TableCell>
-                        )
-                      })}
-                    </TableRow>
-                  )
-                })}
+                {transactions.map((row, index) => (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                    <TableCell key={"date" + index} align="left">
+                      {row.blockDate}
+                    </TableCell>
+                    <TableCell key={"amount" + index} align="right">
+                      {row.value.toFixed(2)}
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
