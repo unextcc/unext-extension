@@ -1,10 +1,10 @@
 // @ts-ignore
 import Abi from "human-standard-token-abi"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import Web3 from "web3"
 
 import { config } from "~contents/config"
-import { encryptAES } from "~utils/encryption"
+import { decryptAES, encryptAES } from "~utils/encryption"
 
 type accountType = {
   address: string
@@ -95,5 +95,41 @@ export const useWeb3TokenBalance = (
     isError: status === "error",
     isLoading: status === "loading",
     isLoaded: status === "loaded"
+  }
+}
+
+export const useWeb3GetAddressFromPrivateKey = () => {
+  // public account address
+  const [address, setAddress] = useState<string>("")
+  const [error, setError] = useState<string>("")
+  const [status, setStatus] = useState<string>("idle")
+
+  const getAddressFromPrivateKey = useCallback(
+    async (privateKey: string, providerUrl: string = config.providerUrl) => {
+      try {
+        setStatus("working")
+        const web3 = await new Web3(
+          new Web3.providers.HttpProvider(providerUrl)
+        )
+        const accountInfo = await web3.eth.accounts.privateKeyToAccount(
+          privateKey
+        )
+
+        setAddress(accountInfo.address)
+        setStatus("success")
+      } catch (error: any) {
+        setError(error)
+        setStatus("error")
+        console.error(error)
+      }
+    },
+    []
+  )
+
+  return {
+    address,
+    error,
+    status,
+    getAddressFromPrivateKey
   }
 }

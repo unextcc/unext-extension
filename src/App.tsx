@@ -1,5 +1,5 @@
 import { Container, Grid } from "@mui/material"
-import React, { useContext, useEffect } from "react"
+import React, { useContext } from "react"
 
 import Account from "~components/Account/Account"
 import AccountMATIC from "~components/Account/AccountMATIC"
@@ -7,6 +7,7 @@ import AccountUSDC from "~components/Account/AccountUSDC"
 import Dashboard from "~components/Dashboard/Dashboard"
 import ConfigureWallet from "~components/Landing/ConfigureWallet"
 import CreateNewWallet from "~components/Landing/CreateNewWallet"
+import ImportWallet from "~components/Landing/ImportWallet"
 import Landing from "~components/Landing/Landing"
 import LockPassword from "~components/LockPassword/LockPassword"
 import ChangeWalletPassword from "~components/Settings/ChangeWalletPassword"
@@ -58,6 +59,7 @@ const App = () => {
           (settingsContext.shownPage === "showPrivateKey" && (
             <ShowPrivateKey />
           )) ||
+          (settingsContext.shownPage === "importWallet" && <ImportWallet />) ||
           (settingsContext.shownPage === "logout" && <Logout />) ||
           (settingsContext.shownPage === "lockPasswordTtl" && (
             <LockPasswordTtl />

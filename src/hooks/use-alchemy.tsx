@@ -28,6 +28,7 @@ export const useAlchemyGetAssetTransfers = (
 
   const [error, setError] = useState<string>("")
   const [transactions, setTransactions] = useState<any[]>([])
+  const [transactionFound, setTransactionFound] = useState<boolean>(true)
   const [status, setStatus] = useState("idle")
 
   const alchemyConfig: AlchemyConfig = {
@@ -75,6 +76,10 @@ export const useAlchemyGetAssetTransfers = (
       // merge received and sent transactions to single list
       const data = [...datadReceived.transfers, ...dataSend.transfers]
 
+      if (data.length <= 0) {
+        setTransactionFound(false)
+      }
+
       let transfers = []
 
       for (let i = 0; i < data.length; i++) {
@@ -108,13 +113,14 @@ export const useAlchemyGetAssetTransfers = (
   }
 
   useEffect(() => {
-    if (transactions.length <= 0) {
+    if (transactions.length <= 0 && transactionFound) {
       getAssetTransfer()
     }
   }, [transactions])
 
   return {
     error,
+    transactionFound,
     isLoading: status === "loading",
     isLoaded: status === "loaded",
     transactions

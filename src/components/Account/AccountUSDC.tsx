@@ -110,6 +110,7 @@ const AccountUSDC = (props: Props) => {
     error: errorTransactions,
     isLoaded: isLoadedTransactions,
     isLoading: isLoadingTransactions,
+    transactionFound,
     transactions
   } = useAlchemyGetAssetTransfers(wallet.address, [
     config.tokens[0].contractAddress
@@ -225,16 +226,18 @@ const AccountUSDC = (props: Props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {transactions.map((row, index) => (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                    <TableCell key={"date" + index} align="left">
-                      {row.blockDate}
-                    </TableCell>
-                    <TableCell key={"amount" + index} align="right">
-                      {row.value.toFixed(2)}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {transactionFound
+                  ? transactions.map((row, index) => (
+                      <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                        <TableCell key={"date" + index} align="left">
+                          {row.blockDate}
+                        </TableCell>
+                        <TableCell key={"amount" + index} align="right">
+                          {row.value.toFixed(2)}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  : "Transaction not found!"}
               </TableBody>
             </Table>
           </TableContainer>
