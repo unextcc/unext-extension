@@ -97,8 +97,8 @@ const CreateNewWallet = () => {
     <Grid container>
       <Grid item container height={465}>
         <Grid
-          item
           container
+          item
           display={"flex"}
           alignItems={"center"}
           direction={"row"}>
@@ -110,7 +110,7 @@ const CreateNewWallet = () => {
           </Typography>
         </Grid>
 
-        <Grid item container xs={12}>
+        <Grid container item xs={12}>
           <Grid item xs={12}>
             <TextField
               id={"password-input"}

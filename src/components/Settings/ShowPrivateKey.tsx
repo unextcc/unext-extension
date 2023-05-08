@@ -29,7 +29,7 @@ interface Props {
 
 const ShowPrivateKey = (props: Props) => {
   const [step, setStep] = useState("passwordStep")
-  const [privateKey, setPrivateKey] = useState<string>("PrivateKey")
+  const [privateKey, setPrivateKey] = useState<string>("")
 
   const settingsContext = useContext(SettingsContext)
   const walletContext = useContext(WalletContext)
@@ -60,6 +60,9 @@ const ShowPrivateKey = (props: Props) => {
       data.passwordInput
     )
 
+    console.log("encryptedPrivateKey: " + walletContext.encryptedPrivateKey)
+    console.log("isPasswordCorrect: " + isPasswordCorrect)
+
     if (isPasswordCorrect) {
       setPrivateKey(
         decryptAES(walletContext.encryptedPrivateKey, data.passwordInput)
@@ -88,7 +91,7 @@ const ShowPrivateKey = (props: Props) => {
       item
       xs={12}
       display={"flex"}
-      direction={"row"}
+      flexDirection={"row"}
       alignItems={"stretch"}
       marginTop={7}>
       <Grid item xs={12} padding={1}>
@@ -171,6 +174,7 @@ const ShowPrivateKey = (props: Props) => {
 
   const showPrivateKeyStep = (
     <Grid
+      container
       item
       xs={12}
       display={"inline-block"}
