@@ -60,9 +60,6 @@ const ShowPrivateKey = (props: Props) => {
       data.passwordInput
     )
 
-    console.log("encryptedPrivateKey: " + walletContext.encryptedPrivateKey)
-    console.log("isPasswordCorrect: " + isPasswordCorrect)
-
     if (isPasswordCorrect) {
       setPrivateKey(
         decryptAES(walletContext.encryptedPrivateKey, data.passwordInput)

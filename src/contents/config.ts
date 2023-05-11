@@ -8,6 +8,7 @@ type envType = {
     alchemyApiKey: string;
     alchemyNetwork: Network;
     alchemyMaxRetries: number;
+    alchemyUrl: string;
     blockchain: string;
     contractAddress: string;
     decimals: number;
@@ -25,6 +26,7 @@ type envType = {
     alchemyApiKey: string;
     alchemyNetwork: string;
     alchemyMaxRetries: number;
+    alchemyUrl: string;
     blockchain: string;
     contractAddress: string;
     decimals: number;
@@ -43,7 +45,7 @@ const prod = <envType>({
       id: 0,
       alchemyApiKey: '',
       alchemyNetwork: Network.MATIC_MAINNET,
-      alchemyMaxRetries: 1,
+      alchemyMaxRetries: 3,
       blockchain: 'polygon',
       contractAddress: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
       decimals: 6,
@@ -99,7 +101,8 @@ const dev = <envType>({
       id: 0,
       alchemyApiKey: 'l1pSvMC4vAu8hap2qu5cN6nsuTnryRkT',
       alchemyNetwork: Network.MATIC_MUMBAI,
-      alchemyMaxRetries: 1,
+      alchemyMaxRetries: 3,
+      alchemyUrl: "http://localhost:8000/alchemy-polygon-mumbai",
       blockchain: 'polygon',
       contractAddress: "0x0FA8781a83E46826621b3BC094Ea2A0212e71B23",
       decimals: 6,
@@ -116,7 +119,7 @@ const dev = <envType>({
       id: 1,
       alchemyApiKey: '',
       alchemyNetwork: Network.ETH_GOERLI,
-      alchemyMaxRetries: 1,
+      alchemyMaxRetries: 3,
       blockchain: 'polygon',
       contractAddress: "0xA683d909e996052955500DDc45CA13E25c76e286",
       decimals: 6,
@@ -135,7 +138,8 @@ const dev = <envType>({
       id: 0,
       alchemyApiKey: 'l1pSvMC4vAu8hap2qu5cN6nsuTnryRkT',
       alchemyNetwork: Network.MATIC_MUMBAI,
-      alchemyMaxRetries: 1,
+      alchemyMaxRetries: 3,
+      alchemyUrl: "http://localhost:8000/infura-polygon-mumbai",
       blockchain: "polygon",
       contractAddress: "0x0000000000000000000000000000000000001010",
       decimals: 18,

@@ -5,18 +5,45 @@ import {
   SortingOrder
 } from "alchemy-sdk"
 import type types from "alchemy-sdk"
-import memoize from "lodash"
+import type { url } from "inspector"
 import { sortBy } from "lodash"
 import { useContext, useEffect, useState } from "react"
 
 import { config } from "~contents/config"
 import { WalletContext } from "~store/wallet-context"
 
+type Transactions = {
+  asset: string
+  blockDate: string
+  blockNum: string
+  blockTime: string
+  blockTimestamp: string
+  category: string
+  erc721TokenId: string
+  erc1155Metadata: string
+  fiatSymbol: string
+  from: string
+  hash: string
+  metadata: {
+    blockTimestamp: string
+  }
+  rawContract: {
+    address: string
+    decimal: string
+    value: string
+  }
+  to: string
+  tokenId: number
+  transactionType: string
+  uniqueId: string
+  value: number
+}
+
 export const useAlchemyGetAssetTransfers = (
   address: string,
   contractAddresses: string[],
   fromBlock: string = "0x0",
-  category = [AssetTransfersCategory.ERC20],
+  category = [AssetTransfersCategory.EXTERNAL, AssetTransfersCategory.ERC20],
   withMetadata: boolean = true,
   order: SortingOrder = SortingOrder.DESCENDING,
   excludeZeroValue: boolean = true,
@@ -27,7 +54,7 @@ export const useAlchemyGetAssetTransfers = (
   const wallet = walletContext.wallets[0][0]
 
   const [error, setError] = useState<string>("")
-  const [transactions, setTransactions] = useState<any[]>([])
+  const [transactions, setTransactions] = useState<Transactions[]>([])
   const [transactionFound, setTransactionFound] = useState<boolean>(true)
   const [status, setStatus] = useState("idle")
 
@@ -41,7 +68,8 @@ export const useAlchemyGetAssetTransfers = (
     },
     getWebSocketProvider: function (): Promise<types.AlchemyWebSocketProvider> {
       throw new Error("Function not implemented.")
-    }
+    },
+    url: config.tokens[0].alchemyUrl
   }
 
   const alchemy = new Alchemy(alchemyConfig)
@@ -106,8 +134,12 @@ export const useAlchemyGetAssetTransfers = (
       setTransactions(sortBy(transfers, ["blockTimestamp"]).reverse())
       setStatus("loaded")
     } catch (error: any) {
-      setError(error.message)
-      console.error(error)
+      if (error.code === 429) {
+        console.log(error.message)
+      } else {
+        setError(error.message)
+        console.error(error)
+      }
       return
     }
   }

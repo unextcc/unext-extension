@@ -49,10 +49,10 @@ export const verifyPassword = (
   if (decrypted) {
     try {
       const str = decrypted.toString(CryptoJS.enc.Utf8)
-      console.log(str)
       return str.length > 0
     } catch (error: any) {
-      console.error(error)
+      console.log("The wallet password is wrong! (Probably)")
+      console.log(error)
       return false
     }
   }
