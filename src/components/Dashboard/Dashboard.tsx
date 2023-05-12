@@ -14,15 +14,17 @@ import {
   Tabs,
   Typography
 } from "@mui/material"
+import { AssetTransfersCategory } from "alchemy-sdk"
 import React, { useContext } from "react"
 
 import AccountBalanceItem from "~components/Account/AccountBalanceItem"
-import RecentTransactions from "~components/Dashboard/RecentTransactions"
 import Spend from "~components/Dashboard/Spend"
 import TabPanel from "~components/Dashboard/TabPanel"
 import Footer from "~components/Layout/Footer"
 import HeaderLight from "~components/Layout/HeaderLight"
+import RecentTransactions from "~components/Transaction/RecentTransactions"
 import { config } from "~contents/config"
+import { useAlchemyGetAssetTransfers } from "~hooks/use-alchemy"
 import { useWeb3TokenBalance } from "~hooks/use-web3"
 import { SettingsContext } from "~store/settings-context"
 import { WalletContext } from "~store/wallet-context"
@@ -51,13 +53,27 @@ const Dashboard = (props: Props) => {
   const [value, setValue] = React.useState(0)
 
   const wallets = walletContext.wallets[0]
+  // @ts-ignore
+  const wallet = walletContext.wallets[0][0]
 
-  const { balance, isError, isLoaded, error } = useWeb3TokenBalance(
+  const { balance, isLoaded, error } = useWeb3TokenBalance(
     // @ts-ignore
     wallets[0].address,
     config.tokens[0].contractAddress,
     config.tokens[0].decimals,
     config.tokens[0].providerUrl
+  )
+
+  const {
+    error: errorTransactions,
+    isLoading: isLoadingTransactions,
+    transactionFound,
+    transactions
+  } = useAlchemyGetAssetTransfers(
+    wallet.address,
+    [config.tokens[0].contractAddress],
+    "0x0",
+    [AssetTransfersCategory.ERC20]
   )
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -83,7 +99,7 @@ const Dashboard = (props: Props) => {
 
         <Grid item xs={12} textAlign="left">
           <AccountBalanceItem
-            title="USD"
+            title="USDC / USD"
             balance={isLoaded ? balance : "Loading..."}
             accountPageName="accountUSDC"
           />
@@ -179,7 +195,12 @@ const Dashboard = (props: Props) => {
             </TabPanel>
 
             <TabPanel value={value} index={1}>
-              <RecentTransactions />
+              <RecentTransactions
+                title={""}
+                isLoadingTransactions={isLoadingTransactions}
+                transactionFound={transactionFound}
+                transactions={transactions}
+              />
             </TabPanel>
           </Box>
         </Grid>

@@ -12,7 +12,7 @@ import { useContext, useEffect, useState } from "react"
 import { config } from "~contents/config"
 import { WalletContext } from "~store/wallet-context"
 
-type Transactions = {
+export type Transactions = {
   asset: string
   blockDate: string
   blockNum: string
@@ -37,7 +37,7 @@ type Transactions = {
   transactionType: string
   uniqueId: string
   value: number
-}
+}[]
 
 export const useAlchemyGetAssetTransfers = (
   address: string,
@@ -54,7 +54,7 @@ export const useAlchemyGetAssetTransfers = (
   const wallet = walletContext.wallets[0][0]
 
   const [error, setError] = useState<string>("")
-  const [transactions, setTransactions] = useState<Transactions[]>([])
+  const [transactions, setTransactions] = useState<Transactions>([])
   const [transactionFound, setTransactionFound] = useState<boolean>(true)
   const [status, setStatus] = useState("idle")
 
@@ -123,7 +123,8 @@ export const useAlchemyGetAssetTransfers = (
           blockTimestamp: data[i].metadata.blockTimestamp,
           fiatSymbol: data[i].asset === "USDC" ? "$" : "€",
           transactionType:
-            wallet.address.toLowerCase() === data[i].to ? "Receive" : "Send"
+            // 0=Receive, 1=Send
+            wallet.address.toLowerCase() === data[i].to ? "0" : "1"
         }
 
         // @ts-ignore

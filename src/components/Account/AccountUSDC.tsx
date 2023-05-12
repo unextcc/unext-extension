@@ -6,12 +6,6 @@ import {
 import AddIcon from "@mui/icons-material/Add"
 import AutorenewIcon from "@mui/icons-material/Autorenew"
 import { Alert, Grid, IconButton, Typography } from "@mui/material"
-import Table from "@mui/material/Table"
-import TableBody from "@mui/material/TableBody"
-import TableCell from "@mui/material/TableCell"
-import TableContainer from "@mui/material/TableContainer"
-import TableHead from "@mui/material/TableHead"
-import TableRow from "@mui/material/TableRow"
 import { AssetTransfersCategory } from "alchemy-sdk"
 import type React from "react"
 import { useContext } from "react"
@@ -19,6 +13,7 @@ import { useContext } from "react"
 import AccountDetailItem from "~components/Account/AccountDetailItem"
 import Footer from "~components/Layout/Footer"
 import HeaderLight from "~components/Layout/HeaderLight"
+import RecentTransactions from "~components/Transaction/RecentTransactions"
 import { config } from "~contents/config"
 import { useAlchemyGetAssetTransfers } from "~hooks/use-alchemy"
 import { useWeb3TokenBalance } from "~hooks/use-web3"
@@ -76,7 +71,7 @@ const AccountUSDC = (props: Props) => {
         <AccountDetailItem
           accountAddress={wallet.address}
           balance={isLoaded ? balance : "Loading..."}
-          title={"USD"}
+          title={"USDC / USD"}
         />
 
         <Grid
@@ -132,60 +127,12 @@ const AccountUSDC = (props: Props) => {
           </Grid>
         </Grid>
 
-        <Typography color="primary" sx={{ fontSize: 12, marginTop: 1 }}>
-          Recent Transactions
-        </Typography>
-
-        <Grid item maxHeight={250} xs={12} sx={{ overflow: "hidden" }}>
-          {isLoadingTransactions ? (
-            "Loading..."
-          ) : (
-            <TableContainer
-              sx={{
-                maxHeight: 250,
-                overflowX: "hidden",
-                "&::-webkit-scrollbar": { width: 2 },
-                "&::-webkit-scrollbar-track": { backgroundColor: "lightgray" },
-                "&::-webkit-scrollbar-thumb": {
-                  backgroundColor: "gray",
-                  borderRadius: 0
-                }
-              }}>
-              <Table stickyHeader aria-label="sticky table" size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell
-                      key="date"
-                      align="left"
-                      style={{ minWidth: 170 }}>
-                      Date
-                    </TableCell>
-                    <TableCell
-                      key="amount"
-                      align="right"
-                      style={{ minWidth: 170 }}>
-                      Amount
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {transactionFound
-                    ? transactions.map((row, index) => (
-                        <TableRow hover key={index}>
-                          <TableCell key={"date" + index} align="left">
-                            {row.blockDate}
-                          </TableCell>
-                          <TableCell key={"amount" + index} align="right">
-                            {row.value.toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    : "Transaction not found!"}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          )}
-        </Grid>
+        <RecentTransactions
+          title={"Recent Transactions"}
+          isLoadingTransactions={isLoadingTransactions}
+          transactionFound={transactionFound}
+          transactions={transactions}
+        />
       </Grid>
 
       <Footer />

@@ -5,17 +5,17 @@ import {
 } from "@mui/icons-material"
 import AddIcon from "@mui/icons-material/Add"
 import AutorenewIcon from "@mui/icons-material/Autorenew"
-import { Grid, IconButton, Paper, Tab, Tabs, Typography } from "@mui/material"
+import { Alert, Grid, IconButton, Typography } from "@mui/material"
+import { AssetTransfersCategory } from "alchemy-sdk"
 import type React from "react"
 import { useContext } from "react"
 
 import AccountBalanceItem from "~components/Account/AccountBalanceItem"
-import RecentTransactions from "~components/Dashboard/RecentTransactions"
-import Spend from "~components/Dashboard/Spend"
-import TabPanel from "~components/Dashboard/TabPanel"
 import Footer from "~components/Layout/Footer"
 import HeaderLight from "~components/Layout/HeaderLight"
+import RecentTransactions from "~components/Transaction/RecentTransactions"
 import { config } from "~contents/config"
+import { useAlchemyGetAssetTransfers } from "~hooks/use-alchemy"
 import { useWeb3TokenBalance } from "~hooks/use-web3"
 import { WalletContext } from "~store/wallet-context"
 
@@ -31,7 +31,8 @@ const iconButtonStyle = {
 
 const Account = (props: Props) => {
   const walletContext = useContext(WalletContext)
-  const wallets = walletContext.wallets[0]
+  // @ts-ignore
+  const wallet = walletContext.wallets[0][0]
 
   const {
     balance: balanceUSDC,
@@ -40,7 +41,7 @@ const Account = (props: Props) => {
     error: errorUSDC
   } = useWeb3TokenBalance(
     // @ts-ignore
-    wallets[0].address,
+    wallet.address,
     config.tokens[0].contractAddress,
     config.tokens[0].decimals,
     config.tokens[0].providerUrl
@@ -53,10 +54,22 @@ const Account = (props: Props) => {
     error: errorMATIC
   } = useWeb3TokenBalance(
     // @ts-ignore
-    wallets[0].address,
+    wallet.address,
     config.cryptoTokens[0].contractAddress,
     config.cryptoTokens[0].decimals,
     config.cryptoTokens[0].providerUrl
+  )
+
+  const {
+    error: errorTransactions,
+    isLoading: isLoadingTransactions,
+    transactionFound,
+    transactions
+  } = useAlchemyGetAssetTransfers(
+    wallet.address,
+    [config.tokens[0].contractAddress],
+    "0x0",
+    [AssetTransfersCategory.ERC20, AssetTransfersCategory.EXTERNAL]
   )
 
   return (
@@ -70,9 +83,15 @@ const Account = (props: Props) => {
         marginTop={7.5}
         display="block"
         alignItems="flex-start">
+        {(errorMATIC || errorTransactions) && (
+          <Alert variant="outlined" severity="error">
+            {errorMATIC}
+            {errorTransactions}
+          </Alert>
+        )}
         <Grid container item xs={12} display="flex" spacing={1}>
           <AccountBalanceItem
-            title={"USD"}
+            title={"USDC / USD"}
             balance={isLoadedUSDC ? balanceUSDC : "Loading..."}
             accountPageName="accountUSDC"
           />
@@ -134,9 +153,14 @@ const Account = (props: Props) => {
               More
             </Typography>
           </Grid>
-
-          <Grid item xs={2}></Grid>
         </Grid>
+
+        <RecentTransactions
+          title={"Recent Transactions"}
+          isLoadingTransactions={isLoadingTransactions}
+          transactionFound={transactionFound}
+          transactions={transactions}
+        />
       </Grid>
 
       <Footer />
