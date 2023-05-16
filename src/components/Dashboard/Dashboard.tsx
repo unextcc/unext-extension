@@ -91,9 +91,10 @@ const Dashboard = (props: Props) => {
         marginTop={7.5}
         display="block"
         alignItems="flex-start">
-        {error && (
+        {(error || errorTransactions) && (
           <Alert variant="outlined" severity="error">
             {error}
+            {errorTransactions}
           </Alert>
         )}
 
@@ -197,6 +198,7 @@ const Dashboard = (props: Props) => {
             <TabPanel value={value} index={1}>
               <RecentTransactions
                 title={""}
+                goBackPageName="dashboard"
                 isLoadingTransactions={isLoadingTransactions}
                 transactionFound={transactionFound}
                 transactions={transactions}

@@ -72,6 +72,7 @@ const AccountMATIC = (props: Props) => {
           balance={isLoaded ? balance : "Loading..."}
           title={"MATIC"}
         />
+
         <Grid
           container
           item
@@ -126,6 +127,7 @@ const AccountMATIC = (props: Props) => {
         </Grid>
 
         <RecentTransactions
+          goBackPageName="accountMATIC"
           title={"Recent Transactions"}
           isLoadingTransactions={isLoadingTransactions}
           transactionFound={transactionFound}

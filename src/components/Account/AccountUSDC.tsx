@@ -129,6 +129,7 @@ const AccountUSDC = (props: Props) => {
 
         <RecentTransactions
           title={"Recent Transactions"}
+          goBackPageName="accountUSDC"
           isLoadingTransactions={isLoadingTransactions}
           transactionFound={transactionFound}
           transactions={transactions}

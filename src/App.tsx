@@ -16,6 +16,7 @@ import Logout from "~components/Settings/Logout"
 import Settings from "~components/Settings/Settings"
 import settings from "~components/Settings/Settings"
 import ShowPrivateKey from "~components/Settings/ShowPrivateKey"
+import TransactionDetail from "~components/Transaction/TransactionDetail"
 import Transactions from "~components/Transaction/Transactions"
 import { SettingsContext } from "~store/settings-context"
 import { WalletContext } from "~store/wallet-context"
@@ -69,7 +70,10 @@ const App = () => {
           )) ||
           (settingsContext.shownPage === "account" && <Account />) ||
           (settingsContext.shownPage === "accountUSDC" && <AccountUSDC />) ||
-          (settingsContext.shownPage === "accountMATIC" && <AccountMATIC />)
+          (settingsContext.shownPage === "accountMATIC" && <AccountMATIC />) ||
+          (settingsContext.shownPage === "transactionDetail" && (
+            <TransactionDetail />
+          ))
         )}
       </Grid>
     </Container>
