@@ -2,15 +2,13 @@ import {Network} from "alchemy-sdk";
 
 type envType = {
   providerUrl: string;
-  alchemyApiKey: string;
-  alchemyNetwork: string;
-  alchemyMaxRetries: number;
   etherScanUrl: string;
   tokens: {
     id: number;
     alchemyApiKey: string;
-    alchemyNetwork: string;
+    alchemyNetwork: Network;
     alchemyMaxRetries: number;
+    alchemyUrl: string;
     blockchain: string;
     contractAddress: string;
     decimals: number;
@@ -28,6 +26,7 @@ type envType = {
     alchemyApiKey: string;
     alchemyNetwork: string;
     alchemyMaxRetries: number;
+    alchemyUrl: string;
     blockchain: string;
     contractAddress: string;
     decimals: number;
@@ -44,9 +43,9 @@ const prod = <envType>({
   tokens: [
     {
       id: 0,
-      alchemyApiKey: 'vvihhyWLDnyBDx_UEdaB0f24ItIbeMyn',
+      alchemyApiKey: '',
       alchemyNetwork: Network.MATIC_MAINNET,
-      alchemyMaxRetries: 1,
+      alchemyMaxRetries: 3,
       blockchain: 'polygon',
       contractAddress: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
       decimals: 6,
@@ -57,11 +56,11 @@ const prod = <envType>({
       network: "mainnet",
       symbol: 'USDC',
       scannerUrl: 'https://polygonscan.com',
-      providerUrl: 'https://polygon-mainnet.infura.io/v3/b401a8aed4fd4473aa9442f1b4c5cf98'
+      providerUrl: 'https://infura-polygon-mainnet.unext.cc'
     },
     {
       id: 1,
-      alchemyApiKey: '4RXAc01ERD8TgwdOzJknjQSmU5fxCAKP',
+      alchemyApiKey: '',
       alchemyNetwork: Network.ETH_MAINNET,
       alchemyMaxRetries: 1,
       blockchain: 'ethereum',
@@ -74,13 +73,13 @@ const prod = <envType>({
       network: "mainnet",
       symbol: 'EUROC',
       scannerUrl: 'https://etherscan.io',
-      providerUrl: 'https://mainnet.infura.io/v3/b401a8aed4fd4473aa9442f1b4c5cf98',
+      providerUrl: 'https://infura-ethereum-mainnet.unext.cc',
     }
   ],
   cryptoTokens: [
     {
       id: 0,
-      alchemyApiKey: 'vvihhyWLDnyBDx_UEdaB0f24ItIbeMyn',
+      alchemyApiKey: '',
       alchemyNetwork: Network.MATIC_MAINNET,
       alchemyMaxRetries: 1,
       blockchain: "polygon",
@@ -102,7 +101,8 @@ const dev = <envType>({
       id: 0,
       alchemyApiKey: 'l1pSvMC4vAu8hap2qu5cN6nsuTnryRkT',
       alchemyNetwork: Network.MATIC_MUMBAI,
-      alchemyMaxRetries: 1,
+      alchemyMaxRetries: 3,
+      alchemyUrl: "http://localhost:8000/alchemy-polygon-mumbai",
       blockchain: 'polygon',
       contractAddress: "0x0FA8781a83E46826621b3BC094Ea2A0212e71B23",
       decimals: 6,
@@ -113,13 +113,13 @@ const dev = <envType>({
       network: "mumbai",
       symbol: 'USDC',
       scannerUrl: 'https://mumbai.polygonscan.com',
-      providerUrl: 'http://localhost:8000/infura-mumbai',
+      providerUrl: 'http://localhost:8000/infura-polygon-mumbai',
     },
     {
       id: 1,
-      alchemyApiKey: 'zFXR_i23EsYS1DJ13gb3IOXrf7iR82kR',
+      alchemyApiKey: '',
       alchemyNetwork: Network.ETH_GOERLI,
-      alchemyMaxRetries: 1,
+      alchemyMaxRetries: 3,
       blockchain: 'polygon',
       contractAddress: "0xA683d909e996052955500DDc45CA13E25c76e286",
       decimals: 6,
@@ -129,16 +129,17 @@ const dev = <envType>({
       name: 'Euro Coin',
       network: "mumbai",
       symbol: 'EUROC',
-      scannerUrl: 'https://mumbai.polygonscan.com/',
-      providerUrl: 'http://localhost:8000/infura-mumbai',
+      scannerUrl: 'https://goerli.etherscan.com',
+      providerUrl: 'http://localhost:8000/infura-ethereum-mumbai',
     }
   ],
   cryptoTokens: [
     {
       id: 0,
-      alchemyApiKey: 'vvihhyWLDnyBDx_UEdaB0f24ItIbeMyn',
+      alchemyApiKey: 'l1pSvMC4vAu8hap2qu5cN6nsuTnryRkT',
       alchemyNetwork: Network.MATIC_MUMBAI,
-      alchemyMaxRetries: 1,
+      alchemyMaxRetries: 3,
+      alchemyUrl: "http://localhost:8000/infura-polygon-mumbai",
       blockchain: "polygon",
       contractAddress: "0x0000000000000000000000000000000000001010",
       decimals: 18,
@@ -147,7 +148,7 @@ const dev = <envType>({
       network: "mumbai",
       symbol: "MATIC",
       scannerUrl: "https://mumbai.polygonscan.com",
-      providerUrl: "http://localhost:8000/infura-mumbai",
+      providerUrl: "http://localhost:8000/infura-polygon-mumbai",
     }
   ]
 });
