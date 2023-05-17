@@ -60,7 +60,7 @@ const TransactionDetail = (props: Props) => {
         textAlign="center"
         xs={12}>
         <Typography variant="body1" sx={{ textAlign: "center", width: "100%" }}>
-          USDC
+          {goBackPageTitle}
         </Typography>
         <Typography variant="h5" sx={{ textAlign: "center", width: "100%" }}>
           {fiatSymbol}

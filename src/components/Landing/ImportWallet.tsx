@@ -79,7 +79,7 @@ const ImportWallet = (props: Props) => {
     setStep("saveWalletStep")
   }
 
-  const saveWalletStepHanlder = () => {
+  const saveWalletStepHanlder = async () => {
     // delete current wallet & related data from local storage
     if (walletContext.isWalletConfigured) {
       console.log("Deleting current wallet...")

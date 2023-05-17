@@ -67,7 +67,7 @@ const Account = (props: Props) => {
     transactions
   } = useAlchemyGetAssetTransfers(
     wallet.address,
-    [config.tokens[0].contractAddress],
+    [config.tokens[0].contractAddress, config.cryptoTokens[0].contractAddress],
     "0x0",
     [AssetTransfersCategory.ERC20, AssetTransfersCategory.EXTERNAL]
   )
@@ -156,6 +156,7 @@ const Account = (props: Props) => {
         </Grid>
 
         <RecentTransactions
+          goBackPageName="account"
           title={"Recent Transactions"}
           isLoadingTransactions={isLoadingTransactions}
           transactionFound={transactionFound}

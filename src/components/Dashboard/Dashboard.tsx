@@ -197,7 +197,7 @@ const Dashboard = (props: Props) => {
 
             <TabPanel value={value} index={1}>
               <RecentTransactions
-                title={""}
+                title={"Recent Transactions"}
                 goBackPageName="dashboard"
                 isLoadingTransactions={isLoadingTransactions}
                 transactionFound={transactionFound}

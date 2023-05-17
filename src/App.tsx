@@ -33,6 +33,10 @@ const App = () => {
     "importWallet"
   ]
 
+  console.log(settingsContext.shownPage)
+  console.log(
+    "!walletContext.isWalletConfigured " + !walletContext.isWalletConfigured
+  )
   return (
     <Container style={{ margin: 0, padding: 0 }}>
       <Grid

@@ -1,6 +1,5 @@
 import React, { createContext, useEffect, useState } from "react"
 
-import { Storage } from "@plasmohq/storage"
 import { useStorage } from "@plasmohq/storage/dist/hook"
 
 import { decryptAES, encryptAES } from "~utils/encryption"
@@ -46,16 +45,27 @@ export const WalletContext = createContext<WalletContextType>({
 })
 
 const WalletContextProvider: React.FC<Props> = (props) => {
-  const [wallets, setWallets] = useStorage("wallets", (v) =>
-    typeof v === "undefined" ? [] : v
+  const [wallets, setWallets, { remove: removeWallets }] = useStorage(
+    "wallets",
+    (v) => (typeof v === "undefined" ? [] : v)
   )
 
-  const [encryptedPrivateKey, setEncryptedPrivateKey] = useStorage(
-    "encrypted-private-key",
-    (v) => (typeof v === "undefined" ? "" : v)
+  const [
+    encryptedPrivateKey,
+    setEncryptedPrivateKey,
+    { remove: removeEncryptedPrivateKey }
+  ] = useStorage("encrypted-private-key", (v) =>
+    typeof v === "undefined" ? "" : v
   )
 
   const [isWalletConfigured, setIsWalletConfigured] = useState<boolean>(false)
+
+  console.log("wallets.length " + wallets.length)
+  console.log(encryptedPrivateKey)
+  console.log(
+    "wallets.length > 0 && encryptedPrivateKey " +
+      (wallets.length > 0 && encryptedPrivateKey)
+  )
 
   useEffect(() => {
     if (wallets.length !== 0) {
@@ -78,8 +88,6 @@ const WalletContextProvider: React.FC<Props> = (props) => {
   }
 
   const saveWallet = async (wallet: walletType) => {
-    console.log(wallets)
-
     await setWallets([wallet])
   }
 
@@ -98,12 +106,10 @@ const WalletContextProvider: React.FC<Props> = (props) => {
   }
 
   const deleteWallet = async () => {
-    const storage = new Storage()
-
     // delete wallet date from local storage
-    await storage.remove("wallets")
+    removeWallets()
     // delete encrypted private key from local storage
-    await storage.remove("encrypted-private-key")
+    removeEncryptedPrivateKey()
   }
 
   const walletContextValue: WalletContextType = {

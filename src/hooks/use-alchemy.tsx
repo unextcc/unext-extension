@@ -121,7 +121,10 @@ export const useAlchemyGetAssetTransfers = (
             .replace(".000Z", ""),
           // @ts-ignore
           blockTimestamp: data[i].metadata.blockTimestamp,
-          fiatSymbol: data[i].asset === "USDC" ? "$" : "€",
+          fiatSymbol:
+            (data[i].asset === "USDC" && "$") ||
+            (data[i].asset === "MATIC" && "") ||
+            (data[i].asset === "EUROC" && "€"),
           transactionType:
             // 0=Receive, 1=Send
             wallet.address.toLowerCase() === data[i].to ? "0" : "1"
