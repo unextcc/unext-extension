@@ -62,7 +62,7 @@ const TransactionDetail = (props: Props) => {
         <Typography variant="body1" sx={{ textAlign: "center", width: "100%" }}>
           {goBackPageTitle}
         </Typography>
-        <Typography variant="h5" sx={{ textAlign: "center", width: "100%" }}>
+        <Typography variant="h4" sx={{ textAlign: "center", width: "100%" }}>
           {fiatSymbol}
           {value.toFixed(2)}
         </Typography>
@@ -73,29 +73,47 @@ const TransactionDetail = (props: Props) => {
           <Table width="100%" size="medium">
             <TableBody>
               <TableRow>
-                <TableCell>From</TableCell>
-                <TableCell align="right">
+                <TableCell sx={{ borderBottom: "none", fontSize: 18 }}>
+                  From
+                </TableCell>
+                <TableCell
+                  align="right"
+                  sx={{ borderBottom: "none", fontSize: 18 }}>
                   {from.substring(0, 18)} {from.length >= 18 && "..."}
                 </TableCell>
               </TableRow>
 
               <TableRow>
-                <TableCell>To</TableCell>
-                <TableCell align="right">
+                <TableCell sx={{ borderBottom: "none", fontSize: 18 }}>
+                  To
+                </TableCell>
+                <TableCell
+                  align="right"
+                  sx={{ borderBottom: "none", fontSize: 18 }}>
                   {to.substring(0, 18)} {to.length >= 18 && "..."}
                 </TableCell>
               </TableRow>
 
               <TableRow>
-                <TableCell>Date</TableCell>
-                <TableCell align="right">
+                <TableCell sx={{ borderBottom: "none", fontSize: 18 }}>
+                  Date
+                </TableCell>
+                <TableCell
+                  align="right"
+                  sx={{ borderBottom: "none", fontSize: 18 }}>
                   {date} {time}
                 </TableCell>
               </TableRow>
 
               <TableRow>
-                <TableCell>Total</TableCell>
-                <TableCell align="right">{total.toFixed(2)}</TableCell>
+                <TableCell sx={{ borderBottom: "none", fontSize: 18 }}>
+                  Total
+                </TableCell>
+                <TableCell
+                  align="right"
+                  sx={{ borderBottom: "none", fontSize: 18 }}>
+                  {total.toFixed(2)}
+                </TableCell>
               </TableRow>
             </TableBody>
           </Table>
