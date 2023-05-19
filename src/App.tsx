@@ -1,5 +1,5 @@
-import { Container, Grid } from "@mui/material"
-import React, { useContext } from "react"
+import { Container, Grid, Typography } from "@mui/material"
+import React, { useContext, useEffect } from "react"
 
 import Account from "~components/Account/Account"
 import AccountMATIC from "~components/Account/AccountMATIC"
@@ -14,7 +14,6 @@ import ChangeWalletPassword from "~components/Settings/ChangeWalletPassword"
 import LockPasswordTtl from "~components/Settings/LockPasswordTtl"
 import Logout from "~components/Settings/Logout"
 import Settings from "~components/Settings/Settings"
-import settings from "~components/Settings/Settings"
 import ShowPrivateKey from "~components/Settings/ShowPrivateKey"
 import TransactionDetail from "~components/Transaction/TransactionDetail"
 import Transactions from "~components/Transaction/Transactions"
@@ -33,10 +32,10 @@ const App = () => {
     "importWallet"
   ]
 
-  console.log(settingsContext.shownPage)
-  console.log(
-    "!walletContext.isWalletConfigured " + !walletContext.isWalletConfigured
-  )
+  console.log(!walletContext.isWalletConfiguredLoaded && "Loading..")
+  console.log(walletContext.isWalletConfiguredLoaded && "Loaded!")
+  console.log("settingsContext.shownPage " + settingsContext.shownPage)
+
   return (
     <Container style={{ margin: 0, padding: 0 }}>
       <Grid
@@ -46,25 +45,16 @@ const App = () => {
         minWidth={375}
         maxWidth={720}
         height={580}>
-        {!walletContext.isWalletConfigured &&
-        !shownPageIgnoreList.includes(settingsContext.shownPage) ? (
-          <Landing />
-        ) : !isLockPasswordSet ? (
+        {!isLockPasswordSet ? (
           <LockPassword />
-        ) : (
-          (settingsContext.shownPage === "configureWallet" && (
-            <ConfigureWallet />
-          )) ||
-          (settingsContext.shownPage === "createNewWallet" && (
-            <CreateNewWallet />
-          )) ||
+        ) : walletContext.isWalletConfiguredLoaded &&
+          walletContext.isWalletConfigured ? (
           (settingsContext.shownPage === "dashboard" && <Dashboard />) ||
           (settingsContext.shownPage === "transactions" && <Transactions />) ||
           (settingsContext.shownPage === "settings" && <Settings />) ||
           (settingsContext.shownPage === "showPrivateKey" && (
             <ShowPrivateKey />
           )) ||
-          (settingsContext.shownPage === "importWallet" && <ImportWallet />) ||
           (settingsContext.shownPage === "logout" && <Logout />) ||
           (settingsContext.shownPage === "lockPasswordTtl" && (
             <LockPasswordTtl />
@@ -78,6 +68,20 @@ const App = () => {
           (settingsContext.shownPage === "transactionDetail" && (
             <TransactionDetail />
           ))
+        ) : !walletContext.isWalletConfigured ? (
+          !shownPageIgnoreList.includes(settingsContext.shownPage) ? (
+            <Landing />
+          ) : (
+            (settingsContext.shownPage === "configureWallet" && (
+              <ConfigureWallet />
+            )) ||
+            (settingsContext.shownPage === "createNewWallet" && (
+              <CreateNewWallet />
+            )) ||
+            (settingsContext.shownPage === "importWallet" && <ImportWallet />)
+          )
+        ) : (
+          <Typography variant="h6">Loading...</Typography>
         )}
       </Grid>
     </Container>

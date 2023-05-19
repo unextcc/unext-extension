@@ -15,7 +15,7 @@ import {
   Typography
 } from "@mui/material"
 import { AssetTransfersCategory } from "alchemy-sdk"
-import React, { useContext } from "react"
+import React, { useContext, useState } from "react"
 
 import AccountBalanceItem from "~components/Account/AccountBalanceItem"
 import Spend from "~components/Dashboard/Spend"
@@ -50,7 +50,7 @@ const Dashboard = (props: Props) => {
   const settingsContext = useContext(SettingsContext)
   const walletContext = useContext(WalletContext)
 
-  const [value, setValue] = React.useState(0)
+  const [value, setValue] = useState(0)
 
   const wallets = walletContext.wallets[0]
   // @ts-ignore

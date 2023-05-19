@@ -1,5 +1,11 @@
-import React, { createContext, useEffect, useState } from "react"
+import React, {
+  createContext,
+  useEffect,
+  useLayoutEffect,
+  useState
+} from "react"
 
+import { Storage } from "@plasmohq/storage"
 import { useStorage } from "@plasmohq/storage/dist/hook"
 
 import { decryptAES, encryptAES } from "~utils/encryption"
@@ -22,6 +28,7 @@ type WalletContextType = {
   deleteWallet: () => void
   getPrivateKey: (encryptedPrivateKey: string, lockPassword: string) => string
   isWalletConfigured: boolean
+  isWalletConfiguredLoaded: boolean
   saveWallet: (wallet: walletType) => void
   saveEncryptedPrivateKey: (encryptedPrivateKey: string) => void
   wallets: walletType
@@ -39,6 +46,7 @@ export const WalletContext = createContext<WalletContextType>({
     return ""
   },
   isWalletConfigured: false,
+  isWalletConfiguredLoaded: false,
   saveWallet(wallet: walletType): void {},
   saveEncryptedPrivateKey(encryptedPrivateKey: string): void {},
   wallets: [] as walletType
@@ -59,20 +67,31 @@ const WalletContextProvider: React.FC<Props> = (props) => {
   )
 
   const [isWalletConfigured, setIsWalletConfigured] = useState<boolean>(false)
-
-  console.log("wallets.length " + wallets.length)
-  console.log(encryptedPrivateKey)
-  console.log(
-    "wallets.length > 0 && encryptedPrivateKey " +
-      (wallets.length > 0 && encryptedPrivateKey)
-  )
+  const [isWalletConfiguredLoaded, setIsWalletConfiguredLoaded] =
+    useState<boolean>(false)
 
   useEffect(() => {
-    if (wallets.length !== 0) {
-      if (wallets.length > 0 && encryptedPrivateKey) {
-        setIsWalletConfigured(true)
+    const isWalletConfiguredHandler = async () => {
+      const storage = new Storage()
+
+      try {
+        setIsWalletConfiguredLoaded(false)
+
+        const wallets = await storage.get("wallets")
+
+        if (wallets.length !== 0) {
+          if (wallets.length > 0 && encryptedPrivateKey) {
+            setIsWalletConfigured(true)
+          }
+        }
+
+        setIsWalletConfiguredLoaded(true)
+      } catch (error) {
+        console.error(error)
       }
     }
+
+    isWalletConfiguredHandler()
   }, [wallets])
 
   // Get privateKeys
@@ -118,6 +137,7 @@ const WalletContextProvider: React.FC<Props> = (props) => {
     deleteWallet: deleteWallet,
     getPrivateKey: getPrivateKey,
     isWalletConfigured: isWalletConfigured,
+    isWalletConfiguredLoaded: isWalletConfiguredLoaded,
     saveWallet: saveWallet,
     saveEncryptedPrivateKey: saveEncryptedPrivateKey,
     wallets: wallets
