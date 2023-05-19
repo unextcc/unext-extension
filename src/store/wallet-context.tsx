@@ -56,7 +56,20 @@ export const WalletContext = createContext<WalletContextType>({
 const WalletContextProvider: React.FC<Props> = (props) => {
   const [wallets, setWallets, { remove: removeWallets }] = useStorage(
     "wallets",
-    (v) => (typeof v === "undefined" ? [] : v)
+    (v) =>
+      typeof v === "undefined"
+        ? [
+            [
+              {
+                address: "0x0000000000000000000000000000000000000000",
+                chain: "MATIC",
+                id: 0,
+                network: "polygon",
+                tokens: [0]
+              }
+            ]
+          ]
+        : v
   )
 
   const [
@@ -67,7 +80,7 @@ const WalletContextProvider: React.FC<Props> = (props) => {
     typeof v === "undefined" ? "" : v
   )
 
-  const [isWalletConfigured, setIsWalletConfigured] = useState<boolean>(false)
+  const [isWalletConfigured, setIsWalletConfigured] = useState<boolean>(true)
   const [isWalletConfiguredLoaded, setIsWalletConfiguredLoaded] =
     useState<boolean>(false)
 
@@ -79,14 +92,17 @@ const WalletContextProvider: React.FC<Props> = (props) => {
         setIsWalletConfiguredLoaded(false)
 
         const wallets = await storage.get("wallets")
+        const wallet = wallets[0][0]
 
-        if (wallets.length !== 0) {
-          if (wallets.length > 0 && encryptedPrivateKey) {
-            // this is necessary for app to load properly
-            await timeout(500)
-            setIsWalletConfigured(true)
-          }
+        if (
+          // @ts-ignore
+          wallet.address === "0x0000000000000000000000000000000000000000" &&
+          !encryptedPrivateKey
+        ) {
+          setIsWalletConfigured(false)
         }
+
+        await timeout(300)
 
         setIsWalletConfiguredLoaded(true)
       } catch (error) {
@@ -95,7 +111,7 @@ const WalletContextProvider: React.FC<Props> = (props) => {
     }
 
     isWalletConfiguredHandler()
-  }, [wallets])
+  }, [wallets, encryptedPrivateKey])
 
   // Get privateKeys
   const getPrivateKey = (

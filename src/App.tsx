@@ -1,5 +1,4 @@
 import { CircularProgress, Container, Grid } from "@mui/material"
-import Skeleton from "@mui/material/Skeleton"
 import React, { useContext } from "react"
 
 import Account from "~components/Account/Account"
@@ -74,6 +73,9 @@ const App = () => {
                 )) ||
                 (settingsContext.shownPage === "transactionDetail" && (
                   <TransactionDetail />
+                )) ||
+                (settingsContext.shownPage === "importWallet" && (
+                  <ImportWallet />
                 ))
               ) : (
                 /* if wallet is loaded, configred & is locked, load lock password page */
