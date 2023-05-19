@@ -1,4 +1,4 @@
-import { Container, Grid } from "@mui/material"
+import { CircularProgress, Container, Grid } from "@mui/material"
 import Skeleton from "@mui/material/Skeleton"
 import React, { useContext } from "react"
 
@@ -99,15 +99,13 @@ const App = () => {
               item
               xs={12}
               display="flex"
-              alignContent="flex-start">
-              <Skeleton
-                animation="wave"
-                variant="rounded"
-                width={200}
-                height={100}
-              />
-              <Skeleton animation="wave" height={200} width="100%" />
-              <Skeleton animation="wave" height={200} width="100%" />
+              flexDirection="row"
+              alignItems="center"
+              textAlign="center"
+              height="100%">
+              <Grid width="100%">
+                <CircularProgress />
+              </Grid>
             </Grid>
           )}
         </Grid>

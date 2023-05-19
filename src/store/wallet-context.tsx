@@ -80,11 +80,10 @@ const WalletContextProvider: React.FC<Props> = (props) => {
 
         const wallets = await storage.get("wallets")
 
-        // this is necessary for app to load properly
-        await timeout(500)
-
         if (wallets.length !== 0) {
           if (wallets.length > 0 && encryptedPrivateKey) {
+            // this is necessary for app to load properly
+            await timeout(500)
             setIsWalletConfigured(true)
           }
         }
