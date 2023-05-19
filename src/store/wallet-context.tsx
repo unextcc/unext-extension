@@ -9,6 +9,7 @@ import { Storage } from "@plasmohq/storage"
 import { useStorage } from "@plasmohq/storage/dist/hook"
 
 import { decryptAES, encryptAES } from "~utils/encryption"
+import { timeout } from "~utils/other"
 
 type walletType = {
   id: number
@@ -78,6 +79,9 @@ const WalletContextProvider: React.FC<Props> = (props) => {
         setIsWalletConfiguredLoaded(false)
 
         const wallets = await storage.get("wallets")
+
+        // this is necessary for app to load properly
+        await timeout(500)
 
         if (wallets.length !== 0) {
           if (wallets.length > 0 && encryptedPrivateKey) {

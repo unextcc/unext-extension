@@ -1,5 +1,6 @@
-import { Container, Grid, Typography } from "@mui/material"
-import React, { useContext, useEffect } from "react"
+import { Container, Grid } from "@mui/material"
+import Skeleton from "@mui/material/Skeleton"
+import React, { useContext } from "react"
 
 import Account from "~components/Account/Account"
 import AccountMATIC from "~components/Account/AccountMATIC"
@@ -32,59 +33,86 @@ const App = () => {
     "importWallet"
   ]
 
-  console.log(!walletContext.isWalletConfiguredLoaded && "Loading..")
-  console.log(walletContext.isWalletConfiguredLoaded && "Loaded!")
-  console.log("settingsContext.shownPage " + settingsContext.shownPage)
-
   return (
-    <Container style={{ margin: 0, padding: 0 }}>
-      <Grid
-        container
-        border={0}
-        padding={1}
-        minWidth={375}
-        maxWidth={720}
-        height={580}>
-        {!isLockPasswordSet ? (
-          <LockPassword />
-        ) : walletContext.isWalletConfiguredLoaded &&
-          walletContext.isWalletConfigured ? (
-          (settingsContext.shownPage === "dashboard" && <Dashboard />) ||
-          (settingsContext.shownPage === "transactions" && <Transactions />) ||
-          (settingsContext.shownPage === "settings" && <Settings />) ||
-          (settingsContext.shownPage === "showPrivateKey" && (
-            <ShowPrivateKey />
-          )) ||
-          (settingsContext.shownPage === "logout" && <Logout />) ||
-          (settingsContext.shownPage === "lockPasswordTtl" && (
-            <LockPasswordTtl />
-          )) ||
-          (settingsContext.shownPage === "changeWalletPassword" && (
-            <ChangeWalletPassword />
-          )) ||
-          (settingsContext.shownPage === "account" && <Account />) ||
-          (settingsContext.shownPage === "accountUSDC" && <AccountUSDC />) ||
-          (settingsContext.shownPage === "accountMATIC" && <AccountMATIC />) ||
-          (settingsContext.shownPage === "transactionDetail" && (
-            <TransactionDetail />
-          ))
-        ) : !walletContext.isWalletConfigured ? (
-          !shownPageIgnoreList.includes(settingsContext.shownPage) ? (
-            <Landing />
+    <React.Fragment>
+      <Container style={{ margin: 0, padding: 0 }}>
+        <Grid
+          container
+          border={0}
+          padding={1}
+          minWidth={375}
+          maxWidth={720}
+          height={580}>
+          {/* first check if wallet is loaded */}
+          {walletContext.isWalletConfiguredLoaded ? (
+            /* if wallet is loaded, check if wallet is configured  */
+            walletContext.isWalletConfigured ? (
+              /* if wallet is loaded & configured, check if wallet is locked */
+              isLockPasswordSet ? (
+                /* if wallet is loaded, configred & is NOT locked, load pages */
+                (settingsContext.shownPage === "dashboard" && <Dashboard />) ||
+                (settingsContext.shownPage === "transactions" && (
+                  <Transactions />
+                )) ||
+                (settingsContext.shownPage === "settings" && <Settings />) ||
+                (settingsContext.shownPage === "showPrivateKey" && (
+                  <ShowPrivateKey />
+                )) ||
+                (settingsContext.shownPage === "logout" && <Logout />) ||
+                (settingsContext.shownPage === "lockPasswordTtl" && (
+                  <LockPasswordTtl />
+                )) ||
+                (settingsContext.shownPage === "changeWalletPassword" && (
+                  <ChangeWalletPassword />
+                )) ||
+                (settingsContext.shownPage === "account" && <Account />) ||
+                (settingsContext.shownPage === "accountUSDC" && (
+                  <AccountUSDC />
+                )) ||
+                (settingsContext.shownPage === "accountMATIC" && (
+                  <AccountMATIC />
+                )) ||
+                (settingsContext.shownPage === "transactionDetail" && (
+                  <TransactionDetail />
+                ))
+              ) : (
+                /* if wallet is loaded, configred & is locked, load lock password page */
+                <LockPassword />
+              )
+            ) : /* if wallet is NOT configured & loaded, check if shown page is in ignore list & load the pages*/
+            shownPageIgnoreList.includes(settingsContext.shownPage) ? (
+              (settingsContext.shownPage === "configureWallet" && (
+                <ConfigureWallet />
+              )) ||
+              (settingsContext.shownPage === "createNewWallet" && (
+                <CreateNewWallet />
+              )) ||
+              (settingsContext.shownPage === "importWallet" && <ImportWallet />)
+            ) : (
+              /* if wallet is NOT configured, loaded & NOT in ignore list, load landing page */
+              <Landing />
+            )
           ) : (
-            (settingsContext.shownPage === "configureWallet" && (
-              <ConfigureWallet />
-            )) ||
-            (settingsContext.shownPage === "createNewWallet" && (
-              <CreateNewWallet />
-            )) ||
-            (settingsContext.shownPage === "importWallet" && <ImportWallet />)
-          )
-        ) : (
-          <Typography variant="h6">Loading...</Typography>
-        )}
-      </Grid>
-    </Container>
+            /* Show wallet is loading*/
+            <Grid
+              container
+              item
+              xs={12}
+              display="flex"
+              alignContent="flex-start">
+              <Skeleton
+                animation="wave"
+                variant="rounded"
+                width={200}
+                height={100}
+              />
+              <Skeleton animation="wave" height={200} width="100%" />
+              <Skeleton animation="wave" height={200} width="100%" />
+            </Grid>
+          )}
+        </Grid>
+      </Container>
+    </React.Fragment>
   )
 }
 
