@@ -4,7 +4,14 @@ import React, { useContext } from "react"
 import Account from "~components/Account/Account"
 import AccountMATIC from "~components/Account/AccountMATIC"
 import AccountUSDC from "~components/Account/AccountUSDC"
+import Add from "~components/Actions/Add"
+import Convert from "~components/Actions/Convert"
+import More from "~components/Actions/More"
+import Request from "~components/Actions/Request"
+import Send from "~components/Actions/Send"
+import SpendPage from "~components/Actions/Spend"
 import Dashboard from "~components/Dashboard/Dashboard"
+import Spend from "~components/Dashboard/Spend"
 import ConfigureWallet from "~components/Landing/ConfigureWallet"
 import CreateNewWallet from "~components/Landing/CreateNewWallet"
 import ImportWallet from "~components/Landing/ImportWallet"
@@ -76,7 +83,13 @@ const App = () => {
                 )) ||
                 (settingsContext.shownPage === "importWallet" && (
                   <ImportWallet />
-                ))
+                )) ||
+                (settingsContext.shownPage === "add" && <Add />) ||
+                (settingsContext.shownPage === "convert" && <Convert />) ||
+                (settingsContext.shownPage === "spend" && <SpendPage />) ||
+                (settingsContext.shownPage === "send" && <Send />) ||
+                (settingsContext.shownPage === "request" && <Request />) ||
+                (settingsContext.shownPage === "more" && <More />)
               ) : (
                 /* if wallet is loaded, configred & is locked, load lock password page */
                 <LockPassword />

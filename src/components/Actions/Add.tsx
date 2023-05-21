@@ -2,7 +2,7 @@ import { Grid } from "@mui/material"
 
 import HeaderLight from "~components/Layout/HeaderLight"
 
-const Convert = () => {
+const Add = () => {
   return (
     <Grid
       container
@@ -12,9 +12,9 @@ const Convert = () => {
       direction={"row"}
       alignItems={"stretch"}
       marginTop={7}>
-      <HeaderLight goBackPage="dashboard" title={"Convert"} />
+      <HeaderLight goBackPage="dashboard" title={"Add"} />
     </Grid>
   )
 }
 
-export default Convert
+export default Add
