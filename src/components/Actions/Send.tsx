@@ -1,12 +1,16 @@
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Visibility, VisibilityOff } from "@mui/icons-material"
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline"
 import {
   Button,
+  CircularProgress,
+  Divider,
   FormControl,
   Grid,
   InputAdornment,
   InputLabel,
   MenuItem,
+  Paper,
   Select,
   Table,
   TableBody,
@@ -16,13 +20,14 @@ import {
   TextField,
   Typography
 } from "@mui/material"
-import { time } from "console"
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext, useState } from "react"
 import { useForm } from "react-hook-form"
 import * as Yup from "yup"
 
 import Footer from "~components/Layout/Footer"
 import HeaderLight from "~components/Layout/HeaderLight"
+import { config } from "~contents/config"
+import { useWeb3EstimateFee, useWeb3Send } from "~hooks/use-web3"
 import { SettingsContext } from "~store/settings-context"
 import { WalletContext } from "~store/wallet-context"
 import { verifyPassword } from "~utils/encryption"
@@ -99,20 +104,50 @@ const Send: React.FC = () => {
     mode: "onChange"
   })
 
-  const firstAmountStepHandler = async () => {
-    const isPasswordCorrect = verifyPassword(
+  const {
+    estimatedFeeInMatic,
+    estimatedFeeInGwei,
+    error: estimatedFeeError,
+    status: estimatedFeeStatus
+  } = useWeb3EstimateFee()
+
+  const {
+    error: sendTokenError,
+    sendToken,
+    status: sendTokenStatus,
+    transactionHash
+  } = useWeb3Send(
+    0,
+    getValues("sendingAmount"),
+    estimatedFeeInGwei,
+    getValues("fromAddress"),
+    getValues("toAddress"),
+    walletContext.getPrivateKey(
       walletContext.encryptedPrivateKey,
-      getValues("walletPassword")
+      settingsContext.lockPassword.password
     )
+  )
+
+  console.log("transactionHash " + transactionHash)
+
+  const firstAmountStepHandler = async () => {
+    if (requirePasswordWhenSend) {
+      const isPasswordCorrect = verifyPassword(
+        walletContext.encryptedPrivateKey,
+        getValues("walletPassword")
+      )
+
+      if (!isPasswordCorrect) {
+        setError("walletPassword", {
+          type: "custom",
+          message: "Incorrect wallet password!"
+        })
+        return
+      }
+    }
 
     if (getValues("sendingAmount") <= 0) {
       setError("sendingAmount", { type: "custom", message: "Error!" })
-      return
-    } else if (!isPasswordCorrect) {
-      setError("walletPassword", {
-        type: "custom",
-        message: "Incorrect wallet password!"
-      })
       return
     } else {
       clearErrors()
@@ -125,6 +160,8 @@ const Send: React.FC = () => {
       console.error("Wallet is locked! Unlock your wallet!")
       return
     }
+
+    await sendToken()
   }
 
   const firstAmountStep = (
@@ -147,6 +184,7 @@ const Send: React.FC = () => {
           label="Sending amount"
           type="number"
           color="info"
+          value={1}
           error={
             formState.errors.sendingAmount?.message?.length !== 0 &&
             formState.errors.sendingAmount?.message?.length !== undefined
@@ -213,7 +251,7 @@ const Send: React.FC = () => {
           label="Enter receiving account address"
           color="info"
           fullWidth
-          value="0x9023B19E6012b88f5f2213C5626c4Ec85cC48241"
+          defaultValue="0xB32339605Feb98CA4d114425d868132a555394bC"
           error={
             formState.errors.toAddress?.message?.length !== 0 &&
             formState.errors.toAddress?.message?.length !== undefined
@@ -293,85 +331,81 @@ const Send: React.FC = () => {
   )
 
   const secondConfirmSendStep = (
-    <Grid container item xs={12}>
-      <Grid
-        borderBottom={2}
-        borderColor="lightgray"
-        container
-        flexDirection="row"
-        item
-        height={100}
-        display="flex"
-        alignContent="center"
-        alignItems="center"
-        textAlign="center"
-        xs={12}>
-        <Typography variant="body1" sx={{ textAlign: "center", width: "100%" }}>
-          Sending Amount:
+    <Grid container item xs={12} display="block">
+      <Paper variant="outlined" sx={{ padding: 1 }}>
+        <Typography
+          variant="body1"
+          sx={{
+            textAlign: "center",
+            width: "100%",
+            fontSize: 14,
+            marginBottom: 1
+          }}>
+          Sending amount:
         </Typography>
-        <Typography variant="h4" sx={{ textAlign: "center", width: "100%" }}>
+
+        <Typography
+          variant="h4"
+          fontWeight="bold"
+          sx={{ textAlign: "center", width: "100%", marginBottom: 1 }}>
           ${Number(getValues("sendingAmount")).toFixed(2)}
         </Typography>
-      </Grid>
 
-      <Grid container item height={300}>
-        <TableContainer component="div">
-          <Table width="100%" size="medium">
+        <Typography
+          variant="body1"
+          sx={{
+            textAlign: "center",
+            width: "100%",
+            fontSize: 14,
+            marginBottom: 1
+          }}>
+          Receiving address:
+        </Typography>
+
+        <Typography
+          variant="body1"
+          fontWeight="bold"
+          sx={{
+            textAlign: "center",
+            width: "100%",
+            fontSize: 14,
+            marginBottom: 1
+          }}>
+          {getValues("toAddress")}
+        </Typography>
+      </Paper>
+
+      <Grid container item display="block" xs={12}>
+        <TableContainer>
+          <Table>
             <TableBody>
               <TableRow>
-                <TableCell sx={{ borderBottom: "none", fontSize: 18 }}>
-                  From
+                <TableCell component="th" scope="row">
+                  Date:
                 </TableCell>
-                <TableCell
-                  align="right"
-                  sx={{ borderBottom: "none", fontSize: 18 }}>
-                  {getValues("fromAddress")?.substring(0, 18)}{" "}
-                  {getValues("fromAddress")?.length >= 18 && "..."}
-                </TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell sx={{ borderBottom: "none", fontSize: 18 }}>
-                  To
-                </TableCell>
-                <TableCell
-                  align="right"
-                  sx={{ borderBottom: "none", fontSize: 18 }}>
-                  {getValues("toAddress")?.substring(0, 18)}{" "}
-                  {getValues("toAddress")?.length >= 18 && "..."}
-                </TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell sx={{ borderBottom: "none", fontSize: 18 }}>
-                  Date
-                </TableCell>
-                <TableCell
-                  align="right"
-                  sx={{ borderBottom: "none", fontSize: 18 }}>
+                <TableCell align="right">
                   {new Date().toLocaleString() + ""}
                 </TableCell>
               </TableRow>
 
               <TableRow>
-                <TableCell sx={{ borderBottom: "none", fontSize: 18 }}>
-                  Fee
+                <TableCell component="th" scope="row">
+                  Network:
                 </TableCell>
-                <TableCell
-                  align="right"
-                  sx={{ borderBottom: "none", fontSize: 18 }}>
-                  MATIC 0.0001
+                <TableCell align="right">
+                  {config.tokens[0].blockchain}
                 </TableCell>
               </TableRow>
 
               <TableRow>
-                <TableCell sx={{ borderBottom: "none", fontSize: 18 }}>
-                  Total
+                <TableCell component="th" scope="row">
+                  Network Fee:
                 </TableCell>
-                <TableCell
-                  align="right"
-                  sx={{ borderBottom: "none", fontSize: 18 }}>
-                  ${Number(getValues("sendingAmount")).toFixed(2)}
+                <TableCell align="right">
+                  MATIC{" "}
+                  {estimatedFeeStatus === "working"
+                    ? "Loading..."
+                    : estimatedFeeInMatic}
                 </TableCell>
               </TableRow>
             </TableBody>
@@ -379,39 +413,129 @@ const Send: React.FC = () => {
         </TableContainer>
       </Grid>
 
-      <Grid container item xs={12}>
+      {sendTokenStatus === "working" ? (
         <Grid
+          container
           item
-          xs={6}
-          justifyContent="left"
-          textAlign="left"
-          alignContent="left"
-          alignItems="left">
-          <Button
-            variant="outlined"
-            fullWidth
-            onClick={() => setStep("firstAmountStep")}
-            sx={{ maxWidth: "150px" }}>
-            Back
-          </Button>
+          xs={12}
+          direction="row"
+          textAlign="center"
+          alignContent="center"
+          alignItems="center"
+          height={80}>
+          <Typography width="100%" textAlign="center" fontSize={40}>
+            <CircularProgress sx={{ fontSize: 40 }} color="info" />
+          </Typography>
         </Grid>
+      ) : (
+        <Grid
+          container
+          item
+          xs={12}
+          direction="row"
+          textAlign="center"
+          alignContent="center"
+          alignItems="center"
+          height={80}>
+          {sendTokenStatus === "success" && (
+            <Typography width="100%" textAlign="center" fontSize={40}>
+              <CheckCircleOutlineIcon sx={{ fontSize: 40 }} color="success" />
+            </Typography>
+          )}
+        </Grid>
+      )}
 
+      {sendTokenStatus === "idle" || sendTokenError ? (
+        <Grid container item xs={12}>
+          <Grid
+            item
+            xs={6}
+            justifyContent="left"
+            textAlign="left"
+            alignContent="left"
+            alignItems="left">
+            <Button
+              variant="outlined"
+              fullWidth
+              onClick={() => setStep("firstAmountStep")}
+              disabled={sendTokenStatus !== "idle"}
+              sx={{ maxWidth: "150px" }}>
+              Back
+            </Button>
+          </Grid>
+
+          <Grid
+            item
+            xs={6}
+            justifyContent="right"
+            textAlign="right"
+            alignContent="right"
+            alignItems="right">
+            <Button
+              variant="outlined"
+              fullWidth
+              onClick={() => secondConfirmSendStepHandler()}
+              disabled={sendTokenStatus !== "idle"}
+              sx={{ maxWidth: "150px" }}>
+              Send
+            </Button>
+          </Grid>
+        </Grid>
+      ) : sendTokenStatus === "success" && !sendTokenError ? (
         <Grid
+          container
           item
-          xs={6}
-          justifyContent="right"
-          textAlign="right"
-          alignContent="right"
-          alignItems="right">
+          xs={12}
+          direction="column"
+          justifyContent="center"
+          textAlign="center"
+          alignContent="center"
+          alignItems="center">
           <Button
             variant="outlined"
             fullWidth
-            onClick={() => firstAmountStepHandler()}
-            sx={{ maxWidth: "150px" }}>
-            Send
+            onClick={() => settingsContext.shownPageHandler("dashboard")}
+            disabled={false}>
+            Back to Dashboard
           </Button>
         </Grid>
-      </Grid>
+      ) : (
+        <Grid container item xs={12}>
+          <Grid
+            item
+            xs={6}
+            justifyContent="left"
+            textAlign="left"
+            alignContent="left"
+            alignItems="left">
+            <Button
+              variant="outlined"
+              fullWidth
+              onClick={() => setStep("firstAmountStep")}
+              disabled={true}
+              sx={{ maxWidth: "150px" }}>
+              Back
+            </Button>
+          </Grid>
+
+          <Grid
+            item
+            xs={6}
+            justifyContent="right"
+            textAlign="right"
+            alignContent="right"
+            alignItems="right">
+            <Button
+              variant="outlined"
+              fullWidth
+              onClick={() => secondConfirmSendStepHandler()}
+              disabled={true}
+              sx={{ maxWidth: "150px" }}>
+              Send
+            </Button>
+          </Grid>
+        </Grid>
+      )}
     </Grid>
   )
 

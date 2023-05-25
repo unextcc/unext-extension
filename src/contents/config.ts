@@ -3,6 +3,7 @@ import {Network} from "alchemy-sdk";
 type envType = {
   providerUrl: string;
   etherScanUrl: string;
+  gasStationUrl: string
   tokens: {
     id: number;
     alchemyApiKey: string;
@@ -40,6 +41,8 @@ type envType = {
 }
 
 const prod = <envType>({
+  providerUrl: "https://infura-polygon-mainnet.unext.cc",
+  gasStationUrl: "https://gasstation-mainnet.matic.network/v2",
   tokens: [
     {
       id: 0,
@@ -96,6 +99,8 @@ const prod = <envType>({
 });
 
 const dev = <envType>({
+  providerUrl: "http://localhost:8000/infura-polygon-mumbai",
+  gasStationUrl: "https://gasstation-mumbai.matic.today/v2",
   tokens: [
     {
       id: 0,
