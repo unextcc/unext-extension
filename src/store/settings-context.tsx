@@ -11,6 +11,8 @@ type SettingsContextType = {
   lockPasswordHandler: (password: string, timeStamp: number) => void
   lockPasswordTimeToLiveHandler: (timeToLive: number) => void
   shownPageHandler: (page: string) => void
+  requirePasswordWhenSend: boolean
+  requirePasswordWhenSendHandler: (status: boolean) => void
 }
 
 interface Props {
@@ -24,7 +26,9 @@ export const SettingsContext = createContext<SettingsContextType>({
   shownPage: "",
   lockPasswordHandler: (password: string) => {},
   lockPasswordTimeToLiveHandler: (timeToLive: number) => {},
-  shownPageHandler: (page: string) => {}
+  shownPageHandler: (page: string) => {},
+  requirePasswordWhenSend: false,
+  requirePasswordWhenSendHandler: (status: boolean) => {}
 })
 
 const SettingsContextProvider: React.FC<Props> = (props) => {
@@ -38,6 +42,15 @@ const SettingsContextProvider: React.FC<Props> = (props) => {
     "lock-password-time-to-live",
     (v) => (typeof v === undefined ? 86400 : v)
   )
+
+  const [requirePasswordWhenSend, setRequirePasswordWhenSend] = useStorage(
+    "require-password-when-send",
+    (v) => (typeof v === undefined ? false : v)
+  )
+
+  const requirePasswordWhenSendHandler = (status: boolean) => {
+    setRequirePasswordWhenSend(status)
+  }
 
   const [shownPage, setShownPage] = useState<string>("dashboard")
 
@@ -62,7 +75,9 @@ const SettingsContextProvider: React.FC<Props> = (props) => {
     shownPage: shownPage,
     lockPasswordHandler: lockPasswordHandler,
     lockPasswordTimeToLiveHandler: lockPasswordTimeToLiveHandler,
-    shownPageHandler: shownPageHandler
+    shownPageHandler: shownPageHandler,
+    requirePasswordWhenSend: requirePasswordWhenSend,
+    requirePasswordWhenSendHandler: requirePasswordWhenSendHandler
   }
 
   return (

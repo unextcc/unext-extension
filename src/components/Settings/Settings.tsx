@@ -110,6 +110,16 @@ const Settings = (props: Props) => {
               {">"}
             </Typography>
           </MenuItem>
+
+          <MenuItem
+            onClick={() =>
+              settingsContext.shownPageHandler("requirePasswordWhenSend")
+            }>
+            <ListItemText>Require password when sending</ListItemText>
+            <Typography variant={"body2"} color={"text.secondary"}>
+              {settingsContext.requirePasswordWhenSend ? "Enabled" : "Disabled"}
+            </Typography>
+          </MenuItem>
         </MenuList>
 
         <Divider />

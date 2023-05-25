@@ -1,9 +1,4 @@
-import React, {
-  createContext,
-  useEffect,
-  useLayoutEffect,
-  useState
-} from "react"
+import React, { createContext, useEffect, useState } from "react"
 
 import { Storage } from "@plasmohq/storage"
 import { useStorage } from "@plasmohq/storage/dist/hook"
@@ -12,6 +7,7 @@ import { decryptAES, encryptAES } from "~utils/encryption"
 import { timeout } from "~utils/other"
 
 type walletType = {
+  [x: string]: any
   id: number
   address: string
   chain: string

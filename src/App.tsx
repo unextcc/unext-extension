@@ -20,6 +20,7 @@ import LockPassword from "~components/LockPassword/LockPassword"
 import ChangeWalletPassword from "~components/Settings/ChangeWalletPassword"
 import LockPasswordTtl from "~components/Settings/LockPasswordTtl"
 import Logout from "~components/Settings/Logout"
+import RequirePasswordWhenSend from "~components/Settings/RequirePasswordSend"
 import Settings from "~components/Settings/Settings"
 import ShowPrivateKey from "~components/Settings/ShowPrivateKey"
 import TransactionDetail from "~components/Transaction/TransactionDetail"
@@ -70,6 +71,9 @@ const App = () => {
                 )) ||
                 (settingsContext.shownPage === "changeWalletPassword" && (
                   <ChangeWalletPassword />
+                )) ||
+                (settingsContext.shownPage === "requirePasswordWhenSend" && (
+                  <RequirePasswordWhenSend />
                 )) ||
                 (settingsContext.shownPage === "account" && <Account />) ||
                 (settingsContext.shownPage === "accountUSDC" && (
