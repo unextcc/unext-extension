@@ -24,10 +24,10 @@ specifiers:
   lodash: ^4.17.21
   plasmo: 0.64.5
   prettier: 2.8.3
+  qrcode.react: ^3.1.0
   react: 18.2.0
   react-dom: 18.2.0
   react-hook-form: ^7.43.1
-  react-loading-skeleton: ^3.3.1
   typescript: 4.9.4
   web3: ^1.8.2
   yup: ^1.0.0
@@ -50,10 +50,10 @@ dependencies:
   human-standard-token-abi: 2.0.0
   lodash: 4.17.21
   plasmo: 0.64.5_pvnihi4muhoy7kenlmiyxwzuqy
+  qrcode.react: 3.1.0_react@18.2.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-hook-form: 7.43.1_react@18.2.0
-  react-loading-skeleton: 3.3.1_react@18.2.0
   web3: 1.8.2
   yup: 1.0.0
 
@@ -6481,6 +6481,14 @@ packages:
     engines: {node: '>=6'}
     dev: false
 
+  /qrcode.react/3.1.0_react@18.2.0:
+    resolution: {integrity: sha512-oyF+Urr3oAMUG/OiOuONL3HXM+53wvuH3mtIWQrYmsXoAq0DkvZp2RYUWFSMFtbdOpuS++9v+WAkzNVkMlNW6Q==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+    dev: false
+
   /qs/6.11.0:
     resolution: {integrity: sha512-MvjoMCJwEarSbUYk5O+nmoSzSutSsTwF85zcHPQ9OrlFoZOYIjaqBAJIqIXjptyD5vThxGq52Xu/MaJzRkIk4Q==}
     engines: {node: '>=0.6'}
@@ -6581,14 +6589,6 @@ packages:
 
   /react-is/18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
-    dev: false
-
-  /react-loading-skeleton/3.3.1_react@18.2.0:
-    resolution: {integrity: sha512-NilqqwMh2v9omN7LteiDloEVpFyMIa0VGqF+ukqp0ncVlYu1sKYbYGX9JEl+GtOT9TKsh04zCHAbavnQ2USldA==}
-    peerDependencies:
-      react: '>=16.8.0'
-    dependencies:
-      react: 18.2.0
     dev: false
 
   /react-refresh/0.14.0:

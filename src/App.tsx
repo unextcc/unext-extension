@@ -7,6 +7,7 @@ import AccountUSDC from "~components/Account/AccountUSDC"
 import Add from "~components/Actions/Add"
 import Convert from "~components/Actions/Convert"
 import More from "~components/Actions/More"
+import Receive from "~components/Actions/Receive"
 import Request from "~components/Actions/Request"
 import Send from "~components/Actions/Send"
 import SpendPage from "~components/Actions/Spend"
@@ -93,6 +94,7 @@ const App = () => {
                 (settingsContext.shownPage === "spend" && <SpendPage />) ||
                 (settingsContext.shownPage === "send" && <Send />) ||
                 (settingsContext.shownPage === "request" && <Request />) ||
+                (settingsContext.shownPage === "receive" && <Receive />) ||
                 (settingsContext.shownPage === "more" && <More />)
               ) : (
                 /* if wallet is loaded, configred & is locked, load lock password page */

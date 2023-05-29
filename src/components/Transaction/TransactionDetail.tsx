@@ -1,6 +1,7 @@
 import {
   Button,
   Grid,
+  Paper,
   TableCell,
   TableContainer,
   Typography
@@ -40,79 +41,93 @@ const TransactionDetail = (props: Props) => {
   }
 
   return (
-    <Grid container item xs={12}>
+    <Grid container item xs={12} display="block">
       <HeaderLight
         goBackPage={goBackPageName}
         goBackPageTitle={transactionType + " " + goBackPageTitle}
       />
 
-      <Grid
-        borderBottom={2}
-        borderColor="lightgray"
-        container
-        flexDirection="row"
-        item
-        height={100}
-        marginTop={7.5}
-        display="flex"
-        alignContent="center"
-        alignItems="center"
-        textAlign="center"
-        xs={12}>
-        <Typography variant="body1" sx={{ textAlign: "center", width: "100%" }}>
-          {goBackPageTitle}
-        </Typography>
-        <Typography variant="h4" sx={{ textAlign: "center", width: "100%" }}>
-          {fiatSymbol}
-          {value.toFixed(2)}
-        </Typography>
+      <Grid container item xs={12} display="block">
+        <Paper variant="outlined" sx={{ padding: 1 }}>
+          <Typography
+            variant="body1"
+            sx={{
+              textAlign: "center",
+              width: "100%",
+              fontSize: 14,
+              marginBottom: 1
+            }}>
+            Amount:
+          </Typography>
+
+          <Typography
+            variant="h4"
+            fontWeight="bold"
+            sx={{ textAlign: "center", width: "100%", marginBottom: 1 }}>
+            {fiatSymbol}
+            {value.toFixed(2)}
+          </Typography>
+
+          <Typography
+            variant="body1"
+            sx={{
+              textAlign: "center",
+              width: "100%",
+              fontSize: 14,
+              marginBottom: 1
+            }}>
+            Receiving address:
+          </Typography>
+
+          <Typography
+            variant="body1"
+            fontWeight="bold"
+            sx={{
+              textAlign: "center",
+              width: "100%",
+              fontSize: 14,
+              marginBottom: 1
+            }}>
+            {to}
+          </Typography>
+        </Paper>
       </Grid>
 
-      <Grid container item height={340}>
-        <TableContainer component="div">
-          <Table width="100%" size="medium">
+      <Grid container item xs={12}>
+        <TableContainer>
+          <Table>
             <TableBody>
               <TableRow>
-                <TableCell sx={{ borderBottom: "none", fontSize: 18 }}>
-                  From
+                <TableCell component="th" scope="row">
+                  From:
                 </TableCell>
-                <TableCell
-                  align="right"
-                  sx={{ borderBottom: "none", fontSize: 18 }}>
-                  {from.substring(0, 18)} {from.length >= 18 && "..."}
-                </TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell sx={{ borderBottom: "none", fontSize: 18 }}>
-                  To
-                </TableCell>
-                <TableCell
-                  align="right"
-                  sx={{ borderBottom: "none", fontSize: 18 }}>
-                  {to.substring(0, 18)} {to.length >= 18 && "..."}
+                <TableCell align="right">
+                  {from.substring(0, 6)}
+                  {"..."}
+                  {from.substring(38, 42)}
                 </TableCell>
               </TableRow>
 
               <TableRow>
-                <TableCell sx={{ borderBottom: "none", fontSize: 18 }}>
-                  Date
+                <TableCell component="th" scope="row">
+                  Date:
                 </TableCell>
-                <TableCell
-                  align="right"
-                  sx={{ borderBottom: "none", fontSize: 18 }}>
-                  {date} {time}
-                </TableCell>
+                <TableCell align="right">{date + " " + time}</TableCell>
               </TableRow>
 
               <TableRow>
-                <TableCell sx={{ borderBottom: "none", fontSize: 18 }}>
-                  Total
+                <TableCell component="th" scope="row">
+                  Status:
                 </TableCell>
-                <TableCell
-                  align="right"
-                  sx={{ borderBottom: "none", fontSize: 18 }}>
-                  {total.toFixed(2)}
+                <TableCell align="right">{transactionStatus}</TableCell>
+              </TableRow>
+
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Network:
+                </TableCell>
+                <TableCell align="right">
+                  {config.tokens[0].blockchain}
                 </TableCell>
               </TableRow>
             </TableBody>
@@ -128,6 +143,7 @@ const TransactionDetail = (props: Props) => {
         textAlign="center"
         alignContent="center"
         alignItems="center"
+        marginTop={2}
         xs={12}>
         <Button
           target="_blank"

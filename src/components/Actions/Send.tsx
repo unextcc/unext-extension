@@ -20,8 +20,10 @@ import {
   TextField,
   Typography
 } from "@mui/material"
+import { type } from "os"
 import React, { useContext, useState } from "react"
 import { useForm } from "react-hook-form"
+import Web3 from "web3"
 import * as Yup from "yup"
 
 import Footer from "~components/Layout/Footer"
@@ -128,10 +130,28 @@ const Send: React.FC = () => {
     )
   )
 
-  console.log("transactionHash " + transactionHash)
-
   const firstAmountStepHandler = async () => {
     if (requirePasswordWhenSend) {
+      const web3 = new Web3(new Web3.providers.HttpProvider(""))
+      const isFromAddressValid = web3.utils.isAddress(getValues("fromAddress"))
+      const isToAddressValid = web3.utils.isAddress(getValues("toAddress"))
+
+      if (!isFromAddressValid) {
+        setError("fromAddress", {
+          type: "custom",
+          message: "Sending account address is not valid!"
+        })
+        return
+      }
+
+      if (!isToAddressValid) {
+        setError("toAddress", {
+          type: "custom",
+          message: "Sending account address is not valid!"
+        })
+        return
+      }
+
       const isPasswordCorrect = verifyPassword(
         walletContext.encryptedPrivateKey,
         getValues("walletPassword")
@@ -227,8 +247,9 @@ const Send: React.FC = () => {
               key={"wallet" + index}
               value={wallet.address}
               sx={{ fontSize: 14 }}>
-              {wallet.address.substring(0, 32)}
-              {wallet.address.length >= 32 && "..."}
+              {wallet.address.substring(0, 16)}
+              {"..."}
+              {wallet.address.substring(26, 42)}
             </MenuItem>
           ))}
         </TextField>
@@ -482,22 +503,39 @@ const Send: React.FC = () => {
           </Grid>
         </Grid>
       ) : sendTokenStatus === "success" && !sendTokenError ? (
-        <Grid
-          container
-          item
-          xs={12}
-          direction="column"
-          justifyContent="center"
-          textAlign="center"
-          alignContent="center"
-          alignItems="center">
-          <Button
-            variant="outlined"
-            fullWidth
-            onClick={() => settingsContext.shownPageHandler("dashboard")}
-            disabled={false}>
-            Back to Dashboard
-          </Button>
+        <Grid container item xs={12}>
+          <Grid
+            item
+            xs={6}
+            justifyContent="left"
+            textAlign="left"
+            alignContent="left"
+            alignItems="left">
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => settingsContext.shownPageHandler("dashboard")}
+              sx={{ maxWidth: "150px" }}>
+              Dashboard
+            </Button>
+          </Grid>
+
+          <Grid
+            item
+            xs={6}
+            justifyContent="right"
+            textAlign="right"
+            alignContent="right"
+            alignItems="right">
+            <Button
+              variant="outlined"
+              size="small"
+              href={config.tokens[0].scannerUrl + "/tx/" + transactionHash}
+              target="_blank"
+              sx={{ maxWidth: "150px" }}>
+              View On Explorer
+            </Button>
+          </Grid>
         </Grid>
       ) : (
         <Grid container item xs={12}>

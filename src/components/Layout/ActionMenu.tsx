@@ -104,11 +104,11 @@ const ActionMenu: FunctionComponent<Props> = (props) => {
         <Grid item xs={2} textAlign={"left"}>
           <IconButton
             sx={iconButtonStyle}
-            onClick={() => settingsContext.shownPageHandler("request")}>
+            onClick={() => settingsContext.shownPageHandler("receive")}>
             <ArrowDownwardOutlined color="info" />
           </IconButton>
           <Typography fontSize={12} textAlign="left">
-            Request
+            Receive
           </Typography>
         </Grid>
       )}
