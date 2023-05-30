@@ -33,7 +33,13 @@ const App = () => {
   const settingsContext = useContext(SettingsContext)
   const walletContext = useContext(WalletContext)
 
+  const date: Date = new Date()
+  const now = date.getTime()
+
   let isLockPasswordSet = settingsContext.lockPassword.password !== ""
+  let isLockPasswordExpired =
+    now - settingsContext.lockPassword.timeStamp >
+    settingsContext.lockPasswordTimeToLive * 60 * 1000
 
   const shownPageIgnoreList: string[] = [
     "configureWallet",
@@ -56,7 +62,7 @@ const App = () => {
             /* if wallet is loaded, check if wallet is configured  */
             walletContext.isWalletConfigured ? (
               /* if wallet is loaded & configured, check if wallet is locked */
-              isLockPasswordSet ? (
+              isLockPasswordSet && !isLockPasswordExpired ? (
                 /* if wallet is loaded, configred & is NOT locked, load pages */
                 (settingsContext.shownPage === "dashboard" && <Dashboard />) ||
                 (settingsContext.shownPage === "transactions" && (

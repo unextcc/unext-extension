@@ -92,7 +92,7 @@ const Settings = (props: Props) => {
         <MenuList>
           <MenuItem
             onClick={() => settingsContext.shownPageHandler("lockPasswordTtl")}>
-            <ListItemText>Security Lock</ListItemText>
+            <ListItemText>Wallet lock time</ListItemText>
             <Typography variant={"body2"} color={"text.secondary"}>
               {settingsContext.lockPasswordTimeToLive / 60}
               {settingsContext.lockPasswordTimeToLive < 120

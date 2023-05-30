@@ -44,10 +44,16 @@ const ActionMenu: FunctionComponent<Props> = (props) => {
         <Grid item xs={2} textAlign={"left"}>
           <IconButton
             sx={iconButtonStyle}
+            disabled={true}
             onClick={() => settingsContext.shownPageHandler("add")}>
-            <AddIcon color={"info"} />
+            <AddIcon color="disabled" />
           </IconButton>
-          <Typography fontSize={12} textAlign="left" paddingLeft={1}>
+          <Typography
+            fontSize={12}
+            textAlign="left"
+            paddingLeft={1}
+            color="lightgray"
+            sx={{ cursor: "default" }}>
             Add
           </Typography>
         </Grid>
@@ -58,10 +64,15 @@ const ActionMenu: FunctionComponent<Props> = (props) => {
         <Grid item xs={2} textAlign={"left"}>
           <IconButton
             sx={iconButtonStyle}
+            disabled={true}
             onClick={() => settingsContext.shownPageHandler("convert")}>
-            <AutorenewIcon color="info" />
+            <AutorenewIcon color="disabled" />
           </IconButton>
-          <Typography fontSize={12} textAlign="left">
+          <Typography
+            fontSize={12}
+            textAlign="left"
+            color="lightgray"
+            sx={{ cursor: "default" }}>
             Convert
           </Typography>
         </Grid>
@@ -116,14 +127,14 @@ const ActionMenu: FunctionComponent<Props> = (props) => {
       {/* more */}
       {props.more && (
         <Grid item xs={2} textAlign={"left"}>
-          <IconButton
+          {/*<IconButton
             sx={iconButtonStyle}
             onClick={() => settingsContext.shownPageHandler("more")}>
             <MoreHorizOutlined color="info" />
           </IconButton>
           <Typography fontSize={12} textAlign="left" paddingLeft={0.7}>
             More
-          </Typography>
+          </Typography>*/}
         </Grid>
       )}
     </Grid>

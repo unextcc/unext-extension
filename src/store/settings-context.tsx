@@ -59,9 +59,9 @@ const SettingsContextProvider: React.FC<Props> = (props) => {
   }
 
   const lockPasswordTimeToLiveHandler = async (
-    timeTiLive: number | undefined
+    timeToLive: number | undefined
   ) => {
-    await setLockPasswordTimeToLive(timeTiLive)
+    await setLockPasswordTimeToLive(timeToLive)
   }
 
   const shownPageHandler = (page: string) => {
