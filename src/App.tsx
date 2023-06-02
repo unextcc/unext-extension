@@ -1,5 +1,5 @@
 import { CircularProgress, Container, Grid } from "@mui/material"
-import React, { useContext } from "react"
+import React, { useContext, useEffect } from "react"
 
 import Account from "~components/Account/Account"
 import AccountMATIC from "~components/Account/AccountMATIC"
@@ -21,6 +21,7 @@ import LockPassword from "~components/LockPassword/LockPassword"
 import ChangeWalletPassword from "~components/Settings/ChangeWalletPassword"
 import LockPasswordTtl from "~components/Settings/LockPasswordTtl"
 import Logout from "~components/Settings/Logout"
+import ManageNotification from "~components/Settings/ManageNotification"
 import RequirePasswordWhenSend from "~components/Settings/RequirePasswordSend"
 import Settings from "~components/Settings/Settings"
 import ShowPrivateKey from "~components/Settings/ShowPrivateKey"
@@ -47,6 +48,12 @@ const App = () => {
     "importWallet"
   ]
 
+  useEffect(() => {
+    if (isLockPasswordExpired) {
+      settingsContext.lockPasswordHandler("", 0)
+    }
+  }, [])
+
   return (
     <React.Fragment>
       <Container style={{ margin: 0, padding: 0 }}>
@@ -68,7 +75,14 @@ const App = () => {
                 (settingsContext.shownPage === "transactions" && (
                   <Transactions />
                 )) ||
+                /* settings - start */
                 (settingsContext.shownPage === "settings" && <Settings />) ||
+                (settingsContext.shownPage === "importWallet" && (
+                  <ImportWallet />
+                )) ||
+                (settingsContext.shownPage === "manageNotification" && (
+                  <ManageNotification />
+                )) ||
                 (settingsContext.shownPage === "showPrivateKey" && (
                   <ShowPrivateKey />
                 )) ||
@@ -82,6 +96,7 @@ const App = () => {
                 (settingsContext.shownPage === "requirePasswordWhenSend" && (
                   <RequirePasswordWhenSend />
                 )) ||
+                /* settings - end */
                 (settingsContext.shownPage === "account" && <Account />) ||
                 (settingsContext.shownPage === "accountUSDC" && (
                   <AccountUSDC />
@@ -91,9 +106,6 @@ const App = () => {
                 )) ||
                 (settingsContext.shownPage === "transactionDetail" && (
                   <TransactionDetail />
-                )) ||
-                (settingsContext.shownPage === "importWallet" && (
-                  <ImportWallet />
                 )) ||
                 (settingsContext.shownPage === "add" && <Add />) ||
                 (settingsContext.shownPage === "convert" && <Convert />) ||

@@ -104,7 +104,7 @@ const dev = <envType>({
   tokens: [
     {
       id: 0,
-      alchemyApiKey: 'l1pSvMC4vAu8hap2qu5cN6nsuTnryRkT',
+      alchemyApiKey: '',
       alchemyNetwork: Network.MATIC_MUMBAI,
       alchemyMaxRetries: 3,
       alchemyUrl: "http://localhost:8000/alchemy-polygon-mumbai",
@@ -141,7 +141,7 @@ const dev = <envType>({
   cryptoTokens: [
     {
       id: 0,
-      alchemyApiKey: 'l1pSvMC4vAu8hap2qu5cN6nsuTnryRkT',
+      alchemyApiKey: '',
       alchemyNetwork: Network.MATIC_MUMBAI,
       alchemyMaxRetries: 3,
       alchemyUrl: "http://localhost:8000/infura-polygon-mumbai",

@@ -1,5 +1,6 @@
 import { Alert, Grid } from "@mui/material"
 import { AssetTransfersCategory } from "alchemy-sdk"
+import { SortingOrder } from "alchemy-sdk"
 import React, { useContext } from "react"
 
 import ActionMenu from "~components/Layout/ActionMenu"
@@ -39,7 +40,10 @@ const AccountMATIC = (props: Props) => {
     wallet.address,
     [config.cryptoTokens[0].contractAddress],
     "0x0",
-    [AssetTransfersCategory.EXTERNAL]
+    [AssetTransfersCategory.EXTERNAL],
+    true,
+    SortingOrder.DESCENDING,
+    false
   )
 
   return (

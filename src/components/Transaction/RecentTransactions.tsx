@@ -81,6 +81,7 @@ const RecentTransactions = (props: Props) => {
                             onClick={() => {
                               transactionContext.setTransactionDetailHandler(
                                 props.goBackPageName,
+                                row.blockNum,
                                 row.asset,
                                 row.hash,
                                 row.transactionType,
@@ -107,6 +108,7 @@ const RecentTransactions = (props: Props) => {
                             onClick={() => {
                               transactionContext.setTransactionDetailHandler(
                                 props.goBackPageName,
+                                row.blockNum,
                                 row.asset,
                                 row.hash,
                                 row.transactionType,

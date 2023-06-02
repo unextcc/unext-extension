@@ -71,21 +71,6 @@ const Settings = (props: Props) => {
         <Divider />
 
         <Typography variant={"h6"} marginLeft={2}>
-          General
-        </Typography>
-
-        <MenuList>
-          <MenuItem>
-            <ListItemText>Manage notifications</ListItemText>
-            <Typography variant={"body2"} color={"text.secondary"}>
-              {">"}
-            </Typography>
-          </MenuItem>
-        </MenuList>
-
-        <Divider />
-
-        <Typography variant={"h6"} marginLeft={2}>
           Security
         </Typography>
 
@@ -118,6 +103,22 @@ const Settings = (props: Props) => {
             <ListItemText>Require password when sending</ListItemText>
             <Typography variant={"body2"} color={"text.secondary"}>
               {settingsContext.requirePasswordWhenSend ? "Enabled" : "Disabled"}
+            </Typography>
+          </MenuItem>
+        </MenuList>
+
+        <Divider />
+
+        <Typography variant={"h6"} marginLeft={2}>
+          Crypto Accounts
+        </Typography>
+
+        <MenuList>
+          <MenuItem
+            onClick={() => settingsContext.shownPageHandler("accountMATIC")}>
+            <ListItemText>MATIC</ListItemText>
+            <Typography variant={"body1"} color={"text.secondary"}>
+              {">"}
             </Typography>
           </MenuItem>
         </MenuList>

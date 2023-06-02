@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup"
-import { Button, Grid, TextField, Typography } from "@mui/material"
+import { Button, Grid, MenuItem, TextField, Typography } from "@mui/material"
 import React, { useContext, useState } from "react"
 import { useForm } from "react-hook-form"
 import * as Yup from "yup"
@@ -67,6 +67,7 @@ const LockPasswordTtl = () => {
             fullWidth
             id="lock-password-time-to-live"
             color="info"
+            select
             type="number"
             defaultValue={settingsContext.lockPasswordTimeToLive}
             sx={{ marginBottom: 2 }}
@@ -76,7 +77,17 @@ const LockPasswordTtl = () => {
             helperText={
               formState.errors.lockPasswordTimeToLive &&
               formState.errors.lockPasswordTimeToLive?.message
-            }></TextField>
+            }>
+            <MenuItem key={0} value={15}>
+              15 minutes
+            </MenuItem>
+            <MenuItem key={1} value={60}>
+              1 hour
+            </MenuItem>
+            <MenuItem key={2} value={1440}>
+              24 hours
+            </MenuItem>
+          </TextField>
 
           <Typography>
             This timer will determine how long to wait before automatically

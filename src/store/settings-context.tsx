@@ -1,9 +1,12 @@
+import { set } from "lodash"
 import React, { createContext, useState } from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
 // Declare settings context type
 type SettingsContextType = {
+  enableAlerts: boolean
+  enableAlertsHandler: (enabled: boolean) => void
   shownPage: string
   lockPassword: { password: string; timeStamp: number }
   lockPasswordRemove: () => void
@@ -20,6 +23,7 @@ interface Props {
 }
 
 export const SettingsContext = createContext<SettingsContextType>({
+  enableAlerts: false,
   lockPassword: { password: "", timeStamp: 0 },
   lockPasswordRemove: () => {},
   lockPasswordTimeToLive: 86400,
@@ -28,7 +32,10 @@ export const SettingsContext = createContext<SettingsContextType>({
   lockPasswordTimeToLiveHandler: (timeToLive: number) => {},
   shownPageHandler: (page: string) => {},
   requirePasswordWhenSend: false,
-  requirePasswordWhenSendHandler: (status: boolean) => {}
+  requirePasswordWhenSendHandler: (status: boolean) => {},
+  enableAlertsHandler: function (enabled: boolean): void {
+    throw new Error("Function not implemented.")
+  }
 })
 
 const SettingsContextProvider: React.FC<Props> = (props) => {
@@ -52,6 +59,14 @@ const SettingsContextProvider: React.FC<Props> = (props) => {
     setRequirePasswordWhenSend(status)
   }
 
+  const [enableAlerts, setEnableAlerts] = useStorage("enable-alerts", (v) =>
+    typeof v === undefined ? false : v
+  )
+
+  const enableAlertsHandler = async (enabled: boolean) => {
+    setEnableAlerts(enabled)
+  }
+
   const [shownPage, setShownPage] = useState<string>("dashboard")
 
   const lockPasswordHandler = async (password: string, timeStamp: number) => {
@@ -69,6 +84,7 @@ const SettingsContextProvider: React.FC<Props> = (props) => {
   }
 
   const settingsContextValue: SettingsContextType = {
+    enableAlerts: enableAlerts,
     lockPassword: lockPassword,
     lockPasswordRemove: remove,
     lockPasswordTimeToLive: lockPasswordTimeToLive,
@@ -77,7 +93,8 @@ const SettingsContextProvider: React.FC<Props> = (props) => {
     lockPasswordTimeToLiveHandler: lockPasswordTimeToLiveHandler,
     shownPageHandler: shownPageHandler,
     requirePasswordWhenSend: requirePasswordWhenSend,
-    requirePasswordWhenSendHandler: requirePasswordWhenSendHandler
+    requirePasswordWhenSendHandler: requirePasswordWhenSendHandler,
+    enableAlertsHandler: enableAlertsHandler
   }
 
   return (

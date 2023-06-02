@@ -7,10 +7,12 @@ import {
   Typography
 } from "@mui/material"
 import { Table, TableBody, TableRow } from "@mui/material"
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
+import Web3 from "web3"
 
 import HeaderLight from "~components/Layout/HeaderLight"
 import { config } from "~contents/config"
+import { useAlchemyGetTransactionReceipts } from "~hooks/use-alchemy"
 import { TransactionContext } from "~store/transaction-context"
 
 interface Props {
@@ -19,6 +21,7 @@ interface Props {
 
 const TransactionDetail = (props: Props) => {
   const transactionContext = useContext(TransactionContext)
+  const blockNumber = transactionContext.transactionDetail.blockNumber
   const goBackPageName = transactionContext.transactionDetail.goBackPageName
   const goBackPageTitle = transactionContext.transactionDetail.title
   const transactionHash = transactionContext.transactionDetail.transactionHash
@@ -39,6 +42,29 @@ const TransactionDetail = (props: Props) => {
   } else if (transactionContext.transactionDetail.transactionType === "0") {
     transactionType = "Received"
   }
+
+  const {
+    getTransactionReceipts,
+    error,
+    isLoaded,
+    isLoading,
+    transaction,
+    transactionFound
+  } = useAlchemyGetTransactionReceipts()
+
+  useEffect(() => {
+    getTransactionReceipts(blockNumber, transactionHash)
+  }, [])
+
+  const web3 = new Web3(new Web3.providers.HttpProvider(""))
+
+  const gasUsed =
+    parseInt(transaction!.gasUsed, 16).toString() !== "NaN"
+      ? web3.utils.fromWei(
+          web3.utils.toBN(parseInt(transaction!.gasUsed, 16)),
+          "ether"
+        )
+      : ""
 
   return (
     <Grid container item xs={12} display="block">
@@ -129,6 +155,13 @@ const TransactionDetail = (props: Props) => {
                 <TableCell align="right">
                   {config.tokens[0].blockchain}
                 </TableCell>
+              </TableRow>
+
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Network Fee:
+                </TableCell>
+                <TableCell align="right">MATIC {gasUsed}</TableCell>
               </TableRow>
             </TableBody>
           </Table>

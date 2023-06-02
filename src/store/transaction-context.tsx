@@ -3,6 +3,7 @@ import { createContext } from "react"
 
 type TransactionDetailType = {
   goBackPageName: string
+  blockNumber: string
   title: string
   transactionHash: string
   transactionType: string
@@ -21,6 +22,7 @@ type TransactionContextType = {
   transactionDetail: TransactionDetailType
   setTransactionDetailHandler: (
     goBackPageName: string,
+    blockNumber: string,
     title: string,
     transactionHash: string,
     transactionType: string,
@@ -42,6 +44,7 @@ interface Props {
 
 export const TransactionContext = createContext<TransactionContextType>({
   transactionDetail: {
+    blockNumber: "",
     goBackPageName: "",
     title: "",
     transactionHash: "",
@@ -63,6 +66,7 @@ const TransactionContextProvider: React.FC<Props> = (props) => {
   const [transactionDetail, setTransactionDetail] =
     useState<TransactionDetailType>({
       goBackPageName: "",
+      blockNumber: "",
       title: "",
       transactionHash: "",
       transactionType: "",
@@ -79,6 +83,7 @@ const TransactionContextProvider: React.FC<Props> = (props) => {
 
   const setTransactionDetailHandler = (
     goBackPageName: string,
+    blockNumber: string,
     title: string,
     transactionHash: string,
     transactionType: string,
@@ -94,6 +99,7 @@ const TransactionContextProvider: React.FC<Props> = (props) => {
   ) => {
     setTransactionDetail({
       goBackPageName,
+      blockNumber,
       title,
       transactionHash,
       transactionType,
