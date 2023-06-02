@@ -271,8 +271,6 @@ export const useAlchemyGetTransactionReceipts = () => {
         console.error(error)
       }
     }
-
-    console.log("transaction: " + transaction)
   }
 
   return {
