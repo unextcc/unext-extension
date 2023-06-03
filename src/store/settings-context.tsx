@@ -1,10 +1,11 @@
-import { set } from "lodash"
 import React, { createContext, useState } from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
 // Declare settings context type
 type SettingsContextType = {
+  connectionError: {}
+  connectionErrorHandler: (error: string) => void
   enableAlerts: boolean
   enableAlertsHandler: (enabled: boolean) => void
   shownPage: string
@@ -23,6 +24,8 @@ interface Props {
 }
 
 export const SettingsContext = createContext<SettingsContextType>({
+  connectionError: {},
+  connectionErrorHandler: (error: string) => {},
   enableAlerts: false,
   lockPassword: { password: "", timeStamp: 0 },
   lockPasswordRemove: () => {},
@@ -55,6 +58,12 @@ const SettingsContextProvider: React.FC<Props> = (props) => {
     (v) => (typeof v === undefined ? false : v)
   )
 
+  const [connectionError, setConnectionError] = useState<object>({})
+
+  const connectionErrorHandler = (error: {}) => {
+    setConnectionError(error)
+  }
+
   const requirePasswordWhenSendHandler = (status: boolean) => {
     setRequirePasswordWhenSend(status)
   }
@@ -84,6 +93,8 @@ const SettingsContextProvider: React.FC<Props> = (props) => {
   }
 
   const settingsContextValue: SettingsContextType = {
+    connectionError: connectionError,
+    connectionErrorHandler: connectionErrorHandler,
     enableAlerts: enableAlerts,
     lockPassword: lockPassword,
     lockPasswordRemove: remove,

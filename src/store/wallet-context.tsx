@@ -88,11 +88,11 @@ const WalletContextProvider: React.FC<Props> = (props) => {
         setIsWalletConfiguredLoaded(false)
 
         const wallets = await storage.get("wallets")
-        const wallet = wallets[0][0]
+        const wallet = wallets?.[0]?.[0]
 
         if (
           // @ts-ignore
-          wallet.address === "0x0000000000000000000000000000000000000000" &&
+          wallet?.address === "0x0000000000000000000000000000000000000000" &&
           !encryptedPrivateKey
         ) {
           setIsWalletConfigured(false)

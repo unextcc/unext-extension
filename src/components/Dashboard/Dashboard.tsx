@@ -27,6 +27,7 @@ function a11yProps(index: number) {
 }
 
 const Dashboard = (props: Props) => {
+  const settingsContext = useContext(SettingsContext)
   const walletContext = useContext(WalletContext)
 
   const [value, setValue] = useState(0)
@@ -72,8 +73,8 @@ const Dashboard = (props: Props) => {
         alignItems="flex-start">
         {(error || errorTransactions) && (
           <Alert variant="outlined" severity="error">
-            {error}
-            {errorTransactions}
+            {error.split(": ")[1]}
+            {errorTransactions.split(": ")[1]}
           </Alert>
         )}
 

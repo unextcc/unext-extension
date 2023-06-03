@@ -2,16 +2,13 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { Visibility, VisibilityOff } from "@mui/icons-material"
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline"
 import {
+  Alert,
   Button,
   CircularProgress,
-  Divider,
-  FormControl,
   Grid,
   InputAdornment,
-  InputLabel,
   MenuItem,
   Paper,
-  Select,
   Table,
   TableBody,
   TableCell,
@@ -20,7 +17,6 @@ import {
   TextField,
   Typography
 } from "@mui/material"
-import { type } from "os"
 import React, { useContext, useState } from "react"
 import { useForm } from "react-hook-form"
 import Web3 from "web3"
@@ -29,7 +25,11 @@ import * as Yup from "yup"
 import Footer from "~components/Layout/Footer"
 import HeaderLight from "~components/Layout/HeaderLight"
 import { config } from "~contents/config"
-import { useWeb3EstimateFee, useWeb3Send } from "~hooks/use-web3"
+import {
+  useWeb3EstimateFee,
+  useWeb3Send,
+  useWeb3TokenBalance
+} from "~hooks/use-web3"
 import { SettingsContext } from "~store/settings-context"
 import { WalletContext } from "~store/wallet-context"
 import { verifyPassword } from "~utils/encryption"
@@ -59,11 +59,20 @@ const Send: React.FC = () => {
   const isLockPasswordSet = settingsContext.lockPassword.password !== ""
   const requirePasswordWhenSend = settingsContext.requirePasswordWhenSend
 
+  const { balance } = useWeb3TokenBalance(
+    wallets[0].address,
+    config.tokens[0].contractAddress,
+    config.tokens[0].decimals
+  )
+
   const formSchema = Yup.object()
     .shape({
       sendingAmount: Yup.number()
-        .required("Sending amount is required!")
-        .moreThan(0, "Sending amount must greater than 0!"),
+        .required("Sending amount is required")
+        .typeError("Sending amount must be number")
+        .moreThan(0, "Sending amount must greater than 0")
+        .min(1, "Minimun sending amount is 1")
+        .max(Number(balance), "Not enough balance in your account"),
       fromAddress: Yup.string()
         .required("Please enter from address")
         .min(42, "Address must be 42 characters long"),
@@ -74,7 +83,7 @@ const Send: React.FC = () => {
         "requirePasswordWhenSend",
         (requirePasswordWhenSend, schema) =>
           requirePasswordWhenSend
-            ? schema.required("Wallet password is required!")
+            ? schema.required("Wallet password is required")
             : schema
       ),
       confirmSend: Yup.bool().oneOf(
@@ -131,27 +140,34 @@ const Send: React.FC = () => {
   )
 
   const firstAmountStepHandler = async () => {
+    const web3 = new Web3(new Web3.providers.HttpProvider(""))
+    const isFromAddressValid = web3.utils.isAddress(getValues("fromAddress"))
+    const isToAddressValid = web3.utils.isAddress(getValues("toAddress"))
+
+    if (getValues("sendingAmount") === 0 || !getValues("sendingAmount")) {
+      setError("sendingAmount", {
+        type: "custom",
+        message: "Please enter a positive sending amount"
+      })
+    }
+
+    if (!isFromAddressValid) {
+      setError("fromAddress", {
+        type: "custom",
+        message: "Sending account address is not valid!"
+      })
+      return
+    }
+
+    if (!isToAddressValid) {
+      setError("toAddress", {
+        type: "custom",
+        message: "Receiving account address is not valid!"
+      })
+      return
+    }
+
     if (requirePasswordWhenSend) {
-      const web3 = new Web3(new Web3.providers.HttpProvider(""))
-      const isFromAddressValid = web3.utils.isAddress(getValues("fromAddress"))
-      const isToAddressValid = web3.utils.isAddress(getValues("toAddress"))
-
-      if (!isFromAddressValid) {
-        setError("fromAddress", {
-          type: "custom",
-          message: "Sending account address is not valid!"
-        })
-        return
-      }
-
-      if (!isToAddressValid) {
-        setError("toAddress", {
-          type: "custom",
-          message: "Sending account address is not valid!"
-        })
-        return
-      }
-
       const isPasswordCorrect = verifyPassword(
         walletContext.encryptedPrivateKey,
         getValues("walletPassword")
@@ -166,13 +182,7 @@ const Send: React.FC = () => {
       }
     }
 
-    if (getValues("sendingAmount") <= 0) {
-      setError("sendingAmount", { type: "custom", message: "Error!" })
-      return
-    } else {
-      clearErrors()
-      setStep("secondConfirmSendStep")
-    }
+    setStep("secondConfirmSendStep")
   }
 
   const secondConfirmSendStepHandler = async () => {
@@ -204,15 +214,11 @@ const Send: React.FC = () => {
           label="Sending amount"
           type="number"
           color="info"
-          value={1}
           error={
             formState.errors.sendingAmount?.message?.length !== 0 &&
             formState.errors.sendingAmount?.message?.length !== undefined
           }
-          helperText={
-            getFieldState("sendingAmount").invalid &&
-            "Please enter a positive amount!"
-          }
+          helperText={formState.errors.sendingAmount?.message}
           fullWidth
           {...register("sendingAmount")}
         />
@@ -272,7 +278,6 @@ const Send: React.FC = () => {
           label="Enter receiving account address"
           color="info"
           fullWidth
-          defaultValue="0xB32339605Feb98CA4d114425d868132a555394bC"
           error={
             formState.errors.toAddress?.message?.length !== 0 &&
             formState.errors.toAddress?.message?.length !== undefined
@@ -463,10 +468,15 @@ const Send: React.FC = () => {
               <CheckCircleOutlineIcon sx={{ fontSize: 40 }} color="success" />
             </Typography>
           )}
+          {sendTokenStatus === "error" && (
+            <Alert variant="outlined" severity="error" sx={{ width: "100%" }}>
+              {sendTokenError}
+            </Alert>
+          )}
         </Grid>
       )}
 
-      {sendTokenStatus === "idle" || sendTokenError ? (
+      {sendTokenStatus === "idle" || sendTokenStatus === "error" ? (
         <Grid container item xs={12}>
           <Grid
             item
@@ -479,7 +489,7 @@ const Send: React.FC = () => {
               variant="outlined"
               fullWidth
               onClick={() => setStep("firstAmountStep")}
-              disabled={sendTokenStatus !== "idle"}
+              disabled={false}
               sx={{ maxWidth: "150px" }}>
               Back
             </Button>
@@ -496,7 +506,7 @@ const Send: React.FC = () => {
               variant="outlined"
               fullWidth
               onClick={() => secondConfirmSendStepHandler()}
-              disabled={sendTokenStatus !== "idle"}
+              disabled={false}
               sx={{ maxWidth: "150px" }}>
               Send
             </Button>

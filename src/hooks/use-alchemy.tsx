@@ -282,3 +282,49 @@ export const useAlchemyGetTransactionReceipts = () => {
     transaction
   }
 }
+
+export const useAlchemyCheckConnection = () => {
+  const [isConnected, setIsConnected] = useState<boolean>(true)
+  const [error, setError] = useState<string>("")
+
+  const alchemyConfig: AlchemyConfig = {
+    apiKey: config.tokens[0].alchemyApiKey,
+    network: config.tokens[0].alchemyNetwork,
+    maxRetries: config.tokens[0].alchemyMaxRetries,
+    batchRequests: false,
+    getProvider: function (): Promise<types.AlchemyProvider> {
+      throw new Error("Function not implemented.")
+    },
+    getWebSocketProvider: function (): Promise<types.AlchemyWebSocketProvider> {
+      throw new Error("Function not implemented.")
+    },
+    url: config.tokens[0].alchemyUrl
+  }
+
+  const alchemy = new Alchemy(alchemyConfig)
+
+  const alchemyCheckConnection = async () => {
+    try {
+      await alchemy.core.getNetwork()
+    } catch (err: any) {
+      if (err.code === 429) {
+        setIsConnected(false)
+        setError(err.message)
+        console.log(err.message)
+      } else {
+        setIsConnected(false)
+        setError(err.message)
+        console.error(err)
+      }
+    }
+  }
+
+  useEffect(() => {
+    alchemyCheckConnection()
+  }, [])
+
+  return {
+    error,
+    isConnected
+  }
+}

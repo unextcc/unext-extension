@@ -17,6 +17,7 @@ import ConfigureWallet from "~components/Landing/ConfigureWallet"
 import CreateNewWallet from "~components/Landing/CreateNewWallet"
 import ImportWallet from "~components/Landing/ImportWallet"
 import Landing from "~components/Landing/Landing"
+import ConnectionError from "~components/Layout/ConnectionError"
 import LockPassword from "~components/LockPassword/LockPassword"
 import ChangeWalletPassword from "~components/Settings/ChangeWalletPassword"
 import LockPasswordTtl from "~components/Settings/LockPasswordTtl"
@@ -27,6 +28,7 @@ import Settings from "~components/Settings/Settings"
 import ShowPrivateKey from "~components/Settings/ShowPrivateKey"
 import TransactionDetail from "~components/Transaction/TransactionDetail"
 import Transactions from "~components/Transaction/Transactions"
+import { useAlchemyCheckConnection } from "~hooks/use-alchemy"
 import { SettingsContext } from "~store/settings-context"
 import { WalletContext } from "~store/wallet-context"
 
@@ -47,6 +49,8 @@ const App = () => {
     "createNewWallet",
     "importWallet"
   ]
+
+  const { error, isConnected } = useAlchemyCheckConnection()
 
   useEffect(() => {
     if (isLockPasswordExpired) {

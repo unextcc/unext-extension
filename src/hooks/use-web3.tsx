@@ -44,7 +44,6 @@ export const useWeb3CreateAccount = () => {
     try {
       const web3 = new Web3(new Web3.providers.HttpProvider(providerUrl))
       const createAccount = web3.eth.accounts.create()
-      console.log(password)
       const encryptedPrivateKey = encryptAES(createAccount.privateKey, password)
 
       setAccount({
@@ -219,8 +218,6 @@ export const useWeb3Send = (
   const [error, setError] = useState<string>("")
 
   const sendToken = async (): Promise<void> => {
-    var privateKeyInHex = Buffer.from(privateKey, "hex")
-
     try {
       setStatus("working")
 
@@ -237,7 +234,7 @@ export const useWeb3Send = (
       )
 
       // Get the nonce for the sending address
-      const nonce = await web3.eth.getTransactionCount(fromAddress)
+      const nonce = await web3.eth.getTransactionCount(fromAddress, "latest")
       const amountToSend = await web3.utils.toBN(
         "0x" + (amount * 10 ** config.tokens[token].decimals).toString(16)
       )
@@ -245,7 +242,8 @@ export const useWeb3Send = (
         .transfer(toAddress, amountToSend)
         .encodeABI()
 
-      console.log(data)
+      console.log("data " + data)
+      console.log("nonce " + nonce)
 
       // Build the transaction object
       const tx = {
@@ -254,7 +252,7 @@ export const useWeb3Send = (
         to: config.tokens[token].contractAddress,
         value: "0x0", //Send 0 ether
         data: data,
-        gasLimit: web3.utils.toHex(60000),
+        gasLimit: web3.utils.toHex(600000),
         gasPrice: web3.utils.toHex(
           web3.utils.toWei(Number(gasFee).toFixed(2), "gwei")
         )
@@ -280,6 +278,7 @@ export const useWeb3Send = (
 
       setStatus("success")
     } catch (err: any) {
+      setStatus("error")
       setError(err.message)
       console.error(err)
     }
