@@ -130,15 +130,31 @@ const Settings = (props: Props) => {
         </Typography>
 
         <MenuList>
-          <MenuItem>
+          <MenuItem
+            component="a"
+            href="https://www.unext.cc/help"
+            target="_blank">
             <ListItemText>Help</ListItemText>
             <Typography variant={"body2"} color={"text.secondary"}>
               <OpenInNewIcon />
             </Typography>
           </MenuItem>
 
-          <MenuItem>
+          <MenuItem
+            component="a"
+            href="https://www.unext.cc/terms/"
+            target="_blank">
             <ListItemText>Terms of service</ListItemText>
+            <Typography variant={"body2"} color={"text.secondary"}>
+              <OpenInNewIcon />
+            </Typography>
+          </MenuItem>
+
+          <MenuItem
+            component="a"
+            href="https://unext.cc/privacy/"
+            target="_blank">
+            <ListItemText>Privacy Policy</ListItemText>
             <Typography variant={"body2"} color={"text.secondary"}>
               <OpenInNewIcon />
             </Typography>
@@ -147,7 +163,7 @@ const Settings = (props: Props) => {
           <MenuItem>
             <ListItemText>Version</ListItemText>
             <Typography variant={"body2"} color={"text.secondary"}>
-              {"0.0.1"}
+              {"0.1.0"}
             </Typography>
           </MenuItem>
         </MenuList>

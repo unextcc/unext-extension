@@ -1,9 +1,9 @@
 {
   "name": "unext-extension",
-  "displayName": "Unext extension",
-  "version": "0.0.1",
-  "description": "uNeXT Digital Wallet",
-  "author": "uNeXT",
+  "displayName": "uNeXT Wallet",
+  "version": "0.1.0",
+  "description": "uNeXT Next step for digital money",
+  "author": "uNeXT Inc.",
   "scripts": {
     "dev": "plasmo dev",
     "build": "plasmo build",
@@ -45,13 +45,18 @@
   },
   "manifest": {
     "host_permissions": [
-      "https://*/*"
-    ],
-    "permissions": [
-      "tabs"
-    ],
-    "chrome_url_overrides": {
-      "newtab": "popup.html"
-    }
+      "https://polygonscan.com",
+      "https://gasstation-mainnet.matic.network/v2",
+      "https://api.unext.cc/alchemy-polygon",
+      "https://api.unext.cc/alchemy-ethereum",
+      "https://api.unext.cc/infura-polygon",
+      "https://api.unext.cc/infura-ethereum",
+      "https://mumbai.polygonscan.com",
+      "https://gasstation-mumbai.matic.today/v2",
+      "http://localhost:8000/alchemy-polygon-mumbai",
+      "http://localhost:8000/alchemy-ethereum-mumbai",
+      "http://localhost:8000/infura-ethereum-mumbai",
+      "http://localhost:8000/infura-polygon-mumbai"
+    ]
   }
 }
