@@ -42,9 +42,9 @@ const Account = (props: Props) => {
   } = useWeb3TokenBalance(
     // @ts-ignore
     wallet.address,
-    config.tokens[0].contractAddress,
+    config.tokens[0].networks[0].contractAddress,
     config.tokens[0].decimals,
-    config.tokens[0].providerUrl
+    config.tokens[0].networks[0].providerUrl
   )
 
   const {
@@ -55,9 +55,9 @@ const Account = (props: Props) => {
   } = useWeb3TokenBalance(
     // @ts-ignore
     wallet.address,
-    config.cryptoTokens[0].contractAddress,
+    config.cryptoTokens[0].networks[1].contractAddress,
     config.cryptoTokens[0].decimals,
-    config.cryptoTokens[0].providerUrl
+    config.cryptoTokens[0].networks[1].providerUrl
   )
 
   const {
@@ -67,7 +67,10 @@ const Account = (props: Props) => {
     transactions
   } = useAlchemyGetAssetTransfers(
     wallet.address,
-    [config.tokens[0].contractAddress, config.cryptoTokens[0].contractAddress],
+    [
+      config.tokens[0].networks[1].contractAddress,
+      config.cryptoTokens[0].networks[0].contractAddress
+    ],
     "0x0",
     [AssetTransfersCategory.ERC20, AssetTransfersCategory.EXTERNAL]
   )

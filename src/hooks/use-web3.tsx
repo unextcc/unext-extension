@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react"
 import Web3 from "web3"
 
 import { config } from "~contents/config"
-import { decryptAES, encryptAES } from "~utils/encryption"
+import { encryptAES } from "~utils/encryption"
 
 type accountType = {
   address: string
@@ -55,7 +55,7 @@ export const useWeb3TokenBalance = (
   accountAddress: string,
   contractAddress: string,
   decimals: number,
-  providerUrl: string = config.providerUrl
+  providerUrl: string = config.tokens[0].networks[1].providerUrl
 ) => {
   const [balance, setBalance] = useState<string>("")
   const [error, setError] = useState<string>("")
@@ -68,7 +68,7 @@ export const useWeb3TokenBalance = (
       accountAddress: string,
       contractAddress: string,
       decimals: number,
-      providerUrl: string = config.providerUrl
+      providerUrl: string = config.tokens[0].networks[1].providerUrl
     ) => {
       setStatus("loading")
       try {
@@ -105,7 +105,10 @@ export const useWeb3GetAddressFromPrivateKey = () => {
   const [status, setStatus] = useState<string>("idle")
 
   const getAddressFromPrivateKey = useCallback(
-    async (privateKey: string, providerUrl: string = config.providerUrl) => {
+    async (
+      privateKey: string,
+      providerUrl: string = config.tokens[0].networks[1].providerUrl
+    ) => {
       try {
         setStatus("working")
         const web3 = await new Web3(

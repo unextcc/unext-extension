@@ -59,7 +59,7 @@ const CreateNewWallet = () => {
 
   const onSubmit = async (data: formType) => {
     // create account
-    await createAccount(data.password, config.tokens[0].providerUrl)
+    await createAccount(data.password, config.tokens[0].networks[0].providerUrl)
 
     // set step
     setStep("createWalletStep")
