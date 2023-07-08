@@ -55,7 +55,7 @@ export const useWeb3TokenBalance = (
   accountAddress: string,
   contractAddress: string,
   decimals: number,
-  providerUrl: string = config.tokens[0].networks[1].providerUrl
+  providerUrl: string = config.tokens[1].networks[1].providerUrl
 ) => {
   const [balance, setBalance] = useState<string>("")
   const [error, setError] = useState<string>("")
@@ -68,7 +68,7 @@ export const useWeb3TokenBalance = (
       accountAddress: string,
       contractAddress: string,
       decimals: number,
-      providerUrl: string = config.tokens[0].networks[1].providerUrl
+      providerUrl: string = config.tokens[1].networks[1].providerUrl
     ) => {
       setStatus("loading")
       try {

@@ -58,9 +58,9 @@ export const useAlchemyGetAssetTransfers = (
   const [status, setStatus] = useState("idle")
 
   const alchemyConfig: AlchemyConfig = {
-    apiKey: config.tokens[0].networks[0].alchemyApiKey,
-    network: config.tokens[0].networks[0].alchemyNetwork,
-    maxRetries: config.tokens[0].networks[0].alchemyMaxRetries,
+    apiKey: config.tokens[1].networks[1].alchemyApiKey,
+    network: config.tokens[1].networks[1].alchemyNetwork,
+    maxRetries: config.tokens[1].networks[1].alchemyMaxRetries,
     batchRequests: false,
     getProvider: function (): Promise<types.AlchemyProvider> {
       throw new Error("Function not implemented.")
@@ -68,7 +68,7 @@ export const useAlchemyGetAssetTransfers = (
     getWebSocketProvider: function (): Promise<types.AlchemyWebSocketProvider> {
       throw new Error("Function not implemented.")
     },
-    url: config.tokens[0].networks[0].alchemyUrl
+    url: config.tokens[1].networks[1].alchemyUrl
   }
 
   const alchemy = new Alchemy(alchemyConfig)

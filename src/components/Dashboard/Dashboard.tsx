@@ -59,9 +59,9 @@ const Dashboard = (props: Props) => {
   const { balance, isLoaded, error } = useWeb3TokenBalance(
     // @ts-ignore
     wallets[0].address,
-    config.tokens[0].networks[0].contractAddress,
-    config.tokens[0].decimals,
-    config.tokens[0].networks[0].providerUrl
+    config.tokens[1].networks[1].contractAddress,
+    config.tokens[1].decimals,
+    config.tokens[1].networks[1].providerUrl
   )
 
   const {
@@ -71,7 +71,7 @@ const Dashboard = (props: Props) => {
     transactions
   } = useAlchemyGetAssetTransfers(
     wallet.address,
-    [config.tokens[0].networks[0].contractAddress],
+    [config.tokens[1].networks[1].contractAddress],
     "0x0",
     [AssetTransfersCategory.ERC20]
   )
