@@ -124,7 +124,7 @@ export const useWeb3GetAddressFromPrivateKey = () => {
   const getAddressFromPrivateKey = useCallback(
     async (
       privateKey: string,
-      providerUrl: string = config.tokens[0].networks[1].providerUrl
+      providerUrl: string = config.tokens[1].networks[1].providerUrl
     ) => {
       try {
         setStatus("working")
@@ -155,7 +155,7 @@ export const useWeb3GetAddressFromPrivateKey = () => {
 }
 
 export const useWeb3EstimateFee = (
-  gasStationUrl: string = config.gasStationUrl
+  gasStationUrl: string = config.tokens[1].networks[1].gasStationUrl
 ) => {
   const [estimatedFeeInMatic, setestimatedFeeInMatic] = useState<string>("")
   const [estimatedFeeInGwei, setestimatedFeeInGwei] = useState<string>("")
@@ -164,7 +164,11 @@ export const useWeb3EstimateFee = (
 
   useEffect(() => {
     const estimateFee = async () => {
-      const web3 = new Web3(new Web3.providers.HttpProvider(config.providerUrl))
+      const web3 = new Web3(
+        new Web3.providers.HttpProvider(
+          config.tokens[1].networks[1].providerUrl
+        )
+      )
 
       try {
         setStatus("working")
@@ -214,7 +218,7 @@ export const useWeb3Send = (
   fromAddress: string,
   toAddress: string,
   privateKey: string,
-  providerUrl: string = config.providerUrl
+  providerUrl: string = config.tokens[1].networks[1].providerUrl
 ) => {
   const [transactionHash, setTransactionHash] = useState<string>()
   const [status, setStatus] = useState<string>("idle")
@@ -230,7 +234,7 @@ export const useWeb3Send = (
       // Get the contract instance
       const contract = new web3.eth.Contract(
         Abi,
-        config.tokens[token].contractAddress,
+        config.tokens[1].networks[1].contractAddress,
         {
           from: fromAddress
         }
@@ -252,7 +256,7 @@ export const useWeb3Send = (
       const tx = {
         from: fromAddress,
         nonce: "0x" + nonce.toString(16),
-        to: config.tokens[token].contractAddress,
+        to: config.tokens[1].networks[1].contractAddress,
         value: "0x0", //Send 0 ether
         data: data,
         gasLimit: web3.utils.toHex(600000),

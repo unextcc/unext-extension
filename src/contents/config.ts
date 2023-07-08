@@ -17,6 +17,7 @@ type envType = {
       chaindId: string
       contractAddress: string
       enabled: boolean
+      gasStationUrl: string
       name: string
       network: string
       providerUrl: string
@@ -38,6 +39,7 @@ type envType = {
       chaindId: string
       contractAddress: string
       enabled: boolean
+      gasStationUrl: string
       name: string
       network: string
       providerUrl: string
@@ -66,6 +68,7 @@ const prod: envType = {
           chaindId: "none",
           contractAddress: "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
           enabled: true,
+          gasStationUrl: "",
           name: "avalanche",
           network: "mainnet",
           providerUrl: "https://api.avax.network/ext/bc",
@@ -80,8 +83,9 @@ const prod: envType = {
           chaindId: "none",
           contractAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
           enabled: false,
+          gasStationUrl: "",
           name: "ethereum",
-          network: "z",
+          network: "mainnet",
           providerUrl: "https://api.unext.cc/infura-ethereum",
           scannerUrl: "https://etherscan.io"
         }
@@ -104,6 +108,7 @@ const prod: envType = {
           alchemyUrl: "",
           chaindId: "none",
           contractAddress: "0xC891EB4cbdEFf6e073e859e987815Ed1505c2ACD",
+          gasStationUrl: "",
           enabled: true,
           name: "avalanche",
           network: "mainnet",
@@ -119,6 +124,7 @@ const prod: envType = {
           chaindId: "none",
           contractAddress: "0x1aBaEA1f7C830bD89Acc67eC4af516284b1bC33c",
           enabled: true,
+          gasStationUrl: "",
           name: "ethereum",
           network: "mainnet",
           providerUrl: "https://api.unext.cc/infura-ethereum",
@@ -144,6 +150,7 @@ const prod: envType = {
           chaindId: "",
           contractAddress: "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
           enabled: true,
+          gasStationUrl: "",
           name: "avalanche",
           network: "mainnet",
           providerUrl: "https://api.avax.network/ext/bc",
@@ -165,8 +172,9 @@ const prod: envType = {
           alchemyNetwork: Network.ETH_MAINNET,
           alchemyUrl: "https://api.unext.cc/alchemy-ethereum",
           chaindId: "none",
-          contractAddress: "none",
+          contractAddress: "0x",
           enabled: true,
+          gasStationUrl: "",
           name: "avalanche",
           network: "mainnet",
           providerUrl: "https://api.unext.cc/infura-ethereum",
@@ -197,6 +205,7 @@ const dev: envType = {
           chaindId: "none",
           contractAddress: "0x5425890298aed601595a70ab815c96711a31bc65",
           enabled: true,
+          gasStationUrl: "",
           name: "avalanche",
           network: "testnet",
           providerUrl: "https://api.avax-test.network/ext/bc",
@@ -211,6 +220,8 @@ const dev: envType = {
           chaindId: "none",
           contractAddress: "0x07865c6E87B9F70255377e024ace6630C1Eaa37F",
           enabled: false,
+          gasStationUrl:
+            "https://api.etherscan.io/api?module=gastracker&action=gasestimate&gasprice=2000000000&apikey=H8HXPX42N8MTQS7TZBD7RFTZUEJ2YV8Y98",
           name: "ethereum",
           network: "goerli",
           providerUrl: "http://localhost:8000/infura-ethereum-goerli",
@@ -237,6 +248,7 @@ const dev: envType = {
           contractAddress: "0x5E44db7996c682E92a960b65AC713a54AD815c6B",
           enabled: false,
           name: "avalanche",
+          gasStationUrl: "",
           network: "testnet",
           providerUrl: "https://api.avax-test.network/ext/bc",
           scannerUrl: "https://subnets-test.avax.network"
@@ -250,6 +262,8 @@ const dev: envType = {
           chaindId: "none",
           contractAddress: "0xA683d909e996052955500DDc45CA13E25c76e286",
           enabled: false,
+          gasStationUrl:
+            "https://api.etherscan.io/api?module=gastracker&action=gasestimate&gasprice=2000000000&apikey=H8HXPX42N8MTQS7TZBD7RFTZUEJ2YV8Y98",
           name: "ethereum",
           network: "goerli",
           providerUrl: "http://localhost:8000/infura-ethereum-goerli",
@@ -274,6 +288,7 @@ const dev: envType = {
           alchemyUrl: "",
           chaindId: "none",
           contractAddress: "",
+          gasStationUrl: "",
           enabled: true,
           name: "avalanche",
           network: "testnet",
@@ -296,8 +311,10 @@ const dev: envType = {
           alchemyNetwork: Network.ETH_MAINNET,
           alchemyUrl: "http://localhost:8000/alchemy-ethereum-goerli",
           chaindId: "none",
-          contractAddress: "none",
+          contractAddress: "0x",
           enabled: true,
+          gasStationUrl:
+            "https://api.etherscan.io/api?module=gastracker&action=gasestimate&gasprice=2000000000&apikey=H8HXPX42N8MTQS7TZBD7RFTZUEJ2YV8Y98",
           name: "ethereum",
           network: "goerli",
           providerUrl: "http://localhost:8000/infura-ethereum-goerli",

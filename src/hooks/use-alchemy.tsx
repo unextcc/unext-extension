@@ -229,9 +229,9 @@ export const useAlchemyGetTransactionReceipts = () => {
   const [status, setStatus] = useState("idle")
 
   const alchemyConfig: AlchemyConfig = {
-    apiKey: config.tokens[0].alchemyApiKey,
-    network: config.tokens[0].alchemyNetwork,
-    maxRetries: config.tokens[0].alchemyMaxRetries,
+    apiKey: config.tokens[1].networks[1].alchemyApiKey,
+    network: config.tokens[1].networks[1].alchemyNetwork,
+    maxRetries: config.tokens[1].networks[1].alchemyMaxRetries,
     batchRequests: false,
     getProvider: function (): Promise<types.AlchemyProvider> {
       throw new Error("Function not implemented.")
@@ -239,7 +239,7 @@ export const useAlchemyGetTransactionReceipts = () => {
     getWebSocketProvider: function (): Promise<types.AlchemyWebSocketProvider> {
       throw new Error("Function not implemented.")
     },
-    url: config.tokens[0].alchemyUrl
+    url: config.tokens[0].networks[1].alchemyUrl
   }
 
   const alchemy = new Alchemy(alchemyConfig)
@@ -288,9 +288,9 @@ export const useAlchemyCheckConnection = () => {
   const [error, setError] = useState<string>("")
 
   const alchemyConfig: AlchemyConfig = {
-    apiKey: config.tokens[0].alchemyApiKey,
-    network: config.tokens[0].alchemyNetwork,
-    maxRetries: config.tokens[0].alchemyMaxRetries,
+    apiKey: config.tokens[1].networks[1].alchemyApiKey,
+    network: config.tokens[1].networks[1].alchemyNetwork,
+    maxRetries: config.tokens[1].networks[1].alchemyMaxRetries,
     batchRequests: false,
     getProvider: function (): Promise<types.AlchemyProvider> {
       throw new Error("Function not implemented.")
@@ -298,7 +298,7 @@ export const useAlchemyCheckConnection = () => {
     getWebSocketProvider: function (): Promise<types.AlchemyWebSocketProvider> {
       throw new Error("Function not implemented.")
     },
-    url: config.tokens[0].alchemyUrl
+    url: config.tokens[0].networks[1].alchemyUrl
   }
 
   const alchemy = new Alchemy(alchemyConfig)
