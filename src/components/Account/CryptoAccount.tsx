@@ -1,8 +1,9 @@
 import { Alert, Grid } from "@mui/material"
 import { AssetTransfersCategory } from "alchemy-sdk"
-import { SortingOrder } from "alchemy-sdk"
-import React, { useContext } from "react"
+import type React from "react"
+import { useContext } from "react"
 
+import AccountBalanceItem from "~components/Account/AccountBalanceItem"
 import ActionMenu from "~components/Layout/ActionMenu"
 import Footer from "~components/Layout/Footer"
 import HeaderLight from "~components/Layout/HeaderLight"
@@ -12,23 +13,26 @@ import { useAlchemyGetAssetTransfers } from "~hooks/use-alchemy"
 import { useWeb3TokenBalance } from "~hooks/use-web3"
 import { WalletContext } from "~store/wallet-context"
 
-import AccountDetailItem from "./AccountDetailItem"
-
 interface Props {
   children?: React.ReactNode
 }
 
-const AccountMATIC = (props: Props) => {
+const CryptoAccount = (props: Props) => {
   const walletContext = useContext(WalletContext)
   // @ts-ignore
   const wallet = walletContext.wallets[0][0]
 
-  const { balance, isLoaded, error } = useWeb3TokenBalance(
+  const {
+    balance: balanceMATIC,
+    isError: isErrorMATIC,
+    isLoaded: isLoadedMATIC,
+    error: errorMATIC
+  } = useWeb3TokenBalance(
     // @ts-ignore
     wallet.address,
-    config.cryptoTokens[0].networks[0].contractAddress,
+    config.cryptoTokens[0].contractAddress,
     config.cryptoTokens[0].decimals,
-    config.cryptoTokens[0].networks[0].providerUrl
+    config.cryptoTokens[0].providerUrl
   )
 
   const {
@@ -38,17 +42,14 @@ const AccountMATIC = (props: Props) => {
     transactions
   } = useAlchemyGetAssetTransfers(
     wallet.address,
-    [config.cryptoTokens[0].networks[0].contractAddress],
+    [config.tokens[0].contractAddress, config.cryptoTokens[0].contractAddress],
     "0x0",
-    [AssetTransfersCategory.EXTERNAL],
-    true,
-    SortingOrder.DESCENDING,
-    false
+    [AssetTransfersCategory.EXTERNAL]
   )
 
   return (
     <Grid container item xs={12}>
-      <HeaderLight goBackPage="account" title={"MATIC Account"} />
+      <HeaderLight title={"Accounts"} />
 
       <Grid
         container
@@ -57,23 +58,24 @@ const AccountMATIC = (props: Props) => {
         marginTop={7.5}
         display="block"
         alignItems="flex-start">
-        {(error || errorTransactions) && (
+        {(errorMATIC || errorTransactions) && (
           <Alert variant="outlined" severity="error">
-            {error}
+            {errorMATIC}
             {errorTransactions}
           </Alert>
         )}
-
-        <AccountDetailItem
-          accountAddress={wallet.address}
-          balance={isLoaded ? balance : "Loading..."}
-          title={"MATIC"}
-        />
+        <Grid container item xs={12} display="flex" spacing={1}>
+          <AccountBalanceItem
+            title={"MATIC"}
+            balance={isLoadedMATIC ? balanceMATIC : "Loading"}
+            accountPageName="accountMATIC"
+          />
+        </Grid>
 
         <ActionMenu />
 
         <RecentTransactions
-          goBackPageName="accountMATIC"
+          goBackPageName="account"
           title={"Recent Transactions"}
           isLoadingTransactions={isLoadingTransactions}
           transactionFound={transactionFound}
@@ -85,5 +87,4 @@ const AccountMATIC = (props: Props) => {
     </Grid>
   )
 }
-
-export default AccountMATIC
+export default CryptoAccount

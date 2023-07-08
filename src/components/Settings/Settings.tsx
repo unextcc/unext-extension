@@ -71,28 +71,13 @@ const Settings = (props: Props) => {
         <Divider />
 
         <Typography variant={"h6"} marginLeft={2}>
-          General
-        </Typography>
-
-        <MenuList>
-          <MenuItem>
-            <ListItemText>Manage notifications</ListItemText>
-            <Typography variant={"body2"} color={"text.secondary"}>
-              {">"}
-            </Typography>
-          </MenuItem>
-        </MenuList>
-
-        <Divider />
-
-        <Typography variant={"h6"} marginLeft={2}>
           Security
         </Typography>
 
         <MenuList>
           <MenuItem
             onClick={() => settingsContext.shownPageHandler("lockPasswordTtl")}>
-            <ListItemText>Security Lock</ListItemText>
+            <ListItemText>Wallet lock time</ListItemText>
             <Typography variant={"body2"} color={"text.secondary"}>
               {settingsContext.lockPasswordTimeToLive / 60}
               {settingsContext.lockPasswordTimeToLive < 120
@@ -110,6 +95,32 @@ const Settings = (props: Props) => {
               {">"}
             </Typography>
           </MenuItem>
+
+          <MenuItem
+            onClick={() =>
+              settingsContext.shownPageHandler("requirePasswordWhenSend")
+            }>
+            <ListItemText>Require password when sending</ListItemText>
+            <Typography variant={"body2"} color={"text.secondary"}>
+              {settingsContext.requirePasswordWhenSend ? "Enabled" : "Disabled"}
+            </Typography>
+          </MenuItem>
+        </MenuList>
+
+        <Divider />
+
+        <Typography variant={"h6"} marginLeft={2}>
+          Crypto Accounts
+        </Typography>
+
+        <MenuList>
+          <MenuItem
+            onClick={() => settingsContext.shownPageHandler("accountMATIC")}>
+            <ListItemText>MATIC</ListItemText>
+            <Typography variant={"body1"} color={"text.secondary"}>
+              {">"}
+            </Typography>
+          </MenuItem>
         </MenuList>
 
         <Divider />
@@ -119,15 +130,31 @@ const Settings = (props: Props) => {
         </Typography>
 
         <MenuList>
-          <MenuItem>
+          <MenuItem
+            component="a"
+            href="https://www.unext.cc/help"
+            target="_blank">
             <ListItemText>Help</ListItemText>
             <Typography variant={"body2"} color={"text.secondary"}>
               <OpenInNewIcon />
             </Typography>
           </MenuItem>
 
-          <MenuItem>
+          <MenuItem
+            component="a"
+            href="https://www.unext.cc/terms/"
+            target="_blank">
             <ListItemText>Terms of service</ListItemText>
+            <Typography variant={"body2"} color={"text.secondary"}>
+              <OpenInNewIcon />
+            </Typography>
+          </MenuItem>
+
+          <MenuItem
+            component="a"
+            href="https://unext.cc/privacy/"
+            target="_blank">
+            <ListItemText>Privacy Policy</ListItemText>
             <Typography variant={"body2"} color={"text.secondary"}>
               <OpenInNewIcon />
             </Typography>
@@ -136,7 +163,7 @@ const Settings = (props: Props) => {
           <MenuItem>
             <ListItemText>Version</ListItemText>
             <Typography variant={"body2"} color={"text.secondary"}>
-              {"0.0.1"}
+              {"0.1.0"}
             </Typography>
           </MenuItem>
         </MenuList>

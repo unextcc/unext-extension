@@ -15,7 +15,9 @@ import * as Yup from "yup"
 import HeaderLight from "~components/Layout/HeaderLight"
 import { config } from "~contents/config"
 import { useWeb3CreateAccount } from "~hooks/use-web3"
+import { SettingsContext } from "~store/settings-context"
 import { WalletContext } from "~store/wallet-context"
+import { getTimeNow } from "~utils/other"
 
 interface Props {
   children?: React.ReactNode
@@ -28,6 +30,7 @@ type formType = {
 }
 
 const CreateNewWallet = () => {
+  const settingsContext = useContext(SettingsContext)
   const walletContext = useContext(WalletContext)
 
   const [step, setStep] = useState("passwordStep")
@@ -66,7 +69,7 @@ const CreateNewWallet = () => {
   }
 
   const createWalletHandler = async () => {
-    await walletContext.saveWallet([
+    walletContext.saveWallet([
       {
         id: 0,
         address: account.address,
@@ -76,9 +79,13 @@ const CreateNewWallet = () => {
       }
     ])
 
-    await walletContext.saveEncryptedPrivateKey(account.encryptedPrivateKey)
+    walletContext.saveEncryptedPrivateKey(account.encryptedPrivateKey)
 
-    await window.location.reload()
+    settingsContext.lockPasswordHandler(getValues("password"), getTimeNow())
+    settingsContext.lockPasswordTimeToLiveHandler(86400)
+    settingsContext.requirePasswordWhenSendHandler(false)
+
+    window.location.reload()
   }
 
   const togglePasswordHandler = () => {
@@ -184,7 +191,11 @@ const CreateNewWallet = () => {
 
       <Grid item container xs={12} height={40}>
         <Grid item xs={6} textAlign={"left"}>
-          <Button variant={"outlined"}>BACK</Button>
+          <Button
+            variant={"outlined"}
+            onClick={() => settingsContext.shownPageHandler("configureWallet")}>
+            BACK
+          </Button>
         </Grid>
         <Grid item xs={6} textAlign={"right"}>
           <Button

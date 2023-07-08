@@ -21,6 +21,7 @@ import { useWeb3GetAddressFromPrivateKey } from "~hooks/use-web3"
 import { SettingsContext } from "~store/settings-context"
 import { WalletContext } from "~store/wallet-context"
 import { encryptAES } from "~utils/encryption"
+import { getTimeNow } from "~utils/other"
 
 type formType = {
   password: string
@@ -57,10 +58,11 @@ const ImportWallet = (props: Props) => {
       .min(66, "Private key must be at least 67 characters long")
   })
 
-  const { register, setError, handleSubmit, formState } = useForm<formType>({
-    resolver: yupResolver(formSchema),
-    mode: "onChange"
-  })
+  const { register, setError, handleSubmit, formState, getValues } =
+    useForm<formType>({
+      resolver: yupResolver(formSchema),
+      mode: "onChange"
+    })
 
   const { address, error, getAddressFromPrivateKey } =
     useWeb3GetAddressFromPrivateKey()
@@ -97,6 +99,10 @@ const ImportWallet = (props: Props) => {
         tokens: [0]
       }
     ])
+
+    settingsContext.lockPasswordHandler(getValues("password"), getTimeNow())
+    settingsContext.lockPasswordTimeToLiveHandler(86400)
+    settingsContext.requirePasswordWhenSendHandler(false)
 
     window.location.reload()
   }

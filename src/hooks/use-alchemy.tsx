@@ -2,7 +2,8 @@ import {
   Alchemy,
   AlchemyConfig,
   AssetTransfersCategory,
-  SortingOrder
+  SortingOrder,
+  TransactionReceiptsResponse
 } from "alchemy-sdk"
 import type types from "alchemy-sdk"
 import { sortBy } from "lodash"
@@ -37,6 +38,36 @@ export type Transactions = {
   uniqueId: string
   value: number
 }[]
+
+export type Transaction = {
+  blockHash: string
+  blockNumber: string
+  transactionIndex: string
+  transactionHash: string
+  from: string
+  to: string
+  cumulativeGasUsed: string
+  gasUsed: string
+  contractAddress: string
+  logs: [
+    {
+      blockHash: string
+      blockNumber: string
+      transactionIndex: string
+      address: string
+      logIndex: string
+      data: string
+      removed: boolean
+      topics: [string]
+      transactionHash: string
+    }
+  ]
+  logsBloom: string
+  root: string
+  status: number
+  effectiveGasPrice: string
+  type: string
+}
 
 export const useAlchemyGetAssetTransfers = (
   address: string,
@@ -74,8 +105,9 @@ export const useAlchemyGetAssetTransfers = (
   const alchemy = new Alchemy(alchemyConfig)
 
   const getAssetTransfer = async () => {
-    setStatus("loading")
     try {
+      setStatus("loading")
+
       // Get received transactions
       const datadReceived = await alchemy.core.getAssetTransfers({
         fromBlock: fromBlock,
@@ -159,5 +191,140 @@ export const useAlchemyGetAssetTransfers = (
     isLoading: status === "loading",
     isLoaded: status === "loaded",
     transactions
+  }
+}
+
+export const useAlchemyGetTransactionReceipts = () => {
+  const [error, setError] = useState<string>("")
+  const [transaction, setTransaction] = useState<Transaction | null>({
+    blockHash: "string",
+    blockNumber: "string",
+    transactionIndex: "string",
+    transactionHash: "string",
+    from: "string",
+    to: "string",
+    cumulativeGasUsed: "string",
+    gasUsed: "string",
+    contractAddress: "string",
+    logs: [
+      {
+        blockHash: "string",
+        blockNumber: "string",
+        transactionIndex: "string",
+        address: "string",
+        logIndex: "string",
+        data: "string",
+        removed: true,
+        topics: ["string"],
+        transactionHash: "string"
+      }
+    ],
+    logsBloom: "string",
+    root: "string",
+    status: 0,
+    effectiveGasPrice: "string",
+    type: "string"
+  })
+  const [transactionFound, setTransactionFound] = useState<boolean>(true)
+  const [status, setStatus] = useState("idle")
+
+  const alchemyConfig: AlchemyConfig = {
+    apiKey: config.tokens[0].alchemyApiKey,
+    network: config.tokens[0].alchemyNetwork,
+    maxRetries: config.tokens[0].alchemyMaxRetries,
+    batchRequests: false,
+    getProvider: function (): Promise<types.AlchemyProvider> {
+      throw new Error("Function not implemented.")
+    },
+    getWebSocketProvider: function (): Promise<types.AlchemyWebSocketProvider> {
+      throw new Error("Function not implemented.")
+    },
+    url: config.tokens[0].alchemyUrl
+  }
+
+  const alchemy = new Alchemy(alchemyConfig)
+
+  const getTransactionReceipts = async (number: string, hash: string) => {
+    try {
+      setStatus("loading")
+      const data = await alchemy.core.getTransactionReceipts({
+        blockNumber: number
+      })
+
+      if (!data) {
+        setTransactionFound(false)
+      }
+
+      data.receipts?.map((value, index) => {
+        if (value.transactionHash === hash) {
+          //@ts-ignore
+          setTransaction(value)
+        }
+      })
+
+      setStatus("loaded")
+    } catch (error: any) {
+      if (error.code === 429) {
+        console.log(error.message)
+      } else {
+        setError(error.message)
+        console.error(error)
+      }
+    }
+  }
+
+  return {
+    getTransactionReceipts,
+    error,
+    transactionFound,
+    isLoading: status === "loading",
+    isLoaded: status === "loaded",
+    transaction
+  }
+}
+
+export const useAlchemyCheckConnection = () => {
+  const [isConnected, setIsConnected] = useState<boolean>(true)
+  const [error, setError] = useState<string>("")
+
+  const alchemyConfig: AlchemyConfig = {
+    apiKey: config.tokens[0].alchemyApiKey,
+    network: config.tokens[0].alchemyNetwork,
+    maxRetries: config.tokens[0].alchemyMaxRetries,
+    batchRequests: false,
+    getProvider: function (): Promise<types.AlchemyProvider> {
+      throw new Error("Function not implemented.")
+    },
+    getWebSocketProvider: function (): Promise<types.AlchemyWebSocketProvider> {
+      throw new Error("Function not implemented.")
+    },
+    url: config.tokens[0].alchemyUrl
+  }
+
+  const alchemy = new Alchemy(alchemyConfig)
+
+  const alchemyCheckConnection = async () => {
+    try {
+      await alchemy.core.getNetwork()
+    } catch (err: any) {
+      if (err.code === 429) {
+        setIsConnected(false)
+        setError(err.message)
+        console.log(err.message)
+      } else {
+        setIsConnected(false)
+        setError(err.message)
+        console.error(err)
+      }
+    }
+  }
+
+  useEffect(() => {
+    alchemyCheckConnection()
+  }, [])
+
+  return {
+    error,
+    isConnected
   }
 }

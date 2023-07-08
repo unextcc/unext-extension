@@ -71,66 +71,73 @@ const RecentTransactions = (props: Props) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {props.transactionFound
-                    ? props.transactions.map((row, index) => (
-                        <TableRow hover key={index}>
-                          <TableCell
-                            key={"date" + index}
-                            align="left"
-                            sx={{ verticalAlign: "middle", cursor: "pointer" }}
-                            onClick={() => {
-                              transactionContext.setTransactionDetailHandler(
-                                props.goBackPageName,
-                                row.asset,
-                                row.hash,
-                                row.transactionType,
-                                row.from,
-                                row.to,
-                                row.blockDate,
-                                row.blockTime,
-                                "Completed",
-                                row.fiatSymbol,
-                                row.value,
-                                0,
-                                row.value
-                              )
-                              settingsContext.shownPageHandler(
-                                "transactionDetail"
-                              )
-                            }}>
-                            {row.blockDate}
-                          </TableCell>
-                          <TableCell
-                            key={"amount" + index}
-                            align="right"
-                            sx={{ verticalAlign: "middle", cursor: "pointer" }}
-                            onClick={() => {
-                              transactionContext.setTransactionDetailHandler(
-                                props.goBackPageName,
-                                row.asset,
-                                row.hash,
-                                row.transactionType,
-                                row.from,
-                                row.to,
-                                row.blockDate,
-                                row.blockTime,
-                                "Completed",
-                                row.fiatSymbol,
-                                row.value,
-                                0,
-                                row.value
-                              )
-                              settingsContext.shownPageHandler(
-                                "transactionDetail"
-                              )
-                            }}>
-                            {row.asset} {row.transactionType === "0" && "+"}
-                            {row.transactionType === "1" && "-"}
-                            {row.value.toFixed(2)}
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    : "Transaction not found!"}
+                  {props.transactionFound ? (
+                    props.transactions.map((row, index) => (
+                      <TableRow hover key={index}>
+                        <TableCell
+                          key={"date" + index}
+                          align="left"
+                          sx={{ verticalAlign: "middle", cursor: "pointer" }}
+                          onClick={() => {
+                            transactionContext.setTransactionDetailHandler(
+                              props.goBackPageName,
+                              row.blockNum,
+                              row.asset,
+                              row.hash,
+                              row.transactionType,
+                              row.from,
+                              row.to,
+                              row.blockDate,
+                              row.blockTime,
+                              "Completed",
+                              row.fiatSymbol,
+                              row.value,
+                              0,
+                              row.value
+                            )
+                            settingsContext.shownPageHandler(
+                              "transactionDetail"
+                            )
+                          }}>
+                          {row.blockDate}
+                        </TableCell>
+                        <TableCell
+                          key={"amount" + index}
+                          align="right"
+                          sx={{ verticalAlign: "middle", cursor: "pointer" }}
+                          onClick={() => {
+                            transactionContext.setTransactionDetailHandler(
+                              props.goBackPageName,
+                              row.blockNum,
+                              row.asset,
+                              row.hash,
+                              row.transactionType,
+                              row.from,
+                              row.to,
+                              row.blockDate,
+                              row.blockTime,
+                              "Completed",
+                              row.fiatSymbol,
+                              row.value,
+                              0,
+                              row.value
+                            )
+                            settingsContext.shownPageHandler(
+                              "transactionDetail"
+                            )
+                          }}>
+                          {row.asset} {row.transactionType === "0" && "+"}
+                          {row.transactionType === "1" && "-"}
+                          {row.value.toFixed(2)}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell>Transaction not found!</TableCell>
+                      <TableCell></TableCell>
+                    </TableRow>
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
