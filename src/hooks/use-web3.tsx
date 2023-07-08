@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react"
 import Web3 from "web3"
 
 import { config } from "~contents/config"
-import { decryptAES, encryptAES } from "~utils/encryption"
+import { encryptAES } from "~utils/encryption"
 
 type accountType = {
   address: string
@@ -72,7 +72,7 @@ export const useWeb3TokenBalance = (
   accountAddress: string,
   contractAddress: string,
   decimals: number,
-  providerUrl: string = config.providerUrl
+  providerUrl: string = config.tokens[1].networks[1].providerUrl
 ) => {
   const [balance, setBalance] = useState<string>("")
   const [error, setError] = useState<string>("")
@@ -85,7 +85,7 @@ export const useWeb3TokenBalance = (
       accountAddress: string,
       contractAddress: string,
       decimals: number,
-      providerUrl: string = config.providerUrl
+      providerUrl: string = config.tokens[1].networks[1].providerUrl
     ) => {
       setStatus("loading")
       try {
@@ -122,7 +122,10 @@ export const useWeb3GetAddressFromPrivateKey = () => {
   const [status, setStatus] = useState<string>("idle")
 
   const getAddressFromPrivateKey = useCallback(
-    async (privateKey: string, providerUrl: string = config.providerUrl) => {
+    async (
+      privateKey: string,
+      providerUrl: string = config.tokens[1].networks[1].providerUrl
+    ) => {
       try {
         setStatus("working")
         const web3 = await new Web3(
@@ -152,7 +155,7 @@ export const useWeb3GetAddressFromPrivateKey = () => {
 }
 
 export const useWeb3EstimateFee = (
-  gasStationUrl: string = config.gasStationUrl
+  gasStationUrl: string = config.tokens[1].networks[1].gasStationUrl
 ) => {
   const [estimatedFeeInMatic, setestimatedFeeInMatic] = useState<string>("")
   const [estimatedFeeInGwei, setestimatedFeeInGwei] = useState<string>("")
@@ -161,7 +164,11 @@ export const useWeb3EstimateFee = (
 
   useEffect(() => {
     const estimateFee = async () => {
-      const web3 = new Web3(new Web3.providers.HttpProvider(config.providerUrl))
+      const web3 = new Web3(
+        new Web3.providers.HttpProvider(
+          config.tokens[1].networks[1].providerUrl
+        )
+      )
 
       try {
         setStatus("working")
@@ -211,7 +218,7 @@ export const useWeb3Send = (
   fromAddress: string,
   toAddress: string,
   privateKey: string,
-  providerUrl: string = config.providerUrl
+  providerUrl: string = config.tokens[1].networks[1].providerUrl
 ) => {
   const [transactionHash, setTransactionHash] = useState<string>()
   const [status, setStatus] = useState<string>("idle")
@@ -227,7 +234,7 @@ export const useWeb3Send = (
       // Get the contract instance
       const contract = new web3.eth.Contract(
         Abi,
-        config.tokens[token].contractAddress,
+        config.tokens[1].networks[1].contractAddress,
         {
           from: fromAddress
         }
@@ -249,7 +256,7 @@ export const useWeb3Send = (
       const tx = {
         from: fromAddress,
         nonce: "0x" + nonce.toString(16),
-        to: config.tokens[token].contractAddress,
+        to: config.tokens[1].networks[1].contractAddress,
         value: "0x0", //Send 0 ether
         data: data,
         gasLimit: web3.utils.toHex(600000),

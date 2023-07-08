@@ -26,9 +26,9 @@ const AccountMATIC = (props: Props) => {
   const { balance, isLoaded, error } = useWeb3TokenBalance(
     // @ts-ignore
     wallet.address,
-    config.cryptoTokens[0].contractAddress,
+    config.cryptoTokens[0].networks[0].contractAddress,
     config.cryptoTokens[0].decimals,
-    config.cryptoTokens[0].providerUrl
+    config.cryptoTokens[0].networks[0].providerUrl
   )
 
   const {
@@ -38,7 +38,7 @@ const AccountMATIC = (props: Props) => {
     transactions
   } = useAlchemyGetAssetTransfers(
     wallet.address,
-    [config.cryptoTokens[0].contractAddress],
+    [config.cryptoTokens[0].networks[0].contractAddress],
     "0x0",
     [AssetTransfersCategory.EXTERNAL],
     true,

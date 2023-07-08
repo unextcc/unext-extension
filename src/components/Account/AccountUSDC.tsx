@@ -25,9 +25,9 @@ const AccountUSDC = (props: Props) => {
   const { balance, isLoaded, error } = useWeb3TokenBalance(
     // @ts-ignore
     wallet.address,
-    config.tokens[0].contractAddress,
+    config.tokens[0].networks[1].contractAddress,
     config.tokens[0].decimals,
-    config.tokens[0].providerUrl
+    config.tokens[0].networks[1].providerUrl
   )
 
   const {
@@ -37,7 +37,7 @@ const AccountUSDC = (props: Props) => {
     transactions
   } = useAlchemyGetAssetTransfers(
     wallet.address,
-    [config.tokens[0].contractAddress],
+    [config.tokens[0].networks[1].contractAddress],
     "0x0",
     [AssetTransfersCategory.ERC20]
   )
