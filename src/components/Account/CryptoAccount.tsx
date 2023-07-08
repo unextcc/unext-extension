@@ -17,22 +17,22 @@ interface Props {
   children?: React.ReactNode
 }
 
-const Account = (props: Props) => {
+const CryptoAccount = (props: Props) => {
   const walletContext = useContext(WalletContext)
   // @ts-ignore
   const wallet = walletContext.wallets[0][0]
 
   const {
-    balance: balanceUSDC,
-    isError: isErrorUSDC,
-    isLoaded: isLoadedUSDC,
-    error: errorUSDC
+    balance: balanceMATIC,
+    isError: isErrorMATIC,
+    isLoaded: isLoadedMATIC,
+    error: errorMATIC
   } = useWeb3TokenBalance(
     // @ts-ignore
     wallet.address,
-    config.tokens[0].contractAddress,
-    config.tokens[0].decimals,
-    config.tokens[0].providerUrl
+    config.cryptoTokens[0].contractAddress,
+    config.cryptoTokens[0].decimals,
+    config.cryptoTokens[0].providerUrl
   )
 
   const {
@@ -44,7 +44,7 @@ const Account = (props: Props) => {
     wallet.address,
     [config.tokens[0].contractAddress, config.cryptoTokens[0].contractAddress],
     "0x0",
-    [AssetTransfersCategory.ERC20, AssetTransfersCategory.EXTERNAL]
+    [AssetTransfersCategory.EXTERNAL]
   )
 
   return (
@@ -58,16 +58,17 @@ const Account = (props: Props) => {
         marginTop={7.5}
         display="block"
         alignItems="flex-start">
-        {errorTransactions && (
+        {(errorMATIC || errorTransactions) && (
           <Alert variant="outlined" severity="error">
+            {errorMATIC}
             {errorTransactions}
           </Alert>
         )}
         <Grid container item xs={12} display="flex" spacing={1}>
           <AccountBalanceItem
-            title={"USDC / USD"}
-            balance={isLoadedUSDC ? balanceUSDC : "Loading..."}
-            accountPageName="accountUSDC"
+            title={"MATIC"}
+            balance={isLoadedMATIC ? balanceMATIC : "Loading"}
+            accountPageName="accountMATIC"
           />
         </Grid>
 
@@ -86,4 +87,4 @@ const Account = (props: Props) => {
     </Grid>
   )
 }
-export default Account
+export default CryptoAccount

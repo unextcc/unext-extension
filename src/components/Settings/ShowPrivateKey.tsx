@@ -68,7 +68,7 @@ const ShowPrivateKey = (props: Props) => {
     } else {
       setErrorPassword("passwordInput", {
         type: "custom",
-        message: "Incorrect password"
+        message: "Incorrect wallet password"
       })
     }
   }

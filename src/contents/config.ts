@@ -3,6 +3,7 @@ import {Network} from "alchemy-sdk";
 type envType = {
   providerUrl: string;
   etherScanUrl: string;
+  gasStationUrl: string
   tokens: {
     id: number;
     alchemyApiKey: string;
@@ -40,12 +41,15 @@ type envType = {
 }
 
 const prod = <envType>({
+  providerUrl: "https://api.unext.cc/infura-polygon",
+  gasStationUrl: "https://gasstation-mainnet.matic.network/v2",
   tokens: [
     {
       id: 0,
       alchemyApiKey: '',
       alchemyNetwork: Network.MATIC_MAINNET,
       alchemyMaxRetries: 3,
+      alchemyUrl: "https://api.unext.cc/alchemy-polygon",
       blockchain: 'polygon',
       contractAddress: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
       decimals: 6,
@@ -56,14 +60,15 @@ const prod = <envType>({
       network: "mainnet",
       symbol: 'USDC',
       scannerUrl: 'https://polygonscan.com',
-      providerUrl: 'https://infura-polygon-mainnet.unext.cc'
+      providerUrl: 'https://api.unext.cc/infura-polygon'
     },
     {
       id: 1,
       alchemyApiKey: '',
       alchemyNetwork: Network.ETH_MAINNET,
       alchemyMaxRetries: 1,
-      blockchain: 'ethereum',
+      alchemyUrl: "https://api.unext.cc/alchemy-polygon",
+      blockchain: 'polygon',
       contractAddress: "0x1aBaEA1f7C830bD89Acc67eC4af516284b1bC33c",
       decimals: 6,
       enabled: true,
@@ -72,8 +77,8 @@ const prod = <envType>({
       name: 'Euro Coin',
       network: "mainnet",
       symbol: 'EUROC',
-      scannerUrl: 'https://etherscan.io',
-      providerUrl: 'https://infura-ethereum-mainnet.unext.cc',
+      scannerUrl: 'https://polygonscan.com',
+      providerUrl: 'https://api.unext.cc/infura-polygon',
     }
   ],
   cryptoTokens: [
@@ -82,6 +87,7 @@ const prod = <envType>({
       alchemyApiKey: '',
       alchemyNetwork: Network.MATIC_MAINNET,
       alchemyMaxRetries: 1,
+      alchemyUrl: "https://api.unext.cc/alchemy-polygon",
       blockchain: "polygon",
       contractAddress: "0x0000000000000000000000000000000000001010",
       decimals: 18,
@@ -90,16 +96,18 @@ const prod = <envType>({
       network: "mainnet",
       symbol: "MATIC",
       scannerUrl: "https://polygonscan.com",
-      providerUrl: "https://polygon-mainnet.unext.cc",
+      providerUrl: "https://api.unext.cc/infura-polygon",
     }
   ]
 });
 
 const dev = <envType>({
+  providerUrl: "http://localhost:8000/infura-polygon-mumbai",
+  gasStationUrl: "https://gasstation-mumbai.matic.today/v2",
   tokens: [
     {
       id: 0,
-      alchemyApiKey: 'l1pSvMC4vAu8hap2qu5cN6nsuTnryRkT',
+      alchemyApiKey: '',
       alchemyNetwork: Network.MATIC_MUMBAI,
       alchemyMaxRetries: 3,
       alchemyUrl: "http://localhost:8000/alchemy-polygon-mumbai",
@@ -136,7 +144,7 @@ const dev = <envType>({
   cryptoTokens: [
     {
       id: 0,
-      alchemyApiKey: 'l1pSvMC4vAu8hap2qu5cN6nsuTnryRkT',
+      alchemyApiKey: '',
       alchemyNetwork: Network.MATIC_MUMBAI,
       alchemyMaxRetries: 3,
       alchemyUrl: "http://localhost:8000/infura-polygon-mumbai",

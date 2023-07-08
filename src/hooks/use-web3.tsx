@@ -12,6 +12,24 @@ type accountType = {
   encryptedPrivateKey: string
 }
 
+type estimatedFeeResponseType = {
+  safeLow: {
+    maxPriorityFee: number
+    maxFee: number
+  }
+  standard: {
+    maxPriorityFee: number
+    maxFee: number
+  }
+  fast: {
+    maxPriorityFee: number
+    maxFee: number
+  }
+  estimatedBaseFee: number
+  blockTime: number
+  blockNumber: number
+}
+
 export const useWeb3CreateAccount = () => {
   const [account, setAccount] = useState<accountType>({
     encryptedPrivateKey: "",
@@ -26,7 +44,6 @@ export const useWeb3CreateAccount = () => {
     try {
       const web3 = new Web3(new Web3.providers.HttpProvider(providerUrl))
       const createAccount = web3.eth.accounts.create()
-      console.log(password)
       const encryptedPrivateKey = encryptAES(createAccount.privateKey, password)
 
       setAccount({
@@ -132,4 +149,139 @@ export const useWeb3GetAddressFromPrivateKey = () => {
     status,
     getAddressFromPrivateKey
   }
+}
+
+export const useWeb3EstimateFee = (
+  gasStationUrl: string = config.gasStationUrl
+) => {
+  const [estimatedFeeInMatic, setestimatedFeeInMatic] = useState<string>("")
+  const [estimatedFeeInGwei, setestimatedFeeInGwei] = useState<string>("")
+  const [error, setError] = useState<string>("")
+  const [status, setStatus] = useState<string>("idle")
+
+  useEffect(() => {
+    const estimateFee = async () => {
+      const web3 = new Web3(new Web3.providers.HttpProvider(config.providerUrl))
+
+      try {
+        setStatus("working")
+
+        const response = await fetch(gasStationUrl)
+        if (!response.ok) {
+          throw new Error("Error: " + response.statusText)
+        }
+
+        const data: estimatedFeeResponseType = await response.json()
+
+        // Get estimated fee in Gwei
+        const receivedEstimatedFeeInGwei =
+          data.estimatedBaseFee + data.standard.maxFee
+
+        // Convert estimated fee to MATIC
+        const estimatedFeeInMATIC: string = web3.utils.fromWei(
+          receivedEstimatedFeeInGwei.toFixed(),
+          "Gwei"
+        )
+
+        setestimatedFeeInMatic(estimatedFeeInMATIC)
+        setestimatedFeeInGwei(receivedEstimatedFeeInGwei.toString())
+        setStatus("success")
+      } catch (err: any) {
+        setStatus("error")
+        setError(err.message)
+        console.error(err.message)
+      }
+    }
+
+    estimateFee()
+  }, [])
+
+  return {
+    estimatedFeeInMatic,
+    estimatedFeeInGwei,
+    error,
+    status
+  }
+}
+
+export const useWeb3Send = (
+  token: number,
+  amount: number,
+  gasFee: string,
+  fromAddress: string,
+  toAddress: string,
+  privateKey: string,
+  providerUrl: string = config.providerUrl
+) => {
+  const [transactionHash, setTransactionHash] = useState<string>()
+  const [status, setStatus] = useState<string>("idle")
+  const [error, setError] = useState<string>("")
+
+  const sendToken = async (): Promise<void> => {
+    try {
+      setStatus("working")
+
+      // Connect to network
+      const web3 = new Web3(new Web3.providers.HttpProvider(providerUrl))
+
+      // Get the contract instance
+      const contract = new web3.eth.Contract(
+        Abi,
+        config.tokens[token].contractAddress,
+        {
+          from: fromAddress
+        }
+      )
+
+      // Get the nonce for the sending address
+      const nonce = await web3.eth.getTransactionCount(fromAddress, "latest")
+      const amountToSend = await web3.utils.toBN(
+        "0x" + (amount * 10 ** config.tokens[token].decimals).toString(16)
+      )
+      const data = await contract.methods
+        .transfer(toAddress, amountToSend)
+        .encodeABI()
+
+      console.log("data " + data)
+      console.log("nonce " + nonce)
+
+      // Build the transaction object
+      const tx = {
+        from: fromAddress,
+        nonce: "0x" + nonce.toString(16),
+        to: config.tokens[token].contractAddress,
+        value: "0x0", //Send 0 ether
+        data: data,
+        gasLimit: web3.utils.toHex(600000),
+        gasPrice: web3.utils.toHex(
+          web3.utils.toWei(Number(gasFee).toFixed(2), "gwei")
+        )
+      }
+
+      console.log(web3.utils.toWei(Number(gasFee).toFixed(2), "gwei"))
+
+      console.log(JSON.stringify(tx))
+
+      // Sing the transaction
+      //@ts-ignore
+      const signedTx = await web3.eth.accounts.signTransaction(tx, privateKey)
+
+      // Send the transaction
+      const receipt = await web3.eth.sendSignedTransaction(
+        //@ts-ignore
+        signedTx.rawTransaction
+      )
+
+      console.log(receipt)
+
+      setTransactionHash(receipt.transactionHash)
+
+      setStatus("success")
+    } catch (err: any) {
+      setStatus("error")
+      setError(err.message)
+      console.error(err)
+    }
+  }
+  return { error, sendToken, transactionHash, status }
 }
