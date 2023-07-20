@@ -42,10 +42,7 @@ const Account = (props: Props) => {
     transactions
   } = useAlchemyGetAssetTransfers(
     wallet.address,
-    [
-      config.tokens[1].networks[1].contractAddress,
-      config.cryptoTokens[1].networks[1].contractAddress
-    ],
+    [config.tokens[1].networks[1].contractAddress],
     "0x0",
     [AssetTransfersCategory.ERC20, AssetTransfersCategory.EXTERNAL]
   )

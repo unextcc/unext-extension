@@ -1,10 +1,5 @@
-import {
-  Alchemy,
-  AlchemyConfig,
-  AssetTransfersCategory,
-  SortingOrder,
-  TransactionReceiptsResponse
-} from "alchemy-sdk"
+import { Alchemy, AssetTransfersCategory, SortingOrder } from "alchemy-sdk"
+import type { AlchemyConfig, TransactionReceiptsResponse } from "alchemy-sdk"
 import type types from "alchemy-sdk"
 import { sortBy } from "lodash"
 import { useContext, useEffect, useState } from "react"

@@ -13,8 +13,7 @@ import { useForm } from "react-hook-form"
 import * as Yup from "yup"
 
 import HeaderLight from "~components/Layout/HeaderLight"
-import { config } from "~contents/config"
-import { useWeb3CreateAccount } from "~hooks/use-web3"
+import { useCreateAccount } from "~hooks/use-wallet"
 import { SettingsContext } from "~store/settings-context"
 import { WalletContext } from "~store/wallet-context"
 import { getTimeNow } from "~utils/other"
@@ -36,8 +35,15 @@ const CreateNewWallet = () => {
   const [step, setStep] = useState("passwordStep")
   const [togglePassword, setTogglePassword] = useState<boolean>(false)
 
-  const { account, error, isError, status, createAccount } =
-    useWeb3CreateAccount()
+  const {
+    account,
+    encryptedAvalanchePrivateKey,
+    encryptedPrivateKey,
+    error,
+    isError,
+    status,
+    createAccount
+  } = useCreateAccount()
 
   const formSchema = Yup.object().shape({
     password: Yup.string()
@@ -62,7 +68,7 @@ const CreateNewWallet = () => {
 
   const onSubmit = async (data: formType) => {
     // create account
-    await createAccount(data.password, config.tokens[0].networks[0].providerUrl)
+    await createAccount(data.password)
 
     // set step
     setStep("createWalletStep")
@@ -73,13 +79,16 @@ const CreateNewWallet = () => {
       {
         id: 0,
         address: account.address,
-        chain: "MATIC",
-        network: "polygon",
-        tokens: [0, 1]
+        avalancheCAddress: account.avalancheCAddress,
+        avalanchePAddress: account.avalanchePAddress,
+        avalancheXAddress: account.avalancheXAddress,
+        tokens: [0],
+        cryptoTokens: [0]
       }
     ])
 
-    walletContext.saveEncryptedPrivateKey(account.encryptedPrivateKey)
+    walletContext.saveEncryptedPrivateKey(encryptedPrivateKey)
+    walletContext.saveAvalancheEncryptedPrivateKey(encryptedAvalanchePrivateKey)
 
     settingsContext.lockPasswordHandler(getValues("password"), getTimeNow())
     settingsContext.lockPasswordTimeToLiveHandler(86400)
@@ -242,13 +251,15 @@ const CreateNewWallet = () => {
               marginBottom: "8px",
               marginTop: "8px"
             }}>
-            <Typography width={360}>{account.privateKey}</Typography>
+            <Typography width={360}>{encryptedPrivateKey}</Typography>
           </div>
           <Button
             variant="outlined"
             size="medium"
             startIcon={<CopyAll />}
-            onClick={() => navigator.clipboard.writeText(account.privateKey)}>
+            onClick={() =>
+              navigator.clipboard.writeText(encryptedAvalanchePrivateKey)
+            }>
             COPY SECRET PRIVATE KEY
           </Button>
         </Grid>

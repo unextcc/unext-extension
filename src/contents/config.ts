@@ -14,7 +14,7 @@ type envType = {
       alchemyNetwork: Network
       alchemyMaxRetries: number
       alchemyUrl: string
-      chaindId: string
+      chaindId: number
       contractAddress: string
       enabled: boolean
       gasStationUrl: string
@@ -36,7 +36,7 @@ type envType = {
       alchemyNetwork: Network
       alchemyMaxRetries: number
       alchemyUrl: string
-      chaindId: string
+      chaindId: number
       contractAddress: string
       enabled: boolean
       gasStationUrl: string
@@ -65,14 +65,14 @@ const prod: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.ETH_MAINNET,
           alchemyUrl: "",
-          chaindId: "none",
+          chaindId: 1,
           contractAddress: "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
           enabled: true,
           gasStationUrl: "",
           name: "avalanche",
           network: "mainnet",
-          providerUrl: "https://api.avax.network/ext/bc",
-          scannerUrl: "https://subnets.avax.network"
+          providerUrl: "api.avax.network",
+          scannerUrl: "https://snowtrace.io"
         },
         {
           id: 1,
@@ -80,7 +80,7 @@ const prod: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.ETH_MAINNET,
           alchemyUrl: "https://api.unext.cc/alchemy-ethereum",
-          chaindId: "none",
+          chaindId: 0,
           contractAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
           enabled: false,
           gasStationUrl: "",
@@ -106,14 +106,14 @@ const prod: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.ETH_MAINNET,
           alchemyUrl: "",
-          chaindId: "none",
+          chaindId: 1,
           contractAddress: "0xC891EB4cbdEFf6e073e859e987815Ed1505c2ACD",
           gasStationUrl: "",
           enabled: true,
           name: "avalanche",
           network: "mainnet",
-          providerUrl: "https://api.avax.network/ext/bc",
-          scannerUrl: "https://subnets.avax.network"
+          providerUrl: "api.avax.network",
+          scannerUrl: "https://snowtrace.io"
         },
         {
           id: 1,
@@ -121,7 +121,7 @@ const prod: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.ETH_MAINNET,
           alchemyUrl: "https://api.unext.cc/alchemy-ethereum",
-          chaindId: "none",
+          chaindId: 0,
           contractAddress: "0x1aBaEA1f7C830bD89Acc67eC4af516284b1bC33c",
           enabled: true,
           gasStationUrl: "",
@@ -147,14 +147,14 @@ const prod: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.ETH_MAINNET,
           alchemyUrl: "",
-          chaindId: "",
+          chaindId: 0,
           contractAddress: "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
           enabled: true,
           gasStationUrl: "",
           name: "avalanche",
           network: "mainnet",
-          providerUrl: "https://api.avax.network/ext/bc",
-          scannerUrl: "https://subnets.avax.network"
+          providerUrl: "api.avax.network",
+          scannerUrl: "https://snowtrace.io"
         }
       ],
       symbol: "AVAX"
@@ -171,7 +171,7 @@ const prod: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.ETH_MAINNET,
           alchemyUrl: "https://api.unext.cc/alchemy-ethereum",
-          chaindId: "none",
+          chaindId: 0,
           contractAddress: "0x",
           enabled: true,
           gasStationUrl: "",
@@ -202,14 +202,14 @@ const dev: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.ETH_GOERLI,
           alchemyUrl: "none",
-          chaindId: "none",
+          chaindId: 1,
           contractAddress: "0x5425890298aed601595a70ab815c96711a31bc65",
           enabled: true,
           gasStationUrl: "",
           name: "avalanche",
           network: "testnet",
-          providerUrl: "https://api.avax-test.network/ext/bc",
-          scannerUrl: "https://subnets-test.avax.network"
+          providerUrl: "api.avax-test.network",
+          scannerUrl: "https://testnet.snowtrace.io"
         },
         {
           id: 1,
@@ -217,7 +217,7 @@ const dev: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.ETH_GOERLI,
           alchemyUrl: "http://localhost:8000/alchemy-ethereum-goerli",
-          chaindId: "none",
+          chaindId: 0,
           contractAddress: "0x07865c6E87B9F70255377e024ace6630C1Eaa37F",
           enabled: false,
           gasStationUrl:
@@ -225,7 +225,7 @@ const dev: envType = {
           name: "ethereum",
           network: "goerli",
           providerUrl: "http://localhost:8000/infura-ethereum-goerli",
-          scannerUrl: ""
+          scannerUrl: "https://goerli.etherscan.io"
         }
       ],
       symbol: "USDC"
@@ -244,14 +244,14 @@ const dev: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.ETH_GOERLI,
           alchemyUrl: "none",
-          chaindId: "none",
+          chaindId: 1,
           contractAddress: "0x5E44db7996c682E92a960b65AC713a54AD815c6B",
           enabled: false,
           name: "avalanche",
           gasStationUrl: "",
           network: "testnet",
-          providerUrl: "https://api.avax-test.network/ext/bc",
-          scannerUrl: "https://subnets-test.avax.network"
+          providerUrl: "api.avax-test.network",
+          scannerUrl: "https://testnet.snowtrace.io"
         },
         {
           id: 1,
@@ -259,7 +259,7 @@ const dev: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.ETH_GOERLI,
           alchemyUrl: "http://localhost:8000/alchemy-ethereum-goerli",
-          chaindId: "none",
+          chaindId: 0,
           contractAddress: "0xA683d909e996052955500DDc45CA13E25c76e286",
           enabled: false,
           gasStationUrl:
@@ -267,7 +267,7 @@ const dev: envType = {
           name: "ethereum",
           network: "goerli",
           providerUrl: "http://localhost:8000/infura-ethereum-goerli",
-          scannerUrl: ""
+          scannerUrl: "https://goerli.etherscan.io"
         }
       ],
       symbol: "EUROC"
@@ -286,13 +286,13 @@ const dev: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.ETH_GOERLI,
           alchemyUrl: "",
-          chaindId: "none",
+          chaindId: 1,
           contractAddress: "",
           gasStationUrl: "",
           enabled: true,
           name: "avalanche",
           network: "testnet",
-          providerUrl: "https://api.avax-test.network/ext/bc",
+          providerUrl: "api.avax-test.network",
           scannerUrl: "https://subnets-test.avax.network"
         }
       ],
@@ -310,7 +310,7 @@ const dev: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.ETH_MAINNET,
           alchemyUrl: "http://localhost:8000/alchemy-ethereum-goerli",
-          chaindId: "none",
+          chaindId: 0,
           contractAddress: "0x",
           enabled: true,
           gasStationUrl:
