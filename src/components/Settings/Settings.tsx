@@ -115,6 +115,22 @@ const Settings = (props: Props) => {
 
         <MenuList>
           <MenuItem
+            onClick={() => settingsContext.shownPageHandler("accountAVAX")}>
+            <ListItemText>AVAX</ListItemText>
+            <Typography variant={"body1"} color={"text.secondary"}>
+              {">"}
+            </Typography>
+          </MenuItem>
+
+          <MenuItem
+            onClick={() => settingsContext.shownPageHandler("accountETH")}>
+            <ListItemText>ETH</ListItemText>
+            <Typography variant={"body1"} color={"text.secondary"}>
+              {">"}
+            </Typography>
+          </MenuItem>
+
+          <MenuItem
             onClick={() => settingsContext.shownPageHandler("accountMATIC")}>
             <ListItemText>MATIC</ListItemText>
             <Typography variant={"body1"} color={"text.secondary"}>

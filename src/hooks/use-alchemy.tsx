@@ -150,6 +150,7 @@ export const useAlchemyGetAssetTransfers = (
           fiatSymbol:
             (data[i].asset === "USDC" && "$") ||
             (data[i].asset === "MATIC" && "") ||
+            (data[i].asset === "AVAX" && "") ||
             (data[i].asset === "EUROC" && "€"),
           transactionType:
             // 0=Receive, 1=Send

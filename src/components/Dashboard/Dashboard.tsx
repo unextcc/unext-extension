@@ -2,7 +2,7 @@ import { Alert, Box, Grid, Tab, Tabs } from "@mui/material"
 import { AssetTransfersCategory } from "alchemy-sdk"
 import React, { useContext, useState } from "react"
 
-import AccountBalanceItem from "~components/Account/AccountBalanceItem"
+import AccountBalanceItemUSDC from "~components/Account/AccountBalanceItemUSDC"
 import Spend from "~components/Dashboard/Spend"
 import TabPanel from "~components/Dashboard/TabPanel"
 import ActionMenu from "~components/Layout/ActionMenu"
@@ -11,8 +11,6 @@ import HeaderLight from "~components/Layout/HeaderLight"
 import RecentTransactions from "~components/Transaction/RecentTransactions"
 import { config } from "~contents/config"
 import { useAlchemyGetAssetTransfers } from "~hooks/use-alchemy"
-import { useAvalancheGetAssetBalance } from "~hooks/use-avalanche"
-import { useWeb3TokenBalance } from "~hooks/use-web3"
 import { SettingsContext } from "~store/settings-context"
 import { WalletContext } from "~store/wallet-context"
 
@@ -36,14 +34,6 @@ const Dashboard = (props: Props) => {
   const wallets = walletContext.wallets[0]
   // @ts-ignore
   const wallet = walletContext.wallets[0][0]
-
-  const { balance, isLoaded, error } = useWeb3TokenBalance(
-    // @ts-ignore
-    wallets[0].address,
-    config.tokens[1].networks[1].contractAddress,
-    config.tokens[1].decimals,
-    config.tokens[1].networks[1].providerUrl
-  )
 
   const {
     error: errorTransactions,
@@ -72,19 +62,14 @@ const Dashboard = (props: Props) => {
         marginTop={7.5}
         display="block"
         alignItems="flex-start">
-        {(error || errorTransactions) && (
+        {errorTransactions && (
           <Alert variant="outlined" severity="error">
-            {error.split(": ")[1]}
             {errorTransactions.split(": ")[1]}
           </Alert>
         )}
 
         <Grid item xs={12} textAlign="left">
-          <AccountBalanceItem
-            title="USDC / USD"
-            balance={isLoaded ? balance : "Loading..."}
-            accountPageName="accountUSDC"
-          />
+          <AccountBalanceItemUSDC />
         </Grid>
 
         <ActionMenu />

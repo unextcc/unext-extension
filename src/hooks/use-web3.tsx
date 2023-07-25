@@ -68,50 +68,83 @@ export const useWeb3CreateAccount = () => {
   }
 }
 
-export const useWeb3TokenBalance = (
+export const useWeb3AccountBalance = (
   accountAddress: string,
-  contractAddress: string,
-  decimals: number,
-  providerUrl: string = config.tokens[1].networks[1].providerUrl
+  providerUrl: string
 ) => {
   const [balance, setBalance] = useState<string>("")
   const [error, setError] = useState<string>("")
   const [status, setStatus] = useState("idle")
 
   useEffect(() => {
-    if (!accountAddress || !contractAddress) return
+    if (!accountAddress) {
+      throw new Error("accountAddress not defined")
+      return
+    }
 
-    const fetchBalance = async (
-      accountAddress: string,
-      contractAddress: string,
-      decimals: number,
-      providerUrl: string = config.tokens[1].networks[1].providerUrl
-    ) => {
+    const getBalance = async (accountAddress: string, providerUrl: string) => {
       setStatus("loading")
+
       try {
         const web3 = new Web3(new Web3.providers.HttpProvider(providerUrl))
-        const token = new web3.eth.Contract(Abi, contractAddress)
-        const balanceRaw: string = await token.methods
-          .balanceOf(accountAddress)
-          .call()
-        setBalance((parseInt(balanceRaw) / 10 ** decimals).toFixed(2))
-        setStatus("success")
-      } catch (error: any) {
-        setError(error.message)
+        const balance = web3.utils
+          .toDecimal(Number(await web3.eth.getBalance(accountAddress)))
+          .toFixed(2)
+          .toString()
+        setBalance(balance)
+        setStatus("done")
+      } catch (err: any) {
         setStatus("error")
-        console.error(error)
+        setError(err)
+        console.error(err.message)
       }
-      setStatus("loaded")
     }
-    fetchBalance(accountAddress, contractAddress, decimals, providerUrl)
-  }, [accountAddress, contractAddress, providerUrl])
+
+    getBalance(accountAddress, providerUrl)
+  }, [])
 
   return {
     balance,
     error,
-    isError: status === "error",
-    isLoading: status === "loading",
-    isLoaded: status === "loaded"
+    status
+  }
+}
+
+export const useWeb3TokenBalance = () => {
+  const [balance, setBalance] = useState<number>(0)
+  const [error, setError] = useState<string>("")
+  const [status, setStatus] = useState("idle")
+
+  const getTokenBalance = async (
+    accountAddress: string,
+    contractAddress: string,
+    decimals: number,
+    providerUrl: string
+  ) => {
+    if (!accountAddress || !contractAddress) return
+
+    setStatus("loading")
+    try {
+      const web3 = new Web3(new Web3.providers.HttpProvider(providerUrl))
+      const token = new web3.eth.Contract(Abi, contractAddress)
+      const balanceRaw: string = await token.methods
+        .balanceOf(accountAddress)
+        .call()
+      setBalance(parseInt(balanceRaw) / 10 ** decimals)
+
+      setStatus("done")
+    } catch (error: any) {
+      setError(error.message)
+      setStatus("error")
+      console.error(error)
+    }
+  }
+
+  return {
+    balance,
+    error,
+    status,
+    getTokenBalance: getTokenBalance
   }
 }
 
@@ -248,9 +281,6 @@ export const useWeb3Send = (
       const data = await contract.methods
         .transfer(toAddress, amountToSend)
         .encodeABI()
-
-      console.log("data " + data)
-      console.log("nonce " + nonce)
 
       // Build the transaction object
       const tx = {

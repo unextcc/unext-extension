@@ -22,6 +22,7 @@ type envType = {
       network: string
       providerUrl: string
       scannerUrl: string
+      snowTraceApiUrl: string
     }[]
     symbol: string
   }[]
@@ -44,6 +45,7 @@ type envType = {
       network: string
       providerUrl: string
       scannerUrl: string
+      snowTraceApiUrl: string
     }[]
     symbol: string
   }[]
@@ -72,7 +74,8 @@ const prod: envType = {
           name: "avalanche",
           network: "mainnet",
           providerUrl: "api.avax.network",
-          scannerUrl: "https://snowtrace.io"
+          scannerUrl: "https://snowtrace.io",
+          snowTraceApiUrl: "https://api.unext.cc/snow-trace"
         },
         {
           id: 1,
@@ -81,13 +84,30 @@ const prod: envType = {
           alchemyNetwork: Network.ETH_MAINNET,
           alchemyUrl: "https://api.unext.cc/alchemy-ethereum",
           chaindId: 0,
-          contractAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-          enabled: false,
+          contractAddress: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          enabled: true,
           gasStationUrl: "",
           name: "ethereum",
           network: "mainnet",
           providerUrl: "https://api.unext.cc/infura-ethereum",
-          scannerUrl: "https://etherscan.io"
+          scannerUrl: "https://etherscan.io",
+          snowTraceApiUrl: ""
+        },
+        {
+          id: 2,
+          alchemyApiKey: "",
+          alchemyMaxRetries: 3,
+          alchemyNetwork: Network.MATIC_MAINNET,
+          alchemyUrl: "https://api.unext.cc/alchemy-polygon",
+          chaindId: 0,
+          contractAddress: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+          enabled: true,
+          gasStationUrl: "",
+          name: "polygon",
+          network: "mainnet",
+          providerUrl: "https://api.unext.cc/infura-polygon",
+          scannerUrl: "https://polygonscan.com",
+          snowTraceApiUrl: ""
         }
       ],
       symbol: "USDC"
@@ -107,13 +127,14 @@ const prod: envType = {
           alchemyNetwork: Network.ETH_MAINNET,
           alchemyUrl: "",
           chaindId: 1,
-          contractAddress: "0xC891EB4cbdEFf6e073e859e987815Ed1505c2ACD",
+          contractAddress: "0xc891eb4cbdeff6e073e859e987815ed1505c2acd",
           gasStationUrl: "",
-          enabled: true,
+          enabled: false,
           name: "avalanche",
           network: "mainnet",
           providerUrl: "api.avax.network",
-          scannerUrl: "https://snowtrace.io"
+          scannerUrl: "https://snowtrace.io",
+          snowTraceApiUrl: "https://api.unext.cc/snow-trace"
         },
         {
           id: 1,
@@ -123,12 +144,29 @@ const prod: envType = {
           alchemyUrl: "https://api.unext.cc/alchemy-ethereum",
           chaindId: 0,
           contractAddress: "0x1aBaEA1f7C830bD89Acc67eC4af516284b1bC33c",
-          enabled: true,
+          enabled: false,
           gasStationUrl: "",
           name: "ethereum",
           network: "mainnet",
           providerUrl: "https://api.unext.cc/infura-ethereum",
-          scannerUrl: "https://etherscan.io"
+          scannerUrl: "https://etherscan.io",
+          snowTraceApiUrl: ""
+        },
+        {
+          id: 2,
+          alchemyApiKey: "",
+          alchemyMaxRetries: 3,
+          alchemyNetwork: Network.MATIC_MAINNET,
+          alchemyUrl: "https://api.unext.cc/alchemy-polygon",
+          chaindId: 0,
+          contractAddress: "",
+          enabled: false,
+          gasStationUrl: "",
+          name: "polygon",
+          network: "mainnet",
+          providerUrl: "https://api.unext.cc/infura-polygon",
+          scannerUrl: "https://polygonscan.com",
+          snowTraceApiUrl: ""
         }
       ],
       symbol: "EUROC"
@@ -148,13 +186,14 @@ const prod: envType = {
           alchemyNetwork: Network.ETH_MAINNET,
           alchemyUrl: "",
           chaindId: 0,
-          contractAddress: "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
+          contractAddress: "",
           enabled: true,
           gasStationUrl: "",
           name: "avalanche",
           network: "mainnet",
           providerUrl: "api.avax.network",
-          scannerUrl: "https://snowtrace.io"
+          scannerUrl: "https://snowtrace.io",
+          snowTraceApiUrl: "https://api.unext.cc/snow-trace"
         }
       ],
       symbol: "AVAX"
@@ -166,7 +205,7 @@ const prod: envType = {
       name: "Ethereum",
       networks: [
         {
-          id: 0,
+          id: 1,
           alchemyApiKey: "",
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.ETH_MAINNET,
@@ -178,10 +217,36 @@ const prod: envType = {
           name: "avalanche",
           network: "mainnet",
           providerUrl: "https://api.unext.cc/infura-ethereum",
-          scannerUrl: "https://etherscan.com"
+          scannerUrl: "https://etherscan.com",
+          snowTraceApiUrl: ""
         }
       ],
       symbol: "ETH"
+    },
+    {
+      id: 2,
+      decimals: 18,
+      enabled: true,
+      name: "Matic",
+      networks: [
+        {
+          id: 1,
+          alchemyApiKey: "",
+          alchemyMaxRetries: 3,
+          alchemyNetwork: Network.MATIC_MAINNET,
+          alchemyUrl: "https://api.unext.cc/alchemy-polygon",
+          chaindId: 0,
+          contractAddress: "0x0000000000000000000000000000000000001010",
+          enabled: true,
+          gasStationUrl: "",
+          name: "avalanche",
+          network: "mainnet",
+          providerUrl: "https://api.unext.cc/infura-polygon",
+          scannerUrl: "https://polygonscan.com",
+          snowTraceApiUrl: ""
+        }
+      ],
+      symbol: "MATIC"
     }
   ]
 }
@@ -209,7 +274,8 @@ const dev: envType = {
           name: "avalanche",
           network: "testnet",
           providerUrl: "api.avax-test.network",
-          scannerUrl: "https://testnet.snowtrace.io"
+          scannerUrl: "https://testnet.snowtrace.io",
+          snowTraceApiUrl: "http://localhost:8000/snow-trace-testnet"
         },
         {
           id: 1,
@@ -218,14 +284,31 @@ const dev: envType = {
           alchemyNetwork: Network.ETH_GOERLI,
           alchemyUrl: "http://localhost:8000/alchemy-ethereum-goerli",
           chaindId: 0,
-          contractAddress: "0x07865c6E87B9F70255377e024ace6630C1Eaa37F",
-          enabled: false,
+          contractAddress: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
+          enabled: true,
           gasStationUrl:
-            "https://api.etherscan.io/api?module=gastracker&action=gasestimate&gasprice=2000000000&apikey=H8HXPX42N8MTQS7TZBD7RFTZUEJ2YV8Y98",
+            "http://localhost:8000/ethereum-gas-station?module=gastracker&action=gasestimate&gasprice=2000000000",
           name: "ethereum",
           network: "goerli",
           providerUrl: "http://localhost:8000/infura-ethereum-goerli",
-          scannerUrl: "https://goerli.etherscan.io"
+          scannerUrl: "https://goerli.etherscan.io",
+          snowTraceApiUrl: "http://localhost:8000/snow-trace-testnet"
+        },
+        {
+          id: 2,
+          alchemyApiKey: "",
+          alchemyMaxRetries: 3,
+          alchemyNetwork: Network.MATIC_MUMBAI,
+          alchemyUrl: "http://localhost:8000/alchemy-polygon-mumbai",
+          chaindId: 0,
+          contractAddress: "0x0fa8781a83e46826621b3bc094ea2a0212e71b23",
+          enabled: true,
+          gasStationUrl: "",
+          name: "polygon",
+          network: "mumbai",
+          providerUrl: "http://localhost:8000/infura-polygon-mumbai",
+          scannerUrl: "https://mumbai.polygonscan.com",
+          snowTraceApiUrl: ""
         }
       ],
       symbol: "USDC"
@@ -245,13 +328,14 @@ const dev: envType = {
           alchemyNetwork: Network.ETH_GOERLI,
           alchemyUrl: "none",
           chaindId: 1,
-          contractAddress: "0x5E44db7996c682E92a960b65AC713a54AD815c6B",
+          contractAddress: "0x5e44db7996c682e92a960b65ac713a54ad815c6b",
           enabled: false,
           name: "avalanche",
           gasStationUrl: "",
           network: "testnet",
           providerUrl: "api.avax-test.network",
-          scannerUrl: "https://testnet.snowtrace.io"
+          scannerUrl: "https://testnet.snowtrace.io",
+          snowTraceApiUrl: "http://localhost:8000/snow-trace-testnet"
         },
         {
           id: 1,
@@ -260,14 +344,15 @@ const dev: envType = {
           alchemyNetwork: Network.ETH_GOERLI,
           alchemyUrl: "http://localhost:8000/alchemy-ethereum-goerli",
           chaindId: 0,
-          contractAddress: "0xA683d909e996052955500DDc45CA13E25c76e286",
+          contractAddress: "0xa683d909e996052955500ddc45ca13e25c76e286",
           enabled: false,
           gasStationUrl:
-            "https://api.etherscan.io/api?module=gastracker&action=gasestimate&gasprice=2000000000&apikey=H8HXPX42N8MTQS7TZBD7RFTZUEJ2YV8Y98",
+            "http://localhost:8000/ethereum-gas-station?module=gastracker&action=gasestimate&gasprice=2000000000",
           name: "ethereum",
           network: "goerli",
           providerUrl: "http://localhost:8000/infura-ethereum-goerli",
-          scannerUrl: "https://goerli.etherscan.io"
+          scannerUrl: "https://goerli.etherscan.io",
+          snowTraceApiUrl: ""
         }
       ],
       symbol: "EUROC"
@@ -293,7 +378,8 @@ const dev: envType = {
           name: "avalanche",
           network: "testnet",
           providerUrl: "api.avax-test.network",
-          scannerUrl: "https://subnets-test.avax.network"
+          scannerUrl: "https://subnets-test.avax.network",
+          snowTraceApiUrl: "http://localhost:8000/snow-trace-testnet"
         }
       ],
       symbol: "AVAX"
@@ -314,14 +400,41 @@ const dev: envType = {
           contractAddress: "0x",
           enabled: true,
           gasStationUrl:
-            "https://api.etherscan.io/api?module=gastracker&action=gasestimate&gasprice=2000000000&apikey=H8HXPX42N8MTQS7TZBD7RFTZUEJ2YV8Y98",
+            "http://localhost:8000/ethereum-gas-station?module=gastracker&action=gasestimate&gasprice=2000000000",
           name: "ethereum",
           network: "goerli",
           providerUrl: "http://localhost:8000/infura-ethereum-goerli",
-          scannerUrl: "https://goerli.etherscan.io"
+          scannerUrl: "https://goerli.etherscan.io",
+          snowTraceApiUrl: ""
         }
       ],
       symbol: "ETH"
+    },
+    {
+      id: 2,
+      decimals: 18,
+      enabled: false,
+      name: "Matic",
+      networks: [
+        {
+          id: 0,
+          alchemyApiKey: "",
+          alchemyMaxRetries: 3,
+          alchemyNetwork: Network.ETH_MAINNET,
+          alchemyUrl: "http://localhost:8000/alchemy-polygon-mumbai",
+          chaindId: 0,
+          contractAddress: "0x0000000000000000000000000000000000001010",
+          enabled: true,
+          gasStationUrl:
+            "http://localhost:8000/ethereum-gas-station?module=gastracker&action=gasestimate&gasprice=2000000000",
+          name: "Matic",
+          network: "testnet",
+          providerUrl: "http://localhost:8000/infura-polygon-mumbai",
+          scannerUrl: "https://goerli.polygonscan.io",
+          snowTraceApiUrl: ""
+        }
+      ],
+      symbol: "MATIC"
     }
   ]
 }

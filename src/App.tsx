@@ -2,8 +2,10 @@ import { CircularProgress, Container, Grid } from "@mui/material"
 import React, { useContext, useEffect } from "react"
 
 import Account from "~components/Account/Account"
-import AccountMATIC from "~components/Account/AccountMATIC"
 import AccountUSDC from "~components/Account/AccountUSDC"
+import CryptoAccountAVAX from "~components/Account/CryptoAccountAVAX"
+import CryptoAccountETH from "~components/Account/CryptoAccountETH"
+import CryptoAccountMATIC from "~components/Account/CryptoAccountMATIC"
 import Add from "~components/Actions/Add"
 import Convert from "~components/Actions/Convert"
 import More from "~components/Actions/More"
@@ -105,8 +107,14 @@ const App = () => {
                 (settingsContext.shownPage === "accountUSDC" && (
                   <AccountUSDC />
                 )) ||
+                (settingsContext.shownPage === "accountAVAX" && (
+                  <CryptoAccountAVAX />
+                )) ||
+                (settingsContext.shownPage === "accountETH" && (
+                  <CryptoAccountETH />
+                )) ||
                 (settingsContext.shownPage === "accountMATIC" && (
-                  <AccountMATIC />
+                  <CryptoAccountMATIC />
                 )) ||
                 (settingsContext.shownPage === "transactionDetail" && (
                   <TransactionDetail />

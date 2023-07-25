@@ -1,29 +1,35 @@
-import { Grid, Link, Paper, Typography } from "@mui/material";
-import type React from "react";
-import { useContext } from "react";
-import { SettingsContext } from "~store/settings-context";
+import { Grid, Link, Paper, Typography } from "@mui/material"
+import type React from "react"
+import { useContext } from "react"
+
+import { SettingsContext } from "~store/settings-context"
+import { WalletContext } from "~store/wallet-context"
 
 interface Props {
-  children?: React.ReactNode;
-  title: string;
-  balance: string;
-  accountPageName: string;
+  children?: React.ReactNode
+  title: string
+  balance: string
+  accountPageName: string
 }
 
 const AccountBalanceItem = (props: Props) => {
-  const settingContext = useContext(SettingsContext);
+  const settingContext = useContext(SettingsContext)
+  const walletContext = useContext(WalletContext)
+  // @ts-ignore
+  const wallet = walletContext.wallets[0][0]
 
   return (
     <Grid item>
-      <Paper variant="outlined"
+      <Paper
+        variant="outlined"
         sx={{
-        p: 1,
-        display: "flex",
-        flexDirection: "column",
-        height: "84px",
-        width: "160px",
-      }}>
-        <Typography component="p" color="primary" sx={{fontSize: 12}}>
+          p: 1,
+          display: "flex",
+          flexDirection: "column",
+          height: "84px",
+          width: "160px"
+        }}>
+        <Typography component="p" color="primary" sx={{ fontSize: 12 }}>
           {props.title}
         </Typography>
 
@@ -33,9 +39,10 @@ const AccountBalanceItem = (props: Props) => {
 
         <Link
           color="primary"
-          sx={{cursor: "pointer", fontSize: 12}}
-          onClick={() => settingContext.shownPageHandler(props.accountPageName)}
-        >
+          sx={{ cursor: "pointer", fontSize: 12 }}
+          onClick={() =>
+            settingContext.shownPageHandler(props.accountPageName)
+          }>
           View Account
         </Link>
       </Paper>
@@ -43,4 +50,4 @@ const AccountBalanceItem = (props: Props) => {
   )
 }
 
-export default AccountBalanceItem;
+export default AccountBalanceItem
