@@ -74,7 +74,7 @@ export const useSnowGetAccountBalance = (
 }
 
 export const useSnowGetAccountTokenBalance = () => {
-  const [balance, setBalance] = useState<string>("")
+  const [balance, setBalance] = useState<number>(0)
   const [balanceWei, setBalanceWei] = useState<string>("")
   const [error, setError] = useState<string>("")
   const [status, setStatus] = useState("idle")
@@ -114,7 +114,7 @@ export const useSnowGetAccountTokenBalance = () => {
 
       const data: accountTokenBalanceType = await response.json()
 
-      setBalance(data.result)
+      setBalance(Number(data.result) / 10 ** decimals)
 
       setStatus("done")
     } catch (err: any) {

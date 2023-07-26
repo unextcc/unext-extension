@@ -3,6 +3,7 @@ import { AssetTransfersCategory } from "alchemy-sdk"
 import React, { useContext, useState } from "react"
 
 import AccountBalanceItemUSDC from "~components/Account/AccountBalanceItemUSDC"
+import AccountNetworkBalanceItemUSDC from "~components/Account/AccountNetworkBalanceItemUSDC"
 import Spend from "~components/Dashboard/Spend"
 import TabPanel from "~components/Dashboard/TabPanel"
 import ActionMenu from "~components/Layout/ActionMenu"
@@ -92,7 +93,7 @@ const Dashboard = (props: Props) => {
                   }}
                 />
                 <Tab
-                  label="Transactions"
+                  label="Accounts"
                   {...a11yProps(1)}
                   sx={{
                     textTransform: "none",
@@ -109,13 +110,7 @@ const Dashboard = (props: Props) => {
             </TabPanel>
 
             <TabPanel value={value} index={1}>
-              <RecentTransactions
-                title={"Recent Transactions"}
-                goBackPageName="dashboard"
-                isLoadingTransactions={isLoadingTransactions}
-                transactionFound={transactionFound}
-                transactions={transactions}
-              />
+              <AccountNetworkBalanceItemUSDC />
             </TabPanel>
           </Box>
         </Grid>
