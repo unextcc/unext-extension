@@ -7,13 +7,14 @@ import {
   TableRow,
   Typography
 } from "@mui/material"
-import React from "react"
+import React, { useContext } from "react"
 
 import {
   AvalancheLogo,
   EthereumLogo,
   PolygonLogo
 } from "~components/CryptoLogo"
+import { SettingsContext } from "~store/settings-context"
 
 import AccountBalanceValueUSDC from "./AccountBalanceValueUSDC"
 
@@ -22,6 +23,8 @@ interface Props {
 }
 
 const AccountNetworkBalanceItemUSDC = (props: Props) => {
+  const settingsContext = useContext(SettingsContext)
+
   return (
     <Grid container item xs={12} sx={{ overflow: "hidden" }}>
       <TableContainer
@@ -39,7 +42,12 @@ const AccountNetworkBalanceItemUSDC = (props: Props) => {
         }}>
         <Table sx={{ minWidth: 343 }}>
           <TableBody>
-            <TableRow hover sx={{ height: 64 }}>
+            <TableRow
+              hover
+              sx={{ height: 64, cursor: "pointer" }}
+              onClick={() => {
+                settingsContext.shownPageHandler("accountAvalancheUSDC")
+              }}>
               <TableCell width={"20%"} sx={{ textAlign: "left" }}>
                 <AvalancheLogo />
               </TableCell>
@@ -54,7 +62,12 @@ const AccountNetworkBalanceItemUSDC = (props: Props) => {
               </TableCell>
             </TableRow>
 
-            <TableRow hover sx={{ height: 64 }}>
+            <TableRow
+              hover
+              sx={{ height: 64, cursor: "pointer" }}
+              onClick={() => {
+                settingsContext.shownPageHandler("accountEthereumUSDC")
+              }}>
               <TableCell width={"20%"} sx={{ textAlign: "left" }}>
                 <EthereumLogo />
               </TableCell>
@@ -69,7 +82,12 @@ const AccountNetworkBalanceItemUSDC = (props: Props) => {
               </TableCell>
             </TableRow>
 
-            <TableRow hover sx={{ height: 64 }}>
+            <TableRow
+              hover
+              sx={{ height: 64, cursor: "pointer" }}
+              onClick={() => {
+                settingsContext.shownPageHandler("accountPolygonUSDC")
+              }}>
               <TableCell
                 width={"20%"}
                 sx={{ borderBottom: "none", textAlign: "left" }}>

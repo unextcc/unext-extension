@@ -3,16 +3,42 @@ import Web3 from "web3"
 
 import { config } from "~contents/config"
 
-type accountBalanceType = {
+export type accountBalanceType = {
   status: string
   message: string
   result: string
 }
 
-type accountTokenBalanceType = {
+export type accountTokenBalanceType = {
   status: string
   message: string
   result: string
+}
+
+export type accountTokenTransactionType = {
+  status: string
+  message: string
+  result: {
+    blockNumber: string
+    timeStamp: string
+    hash: string
+    nonce: string
+    blockHash: string
+    from: string
+    contractAddress: string
+    to: string
+    value: string
+    tokenName: string
+    tokenSymbol: string
+    tokenDecimal: string
+    transactionIndex: string
+    gas: string
+    gasPrice: string
+    gasUsed: string
+    cumulativeGasUsed: string
+    input: string
+    confirmations: string
+  }[]
 }
 
 export const useSnowGetAccountBalance = (
@@ -130,5 +156,124 @@ export const useSnowGetAccountTokenBalance = () => {
     error,
     status,
     getAccountTokenBalance: getAccountTokenBalance
+  }
+}
+
+export const useSnowGetAccountTokenTransactions = (
+  contractAddress: string,
+  accountAddress: string,
+  page: number = 1,
+  offset: number = 10,
+  startBlock: number = 0,
+  endBlock: number = 99999999,
+  sort: string = "desc",
+  apiUrl: string
+) => {
+  const [error, setError] = useState<string>("")
+  const [status, setStatus] = useState("idle")
+  const [transactionFound, setTransactionFound] = useState<boolean>(true)
+  const [transactions, setTransactions] = useState<accountTokenTransactionType>(
+    {
+      status: "1",
+      message: "OK",
+      result: [
+        {
+          blockNumber: "0",
+          timeStamp: "0",
+          hash: "default",
+          nonce: "0",
+          blockHash: "0x0",
+          from: "0x0",
+          contractAddress: "0x0",
+          to: "0x0",
+          value: "0",
+          tokenName: "",
+          tokenSymbol: "",
+          tokenDecimal: "",
+          transactionIndex: "1",
+          gas: "0",
+          gasPrice: "0",
+          gasUsed: "0",
+          cumulativeGasUsed: "0",
+          input: "",
+          confirmations: "0"
+        }
+      ]
+    }
+  )
+
+  const getAccountTokenTransfers = async (
+    contractAddress: string,
+    accountAddress: string,
+    page: number = 1,
+    offset: number = 10,
+    startBlock: number = 0,
+    endBlock: number = 99999999,
+    sort: string = "desc",
+    apiUrl: string
+  ) => {
+    try {
+      if (!contractAddress) {
+        throw new Error("contractAddress not set")
+        return
+      }
+
+      if (!accountAddress) {
+        throw new Error("accountAddress not set")
+        return
+      }
+
+      if (!apiUrl) {
+        throw new Error("apiUrl not set")
+        return
+      }
+
+      const encodedApiUrl = encodeURI(
+        `${apiUrl}?module=account&action=tokentx&contractaddress=${contractAddress}&address=${accountAddress}&page=${page}&offset=${offset}&startblock=${startBlock}&endblock=${endBlock}&sort=${sort}`
+      )
+
+      const response = await fetch(encodedApiUrl)
+      if (!response.ok) {
+        throw new Error("Error: " + response.statusText)
+      }
+
+      const data: accountTokenTransactionType = await response.json()
+
+      if (data.result[0].hash === "default") {
+        setTransactionFound(false)
+      }
+
+      setTransactions(data)
+      setStatus("done")
+    } catch (err: any) {
+      setStatus("error")
+      setError(err)
+      console.error(err)
+    }
+  }
+
+  useEffect(() => {
+    if (transactions.result[0].hash === "default") {
+      getAccountTokenTransfers(
+        contractAddress,
+        accountAddress,
+        page,
+        offset,
+        startBlock,
+        endBlock,
+        sort,
+        apiUrl
+      )
+    }
+  }, [transactions])
+
+  return {
+    error,
+    isLoading: status === "loading",
+    isLoaded: status === "loaded",
+    status,
+    transactionFound,
+    transactions,
+    getAccountTokenTransfers: getAccountTokenTransfers
   }
 }

@@ -1,5 +1,9 @@
 import { Alchemy, AssetTransfersCategory, SortingOrder } from "alchemy-sdk"
-import type { AlchemyConfig, TransactionReceiptsResponse } from "alchemy-sdk"
+import type {
+  AlchemyConfig,
+  Network,
+  TransactionReceiptsResponse
+} from "alchemy-sdk"
 import type types from "alchemy-sdk"
 import { sortBy } from "lodash"
 import { useContext, useEffect, useState } from "react"
@@ -65,6 +69,9 @@ export type Transaction = {
 }
 
 export const useAlchemyGetAssetTransfers = (
+  apiKey: string = "",
+  network: string,
+  maxRetries: number = 3,
   address: string,
   contractAddresses: string[],
   fromBlock: string = "0x0",
@@ -72,7 +79,8 @@ export const useAlchemyGetAssetTransfers = (
   withMetadata: boolean = true,
   order: SortingOrder = SortingOrder.DESCENDING,
   excludeZeroValue: boolean = true,
-  maxCount: number = 10
+  maxCount: number = 10,
+  url: string
 ) => {
   const walletContext = useContext(WalletContext)
   // @ts-ignore
@@ -84,9 +92,10 @@ export const useAlchemyGetAssetTransfers = (
   const [status, setStatus] = useState("idle")
 
   const alchemyConfig: AlchemyConfig = {
-    apiKey: config.tokens[1].networks[1].alchemyApiKey,
-    network: config.tokens[1].networks[1].alchemyNetwork,
-    maxRetries: config.tokens[1].networks[1].alchemyMaxRetries,
+    apiKey: apiKey,
+    // @ts-ignore
+    network: network,
+    maxRetries: maxRetries,
     batchRequests: false,
     getProvider: function (): Promise<types.AlchemyProvider> {
       throw new Error("Function not implemented.")
@@ -94,7 +103,7 @@ export const useAlchemyGetAssetTransfers = (
     getWebSocketProvider: function (): Promise<types.AlchemyWebSocketProvider> {
       throw new Error("Function not implemented.")
     },
-    url: config.tokens[1].networks[1].alchemyUrl
+    url: url
   }
 
   const alchemy = new Alchemy(alchemyConfig)
@@ -150,7 +159,7 @@ export const useAlchemyGetAssetTransfers = (
           fiatSymbol:
             (data[i].asset === "USDC" && "$") ||
             (data[i].asset === "MATIC" && "") ||
-            (data[i].asset === "AVAX" && "") ||
+            (data[i].asset === "ETH" && "") ||
             (data[i].asset === "EUROC" && "€"),
           transactionType:
             // 0=Receive, 1=Send

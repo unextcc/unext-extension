@@ -3,18 +3,15 @@ import { AssetTransfersCategory } from "alchemy-sdk"
 import type React from "react"
 import { useContext } from "react"
 
-import AccountBalanceItem from "~components/Account/AccountBalanceItem"
 import ActionMenu from "~components/Layout/ActionMenu"
 import Footer from "~components/Layout/Footer"
 import HeaderLight from "~components/Layout/HeaderLight"
-import RecentTransactions from "~components/Transaction/RecentTransactions"
 import { config } from "~contents/config"
 import { useAlchemyGetAssetTransfers } from "~hooks/use-alchemy"
-import { useSnowGetAccountBalance } from "~hooks/use-snow"
-import { useWeb3TokenBalance } from "~hooks/use-web3"
 import { WalletContext } from "~store/wallet-context"
 
 import AccountBalanceItemUSDC from "./AccountBalanceItemUSDC"
+import AccountNetworkBalanceItemUSDC from "./AccountNetworkBalanceItemUSDC"
 
 interface Props {
   children?: React.ReactNode
@@ -24,18 +21,6 @@ const Account = (props: Props) => {
   const walletContext = useContext(WalletContext)
   // @ts-ignore
   const wallet = walletContext.wallets[0][0]
-
-  const {
-    error: errorTransactions,
-    isLoading: isLoadingTransactions,
-    transactionFound,
-    transactions
-  } = useAlchemyGetAssetTransfers(
-    wallet.address,
-    [config.tokens[1].networks[1].contractAddress],
-    "0x0",
-    [AssetTransfersCategory.ERC20, AssetTransfersCategory.EXTERNAL]
-  )
 
   return (
     <Grid container item xs={12}>
@@ -48,24 +33,24 @@ const Account = (props: Props) => {
         marginTop={7.5}
         display="block"
         alignItems="flex-start">
-        {errorTransactions && (
-          <Alert variant="outlined" severity="error">
-            {errorTransactions}
-          </Alert>
-        )}
         <Grid container item xs={12} display="flex" spacing={1}>
           <AccountBalanceItemUSDC />
         </Grid>
 
         <ActionMenu />
 
-        <RecentTransactions
-          goBackPageName="account"
-          title={"Recent Transactions"}
-          isLoadingTransactions={isLoadingTransactions}
-          transactionFound={transactionFound}
-          transactions={transactions}
+        <Grid
+          item
+          xs={12}
+          sx={{
+            height: 20,
+            borderTop: 1,
+            borderColor: "lightgray",
+            marginTop: 2
+          }}
         />
+
+        <AccountNetworkBalanceItemUSDC />
       </Grid>
 
       <Footer />

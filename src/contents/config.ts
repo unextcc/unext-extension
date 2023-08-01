@@ -301,7 +301,7 @@ const dev: envType = {
           alchemyNetwork: Network.MATIC_MUMBAI,
           alchemyUrl: "http://localhost:8000/alchemy-polygon-mumbai",
           chaindId: 0,
-          contractAddress: "0x0fa8781a83e46826621b3bc094ea2a0212e71b23",
+          contractAddress: "0x0FA8781a83E46826621b3BC094Ea2A0212e71B23",
           enabled: true,
           gasStationUrl: "",
           name: "polygon",

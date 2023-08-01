@@ -11,8 +11,8 @@ import { config } from "~contents/config"
 import { useAlchemyGetAssetTransfers } from "~hooks/use-alchemy"
 import { WalletContext } from "~store/wallet-context"
 
-import AccountBalanceItemUSDC from "./AccountBalanceItemUSDC"
 import AccountDetailItemUSDC from "./AccountDetailItemUSDC"
+import AccountNetworkBalanceItemUSDC from "./AccountNetworkBalanceItemUSDC"
 
 interface Props {
   children?: React.ReactNode
@@ -22,18 +22,6 @@ const AccountUSDC = (props: Props) => {
   const walletContext = useContext(WalletContext)
   // @ts-ignore
   const wallet = walletContext.wallets[0][0]
-
-  const {
-    error: errorTransactions,
-    isLoading: isLoadingTransactions,
-    transactionFound,
-    transactions
-  } = useAlchemyGetAssetTransfers(
-    wallet.address,
-    [config.tokens[0].networks[1].contractAddress],
-    "0x0",
-    [AssetTransfersCategory.ERC20]
-  )
 
   return (
     <Grid container item xs={12}>
@@ -46,23 +34,22 @@ const AccountUSDC = (props: Props) => {
         marginTop={7.5}
         display="block"
         alignItems="flex-start">
-        {errorTransactions && (
-          <Alert variant="outlined" severity="error">
-            {errorTransactions}
-          </Alert>
-        )}
-
-        <AccountDetailItemUSDC />
+        <AccountDetailItemUSDC balanceType="total" network="" />
 
         <ActionMenu />
 
-        <RecentTransactions
-          title={"Recent Transactions"}
-          goBackPageName="accountUSDC"
-          isLoadingTransactions={isLoadingTransactions}
-          transactionFound={transactionFound}
-          transactions={transactions}
+        <Grid
+          item
+          xs={12}
+          sx={{
+            height: 20,
+            borderTop: 1,
+            borderColor: "lightgray",
+            marginTop: 2
+          }}
         />
+
+        <AccountNetworkBalanceItemUSDC />
       </Grid>
 
       <Footer />

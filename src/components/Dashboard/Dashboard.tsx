@@ -1,6 +1,5 @@
-import { Alert, Box, Grid, Tab, Tabs } from "@mui/material"
-import { AssetTransfersCategory } from "alchemy-sdk"
-import React, { useContext, useState } from "react"
+import { Box, Grid, Tab, Tabs } from "@mui/material"
+import React, { useState } from "react"
 
 import AccountBalanceItemUSDC from "~components/Account/AccountBalanceItemUSDC"
 import AccountNetworkBalanceItemUSDC from "~components/Account/AccountNetworkBalanceItemUSDC"
@@ -9,11 +8,6 @@ import TabPanel from "~components/Dashboard/TabPanel"
 import ActionMenu from "~components/Layout/ActionMenu"
 import Footer from "~components/Layout/Footer"
 import HeaderLight from "~components/Layout/HeaderLight"
-import RecentTransactions from "~components/Transaction/RecentTransactions"
-import { config } from "~contents/config"
-import { useAlchemyGetAssetTransfers } from "~hooks/use-alchemy"
-import { SettingsContext } from "~store/settings-context"
-import { WalletContext } from "~store/wallet-context"
 
 interface Props {
   children?: React.ReactNode
@@ -27,26 +21,7 @@ function a11yProps(index: number) {
 }
 
 const Dashboard = (props: Props) => {
-  const settingsContext = useContext(SettingsContext)
-  const walletContext = useContext(WalletContext)
-
   const [value, setValue] = useState(0)
-
-  const wallets = walletContext.wallets[0]
-  // @ts-ignore
-  const wallet = walletContext.wallets[0][0]
-
-  const {
-    error: errorTransactions,
-    isLoading: isLoadingTransactions,
-    transactionFound,
-    transactions
-  } = useAlchemyGetAssetTransfers(
-    wallet.address,
-    [config.tokens[1].networks[1].contractAddress],
-    "0x0",
-    [AssetTransfersCategory.ERC20]
-  )
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
@@ -63,12 +38,6 @@ const Dashboard = (props: Props) => {
         marginTop={7.5}
         display="block"
         alignItems="flex-start">
-        {errorTransactions && (
-          <Alert variant="outlined" severity="error">
-            {errorTransactions.split(": ")[1]}
-          </Alert>
-        )}
-
         <Grid item xs={12} textAlign="left">
           <AccountBalanceItemUSDC />
         </Grid>

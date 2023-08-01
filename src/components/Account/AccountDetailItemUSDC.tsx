@@ -4,10 +4,13 @@ import { useContext, useEffect, useState } from "react"
 
 import { WalletContext } from "~store/wallet-context"
 
+import AccountBalanceValueUSDC from "./AccountBalanceValueUSDC"
 import AccountTotalBalanceValueUSDC from "./AccountTotalBalanceValueUSDC"
 
 interface Props {
   children?: React.ReactNode
+  balanceType: string
+  network: string
 }
 
 const AccountDetailItemUSDC = (props: Props) => {
@@ -30,7 +33,10 @@ const AccountDetailItemUSDC = (props: Props) => {
         </Typography>
 
         <Typography component="h6" variant="h6">
-          <AccountTotalBalanceValueUSDC />
+          {props.balanceType === "total" && <AccountTotalBalanceValueUSDC />}
+          {props.balanceType === "usdc" && (
+            <AccountBalanceValueUSDC network={props.network} />
+          )}
         </Typography>
 
         <Typography color="primary" sx={{ fontSize: 12, marginTop: 1 }}>

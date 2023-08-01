@@ -2,6 +2,9 @@ import { CircularProgress, Container, Grid } from "@mui/material"
 import React, { useContext, useEffect } from "react"
 
 import Account from "~components/Account/Account"
+import AccountAvalancheUSDC from "~components/Account/AccountAvalancheUSDC"
+import AccountEthereumUSDC from "~components/Account/AccountEthereumUSDC"
+import AccountPolygonUSDC from "~components/Account/AccountPolygonUSDC"
 import AccountUSDC from "~components/Account/AccountUSDC"
 import CryptoAccountAVAX from "~components/Account/CryptoAccountAVAX"
 import CryptoAccountETH from "~components/Account/CryptoAccountETH"
@@ -103,9 +106,19 @@ const App = () => {
                   <RequirePasswordWhenSend />
                 )) ||
                 /* settings - end */
+                /* account - start */
                 (settingsContext.shownPage === "account" && <Account />) ||
                 (settingsContext.shownPage === "accountUSDC" && (
                   <AccountUSDC />
+                )) ||
+                (settingsContext.shownPage === "accountAvalancheUSDC" && (
+                  <AccountAvalancheUSDC />
+                )) ||
+                (settingsContext.shownPage === "accountEthereumUSDC" && (
+                  <AccountEthereumUSDC />
+                )) ||
+                (settingsContext.shownPage === "accountPolygonUSDC" && (
+                  <AccountPolygonUSDC />
                 )) ||
                 (settingsContext.shownPage === "accountAVAX" && (
                   <CryptoAccountAVAX />
@@ -116,6 +129,7 @@ const App = () => {
                 (settingsContext.shownPage === "accountMATIC" && (
                   <CryptoAccountMATIC />
                 )) ||
+                /* account - end */
                 (settingsContext.shownPage === "transactionDetail" && (
                   <TransactionDetail />
                 )) ||
