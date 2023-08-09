@@ -42,6 +42,7 @@ const CreateNewWallet = () => {
     error,
     isError,
     status,
+    privateKey,
     createAccount
   } = useCreateAccount()
 
@@ -251,15 +252,13 @@ const CreateNewWallet = () => {
               marginBottom: "8px",
               marginTop: "8px"
             }}>
-            <Typography width={360}>{encryptedPrivateKey}</Typography>
+            <Typography width={360}>{privateKey}</Typography>
           </div>
           <Button
             variant="outlined"
             size="medium"
             startIcon={<CopyAll />}
-            onClick={() =>
-              navigator.clipboard.writeText(encryptedAvalanchePrivateKey)
-            }>
+            onClick={() => navigator.clipboard.writeText(privateKey)}>
             COPY SECRET PRIVATE KEY
           </Button>
         </Grid>

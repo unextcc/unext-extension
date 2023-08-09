@@ -3,8 +3,9 @@ import { type AlchemyConfig } from "alchemy-sdk"
 import type types from "alchemy-sdk"
 import { sortBy } from "lodash"
 import { useContext, useEffect, useState } from "react"
+import Web3 from "web3"
 
-import { config } from "~contents/config"
+import { NetworkId, config } from "~contents/config"
 import { TransactionContext } from "~store/transaction-context"
 import { WalletContext } from "~store/wallet-context"
 import type {
@@ -210,12 +211,32 @@ export const useAlchemyGetTransactionReceipt = () => {
       setStatus("loading")
       const data = await alchemy.core.getTransactionReceipt(transactionHash)
 
+      let networkFeeConverted: number = 0
+
+      if (network === NetworkId.AVALANCE) {
+        // avalanche fee calculation
+      } else if (network === NetworkId.ETHEREUM) {
+        // ethererum fee calculation
+        networkFeeConverted =
+          Number(data?.effectiveGasPrice) * Number(data?.gasUsed)
+      } else if (network === NetworkId.POLYGON) {
+        // polygon fee calculation
+        networkFeeConverted = Number(
+          Web3.utils.fromWei(
+            (
+              Number(data?.effectiveGasPrice) * Number(data?.gasUsed)
+            ).toString(),
+            "ether"
+          )
+        )
+      }
+
       setTransaction({
         date: transactionContext.transactionDetail.date,
         from: data?.from!,
         hash: data?.transactionHash!,
         network: network,
-        networkFee: Number(data?.effectiveGasPrice) * Number(data?.gasUsed),
+        networkFee: networkFeeConverted,
         status: data?.status == 1 ? "Success" : "Failed",
         time: transactionContext.transactionDetail.time,
         to: data?.to!,

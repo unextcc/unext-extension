@@ -1,5 +1,4 @@
-import * as CryptoJS from "crypto-js"
-import { array } from "yup"
+import CryptoJS from "crypto-js"
 
 /*
  * Encrypt a derived hd private key with a given pin and return it in Base64 form
@@ -46,9 +45,12 @@ export const verifyPassword = (
 ): boolean => {
   const decrypted = CryptoJS.AES.decrypt(encryptedBase64, key)
 
+  console.log(decrypted)
+
   if (decrypted) {
     try {
       const str = decrypted.toString(CryptoJS.enc.Utf8)
+      console.log(str)
       return str.length > 0
     } catch (error: any) {
       console.log("The wallet password is wrong! (Probably)")

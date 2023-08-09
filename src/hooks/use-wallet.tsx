@@ -5,7 +5,6 @@ import { KeyChain as PlatformKeyChain } from "@avalabs/avalanchejs/dist/apis/pla
 import { privateToAddress } from "ethereumjs-util"
 import { useState } from "react"
 
-import { config } from "~contents/config"
 import { ava, avm, bintools, pChain } from "~utils/AVA"
 import { encryptAES } from "~utils/encryption"
 
@@ -31,6 +30,8 @@ export const useCreateAccount = () => {
   const [encryptedAvalanchePrivateKey, setEncryptedAvalanchePrivateKey] =
     useState<string>("")
 
+  const [privateKey, setPrivateKey] = useState<string>("")
+
   const [error, setError] = useState<{}>({})
   const [status, setStatus] = useState<string>("idle")
 
@@ -52,7 +53,7 @@ export const useCreateAccount = () => {
       const pk = keyChain.makeKey().getPrivateKeyString()
       const keyPair = keyChain.importKey(pk)
       setEncryptedAvalanchePrivateKey(
-        encryptAES(password, keyPair.getPrivateKeyString())
+        encryptAES(keyPair.getPrivateKeyString(), password)
       )
 
       // Platform key chain & key pair
@@ -66,7 +67,10 @@ export const useCreateAccount = () => {
 
       const ethereumPrivateKey = pkHex
       const ethereumAddress = privateToAddress(pkBuffNative).toString("hex")
-      setEncryptedPrivateKey(encryptAES(password, ethereumPrivateKey))
+      setEncryptedPrivateKey(encryptAES(ethereumPrivateKey, password))
+
+      // set privateKey
+      setPrivateKey(ethereumPrivateKey)
 
       const cPrivKey =
         `PrivateKey-` + bintools.cb58Encode(BufferAvalanche.from(pkBuf))
@@ -98,6 +102,7 @@ export const useCreateAccount = () => {
     error,
     isError: status === "error",
     status,
+    privateKey,
     createAccount
   }
 }
