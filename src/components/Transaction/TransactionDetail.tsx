@@ -10,7 +10,7 @@ import { Table, TableBody, TableRow } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
 
 import HeaderLight from "~components/Layout/HeaderLight"
-import { config } from "~contents/config"
+import { NetworkId, config } from "~contents/config"
 import { useAlchemyGetTransactionReceipt } from "~hooks/use-alchemy"
 import { TransactionContext } from "~store/transaction-context"
 import type { TransactionDetail } from "~types/transaction"
@@ -25,7 +25,7 @@ const TransactionDetail = (props: Props) => {
     date: "",
     from: "",
     hash: "default",
-    network: "",
+    network: -1,
     networkFee: 0,
     status: "",
     time: "",
@@ -38,24 +38,24 @@ const TransactionDetail = (props: Props) => {
 
 
   useEffect(() => {
-    if (transactionContext.transactionDetail.network === "ethereum" && transactionDetail.hash === "default") {
+    if (transactionContext.transactionDetail.network === NetworkId.ETHEREUM && transactionDetail.hash === "default") {
       console.log("transactionContext.transactionDetail.network " + transactionContext.transactionDetail.network)
       getTransactionReceipt(
         transactionContext.transactionDetail.transactionHash, 
-        config.tokens[0].networks[1].alchemyNetwork, 
+        NetworkId.ETHEREUM, 
         config.tokens[0].networks[1].alchemyMaxRetries, 
         config.tokens[0].networks[1].alchemyUrl
       )
       setTransactionDetail(transactionEthereum)
-    } else if (transactionContext.transactionDetail.network === "polygon" && transactionDetail.hash === "default") {
+    } else if (transactionContext.transactionDetail.network === NetworkId.POLYGON && transactionDetail.hash === "default") {
       getTransactionReceipt(
         transactionContext.transactionDetail.transactionHash,
-        config.tokens[0].networks[2].alchemyNetwork,
+        NetworkId.POLYGON,
         config.tokens[0].networks[2].alchemyMaxRetries,
         config.tokens[0].networks[2].alchemyUrl
       )
       setTransactionDetail(transactionEthereum)
-    } else if (transactionContext.transactionDetail.network === "avalanche" && transactionDetail.hash === "default") {
+    } else if (transactionContext.transactionDetail.network === NetworkId.AVALANCE && transactionDetail.hash === "default") {
       // avalanche
     }
   }, [transactionEthereum])
@@ -157,9 +157,9 @@ const TransactionDetail = (props: Props) => {
                   Network Fee:
                 </TableCell>
                 <TableCell align="right">
-                  {transactionDetail?.network === "ethereum" && "ETH"} 
-                  {transactionDetail?.network === "polygon" && "MATIC"} 
-                  {transactionDetail?.network === "avalanche" && "AVAX"}  
+                  {transactionDetail?.network === NetworkId.ETHEREUM && "ETH "} 
+                  {transactionDetail?.network === NetworkId.POLYGON && "MATIC "} 
+                  {transactionDetail?.network === NetworkId.AVALANCE && "AVAX "}  
                   {transactionDetail?.networkFee}
                   </TableCell>
               </TableRow>

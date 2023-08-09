@@ -53,7 +53,7 @@ export const useAlchemyGetAssetTransfers = () => {
 
   const getAssetTransfers = async (
     apiKey: string = "",
-    network: string,
+    network: number,
     decimals: number = 6,
     maxRetries: number = 3,
     address: string,
@@ -69,7 +69,7 @@ export const useAlchemyGetAssetTransfers = () => {
     const alchemyConfig: AlchemyConfig = {
       apiKey: apiKey,
       // @ts-ignore
-      network: network,
+      network: config.tokens[0].networks[network].alchemyNetwork,
       maxRetries: maxRetries,
       batchRequests: false,
       getProvider: function (): Promise<types.AlchemyProvider> {
@@ -172,7 +172,7 @@ export const useAlchemyGetTransactionReceipt = () => {
     date: "",
     from: "",
     hash: "default",
-    network: "",
+    network: -1,
     networkFee: 0,
     status: "",
     time: "",
@@ -184,14 +184,14 @@ export const useAlchemyGetTransactionReceipt = () => {
 
   const getTransactionReceipt = async (
     transactionHash: string,
-    network: string = "",
+    network: number,
     maxRetries: number,
     url: string
   ) => {
     const alchemyConfig: AlchemyConfig = {
       apiKey: "",
       //@ts-ignore
-      network: network,
+      network: config.tokens[0].networks[network].alchemyNetwork,
       maxRetries: maxRetries,
       batchRequests: false,
       getProvider: function (): Promise<types.AlchemyProvider> {

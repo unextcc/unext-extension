@@ -43,14 +43,36 @@ const RecentTransactions = (props: Props) => {
 
   useEffect(() => {
     if (
-      (transactions.length <= 0 &&
-        transactionFound &&
-        props.networkId === NetworkId.ETHEREUM) ||
-      props.networkId == NetworkId.POLYGON
+      transactions.length <= 0 &&
+      transactionFound &&
+      props.networkId === NetworkId.ETHEREUM
     ) {
       getAssetTransfers(
         config.tokens[props.tokenId].networks[props.networkId].alchemyApiKey,
-        config.tokens[props.tokenId].networks[props.networkId].alchemyNetwork,
+        NetworkId.ETHEREUM,
+        config.tokens[props.tokenId].decimals,
+        config.tokens[props.tokenId].networks[props.networkId]
+          .alchemyMaxRetries,
+        wallet.address,
+        [
+          config.tokens[props.tokenId].networks[props.networkId].contractAddress
+        ],
+        "0x0",
+        [AssetTransfersCategory.ERC20],
+        true,
+        SortingOrder.DESCENDING,
+        true,
+        20,
+        config.tokens[props.tokenId].networks[props.networkId].alchemyUrl
+      )
+    } else if (
+      transactions.length <= 0 &&
+      transactionFound &&
+      props.networkId === NetworkId.POLYGON
+    ) {
+      getAssetTransfers(
+        config.tokens[props.tokenId].networks[props.networkId].alchemyApiKey,
+        NetworkId.POLYGON,
         config.tokens[props.tokenId].decimals,
         config.tokens[props.tokenId].networks[props.networkId]
           .alchemyMaxRetries,
@@ -132,7 +154,7 @@ const RecentTransactions = (props: Props) => {
                             transactionContext.setTransactionDetailHandler(
                               props.goBackPageName,
                               row.blockDate,
-                              "ethereum",
+                              props.networkId,
                               row.blockTime,
                               row.tokenSymbol,
                               row.hash,
@@ -153,7 +175,7 @@ const RecentTransactions = (props: Props) => {
                             transactionContext.setTransactionDetailHandler(
                               props.goBackPageName,
                               row.blockDate,
-                              "ethereum",
+                              props.networkId,
                               row.blockTime,
                               row.tokenSymbol,
                               row.hash,

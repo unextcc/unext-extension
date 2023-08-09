@@ -4,7 +4,7 @@ import { createContext } from "react"
 type TransactionType = {
   goBackPageName: string
   date: string
-  network: string
+  network: number
   time: string
   title: string
   transactionHash: string
@@ -17,7 +17,7 @@ type TransactionContextType = {
   setTransactionDetailHandler: (
     goBackPageName: string,
     date: string,
-    network: string,
+    network: number,
     time: string,
     title: string,
     transactionHash: string,
@@ -34,7 +34,7 @@ export const TransactionContext = createContext<TransactionContextType>({
   transactionDetail: {
     goBackPageName: "",
     date: "",
-    network: "",
+    network: -1,
     time: "",
     title: "",
     transactionHash: "",
@@ -48,7 +48,7 @@ const TransactionContextProvider: React.FC<Props> = (props) => {
   const [transactionDetail, setTransactionDetail] = useState<TransactionType>({
     goBackPageName: "",
     date: "",
-    network: "",
+    network: -1,
     time: "",
     title: "",
     transactionHash: "",
@@ -59,7 +59,7 @@ const TransactionContextProvider: React.FC<Props> = (props) => {
   const setTransactionDetailHandler = (
     goBackPageName: string,
     date: string,
-    network: string,
+    network: number,
     time: string,
     title: string,
     transactionHash: string,

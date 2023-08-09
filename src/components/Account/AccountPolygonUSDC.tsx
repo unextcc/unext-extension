@@ -43,7 +43,7 @@ const AccountPolygonUSDC = (props: Props) => {
         <RecentTransactions
           goBackPageName="account"
           title={"Recent Transactions"}
-          networkId={NetworkId.ETHEREUM}
+          networkId={NetworkId.POLYGON}
           tokenId={TokenId.USDC}
         />
       </Grid>
