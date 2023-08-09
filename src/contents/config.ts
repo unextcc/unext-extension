@@ -51,6 +51,18 @@ type envType = {
   }[]
 }
 
+export enum TokenId {
+  USDC = 0,
+  EUROC = 1,
+  GBPC = 2
+}
+
+export enum NetworkId {
+  AVALANCE = 0,
+  ETHEREUM = 1,
+  POLYGON = 2
+}
+
 const prod: envType = {
   tokens: [
     {

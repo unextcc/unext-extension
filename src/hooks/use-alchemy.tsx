@@ -1,15 +1,18 @@
 import { Alchemy, AssetTransfersCategory, SortingOrder } from "alchemy-sdk"
-import type {
-  AlchemyConfig,
-  Network,
-  TransactionReceiptsResponse
-} from "alchemy-sdk"
+import { type AlchemyConfig } from "alchemy-sdk"
 import type types from "alchemy-sdk"
 import { sortBy } from "lodash"
 import { useContext, useEffect, useState } from "react"
 
 import { config } from "~contents/config"
+import { TransactionContext } from "~store/transaction-context"
 import { WalletContext } from "~store/wallet-context"
+import type {
+  TokenTransactionType,
+  TokenTransactionsType,
+  TransactionDetail
+} from "~types/transaction"
+import { getFiatSymbol } from "~utils/other"
 
 export type Transactions = {
   asset: string
@@ -38,77 +41,49 @@ export type Transactions = {
   value: number
 }[]
 
-export type Transaction = {
-  blockHash: string
-  blockNumber: string
-  transactionIndex: string
-  transactionHash: string
-  from: string
-  to: string
-  cumulativeGasUsed: string
-  gasUsed: string
-  contractAddress: string
-  logs: [
-    {
-      blockHash: string
-      blockNumber: string
-      transactionIndex: string
-      address: string
-      logIndex: string
-      data: string
-      removed: boolean
-      topics: [string]
-      transactionHash: string
-    }
-  ]
-  logsBloom: string
-  root: string
-  status: number
-  effectiveGasPrice: string
-  type: string
-}
-
-export const useAlchemyGetAssetTransfers = (
-  apiKey: string = "",
-  network: string,
-  maxRetries: number = 3,
-  address: string,
-  contractAddresses: string[],
-  fromBlock: string = "0x0",
-  category = [AssetTransfersCategory.EXTERNAL, AssetTransfersCategory.ERC20],
-  withMetadata: boolean = true,
-  order: SortingOrder = SortingOrder.DESCENDING,
-  excludeZeroValue: boolean = true,
-  maxCount: number = 10,
-  url: string
-) => {
+export const useAlchemyGetAssetTransfers = () => {
   const walletContext = useContext(WalletContext)
-  // @ts-ignore
+  //@ts-ignore
   const wallet = walletContext.wallets[0][0]
 
   const [error, setError] = useState<string>("")
-  const [transactions, setTransactions] = useState<Transactions>([])
+  const [transactions, setTransactions] = useState<TokenTransactionsType>([])
   const [transactionFound, setTransactionFound] = useState<boolean>(true)
   const [status, setStatus] = useState("idle")
 
-  const alchemyConfig: AlchemyConfig = {
-    apiKey: apiKey,
-    // @ts-ignore
-    network: network,
-    maxRetries: maxRetries,
-    batchRequests: false,
-    getProvider: function (): Promise<types.AlchemyProvider> {
-      throw new Error("Function not implemented.")
-    },
-    getWebSocketProvider: function (): Promise<types.AlchemyWebSocketProvider> {
-      throw new Error("Function not implemented.")
-    },
-    url: url
-  }
+  const getAssetTransfers = async (
+    apiKey: string = "",
+    network: string,
+    decimals: number = 6,
+    maxRetries: number = 3,
+    address: string,
+    contractAddresses: string[],
+    fromBlock: string = "0x0",
+    category = [AssetTransfersCategory.EXTERNAL, AssetTransfersCategory.ERC20],
+    withMetadata: boolean = true,
+    order: SortingOrder = SortingOrder.DESCENDING,
+    excludeZeroValue: boolean = true,
+    maxCount: number = 10,
+    url: string
+  ) => {
+    const alchemyConfig: AlchemyConfig = {
+      apiKey: apiKey,
+      // @ts-ignore
+      network: network,
+      maxRetries: maxRetries,
+      batchRequests: false,
+      getProvider: function (): Promise<types.AlchemyProvider> {
+        throw new Error("Function not implemented.")
+      },
+      getWebSocketProvider:
+        function (): Promise<types.AlchemyWebSocketProvider> {
+          throw new Error("Function not implemented.")
+        },
+      url: url
+    }
 
-  const alchemy = new Alchemy(alchemyConfig)
+    const alchemy = new Alchemy(alchemyConfig)
 
-  const getAssetTransfer = async () => {
     try {
       setStatus("loading")
 
@@ -143,34 +118,28 @@ export const useAlchemyGetAssetTransfers = (
         setTransactionFound(false)
       }
 
-      let transfers = []
+      let transfers: TokenTransactionsType = []
 
       for (let i = 0; i < data.length; i++) {
-        const transfer = {
-          ...data[i],
-          // @ts-ignore
+        const transfer: TokenTransactionType = {
+          //@ts-ignore
           blockDate: data[i].metadata.blockTimestamp.split("T")[0],
-          // @ts-ignore
+          //@ts-ignore
           blockTime: data[i].metadata.blockTimestamp
             .split("T")[1]
             .replace(".000Z", ""),
-          // @ts-ignore
-          blockTimestamp: data[i].metadata.blockTimestamp,
-          fiatSymbol:
-            (data[i].asset === "USDC" && "$") ||
-            (data[i].asset === "MATIC" && "") ||
-            (data[i].asset === "ETH" && "") ||
-            (data[i].asset === "EUROC" && "€"),
+          fiatSymbol: getFiatSymbol(data[i].asset!),
+          hash: data[i].hash,
+          value: data[i].value!,
+          tokenSymbol: data[i].asset!,
           transactionType:
-            // 0=Receive, 1=Send
-            wallet.address.toLowerCase() === data[i].to ? "0" : "1"
+            wallet.address.toLowerCase() === data[i].to ? "in" : "out"
         }
 
-        // @ts-ignore
         transfers.push(transfer)
       }
 
-      // @ts-ignore
+      //@ts-ignore
       setTransactions(sortBy(transfers, ["blockTimestamp"]).reverse())
       setStatus("loaded")
     } catch (error: any) {
@@ -180,94 +149,81 @@ export const useAlchemyGetAssetTransfers = (
         setError(error.message)
         console.error(error)
       }
-      return
     }
   }
-
-  useEffect(() => {
-    if (transactions.length <= 0 && transactionFound) {
-      getAssetTransfer()
-    }
-  }, [transactions])
 
   return {
     error,
     transactionFound,
     isLoading: status === "loading",
     isLoaded: status === "loaded",
-    transactions
+    transactions,
+    getAssetTransfers: getAssetTransfers
   }
 }
 
-export const useAlchemyGetTransactionReceipts = () => {
+export const useAlchemyGetTransactionReceipt = () => {
+  const transactionContext = useContext(TransactionContext)
+  const walletContext = useContext(WalletContext)
+  const wallet = walletContext.wallets[0]
+
   const [error, setError] = useState<string>("")
-  const [transaction, setTransaction] = useState<Transaction | null>({
-    blockHash: "string",
-    blockNumber: "string",
-    transactionIndex: "string",
-    transactionHash: "string",
-    from: "string",
-    to: "string",
-    cumulativeGasUsed: "string",
-    gasUsed: "string",
-    contractAddress: "string",
-    logs: [
-      {
-        blockHash: "string",
-        blockNumber: "string",
-        transactionIndex: "string",
-        address: "string",
-        logIndex: "string",
-        data: "string",
-        removed: true,
-        topics: ["string"],
-        transactionHash: "string"
-      }
-    ],
-    logsBloom: "string",
-    root: "string",
-    status: 0,
-    effectiveGasPrice: "string",
-    type: "string"
+  const [transaction, setTransaction] = useState<TransactionDetail>({
+    date: "",
+    from: "",
+    hash: "default",
+    network: "",
+    networkFee: 0,
+    status: "",
+    time: "",
+    to: "",
+    transactionType: "",
+    value: 0
   })
-  const [transactionFound, setTransactionFound] = useState<boolean>(true)
   const [status, setStatus] = useState("idle")
 
-  const alchemyConfig: AlchemyConfig = {
-    apiKey: config.tokens[1].networks[1].alchemyApiKey,
-    network: config.tokens[1].networks[1].alchemyNetwork,
-    maxRetries: config.tokens[1].networks[1].alchemyMaxRetries,
-    batchRequests: false,
-    getProvider: function (): Promise<types.AlchemyProvider> {
-      throw new Error("Function not implemented.")
-    },
-    getWebSocketProvider: function (): Promise<types.AlchemyWebSocketProvider> {
-      throw new Error("Function not implemented.")
-    },
-    url: config.tokens[0].networks[1].alchemyUrl
-  }
+  const getTransactionReceipt = async (
+    transactionHash: string,
+    network: string = "",
+    maxRetries: number,
+    url: string
+  ) => {
+    const alchemyConfig: AlchemyConfig = {
+      apiKey: "",
+      //@ts-ignore
+      network: network,
+      maxRetries: maxRetries,
+      batchRequests: false,
+      getProvider: function (): Promise<types.AlchemyProvider> {
+        throw new Error("Function not implemented.")
+      },
+      getWebSocketProvider:
+        function (): Promise<types.AlchemyWebSocketProvider> {
+          throw new Error("Function not implemented.")
+        },
+      url: url
+    }
 
-  const alchemy = new Alchemy(alchemyConfig)
+    const alchemy = new Alchemy(alchemyConfig)
 
-  const getTransactionReceipts = async (number: string, hash: string) => {
     try {
       setStatus("loading")
-      const data = await alchemy.core.getTransactionReceipts({
-        blockNumber: number
+      const data = await alchemy.core.getTransactionReceipt(transactionHash)
+
+      setTransaction({
+        date: transactionContext.transactionDetail.date,
+        from: data?.from!,
+        hash: data?.transactionHash!,
+        network: network,
+        networkFee: Number(data?.effectiveGasPrice) * Number(data?.gasUsed),
+        status: data?.status == 1 ? "Success" : "Failed",
+        time: transactionContext.transactionDetail.time,
+        to: data?.to!,
+        transactionType: data?.from === wallet.address ? "Sent" : "Received",
+        value: transactionContext.transactionDetail.value
       })
 
-      if (!data) {
-        setTransactionFound(false)
-      }
-
-      data.receipts?.map((value, index) => {
-        if (value.transactionHash === hash) {
-          //@ts-ignore
-          setTransaction(value)
-        }
-      })
-
-      setStatus("loaded")
+      setStatus("done")
     } catch (error: any) {
       if (error.code === 429) {
         console.log(error.message)
@@ -279,11 +235,9 @@ export const useAlchemyGetTransactionReceipts = () => {
   }
 
   return {
-    getTransactionReceipts,
+    getTransactionReceipt,
     error,
-    transactionFound,
-    isLoading: status === "loading",
-    isLoaded: status === "loaded",
+    status,
     transaction
   }
 }

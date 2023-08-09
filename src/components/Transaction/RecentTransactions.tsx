@@ -8,24 +8,74 @@ import {
   TableRow,
   Typography
 } from "@mui/material"
-import React, { useContext } from "react"
+import { AssetTransfersCategory, SortingOrder } from "alchemy-sdk"
+import React, { useContext, useEffect } from "react"
 
-import type { Transactions } from "~hooks/use-alchemy"
+import { NetworkId, TokenId, config } from "~contents/config"
+import { useAlchemyGetAssetTransfers } from "~hooks/use-alchemy"
 import { SettingsContext } from "~store/settings-context"
 import { TransactionContext } from "~store/transaction-context"
+import { WalletContext } from "~store/wallet-context"
 
 interface Props {
   children?: React.ReactNode
   goBackPageName: string
   title: string
-  isLoadingTransactions: boolean
-  transactionFound: boolean
-  transactions: Transactions
+  tokenId: number
+  networkId: number
 }
 
 const RecentTransactions = (props: Props) => {
   const settingsContext = useContext(SettingsContext)
   const transactionContext = useContext(TransactionContext)
+  const walletContext = useContext(WalletContext)
+
+  //@ts-ignore
+  const wallet = walletContext.wallets[0][0]
+
+  const {
+    error: errorTransactions,
+    isLoading: isLoadingTransactions,
+    transactionFound,
+    transactions,
+    getAssetTransfers
+  } = useAlchemyGetAssetTransfers()
+
+  useEffect(() => {
+    if (
+      (transactions.length <= 0 &&
+        transactionFound &&
+        props.networkId === NetworkId.ETHEREUM) ||
+      props.networkId == NetworkId.POLYGON
+    ) {
+      getAssetTransfers(
+        config.tokens[props.tokenId].networks[props.networkId].alchemyApiKey,
+        config.tokens[props.tokenId].networks[props.networkId].alchemyNetwork,
+        config.tokens[props.tokenId].decimals,
+        config.tokens[props.tokenId].networks[props.networkId]
+          .alchemyMaxRetries,
+        wallet.address,
+        [
+          config.tokens[props.tokenId].networks[props.networkId].contractAddress
+        ],
+        "0x0",
+        [AssetTransfersCategory.ERC20],
+        true,
+        SortingOrder.DESCENDING,
+        true,
+        20,
+        config.tokens[props.tokenId].networks[props.networkId].alchemyUrl
+      )
+    } else if (
+      transactions.length <= 0 &&
+      transactionFound &&
+      props.networkId === NetworkId.AVALANCE
+    ) {
+      // alchemy
+    }
+  }, [transactions])
+
+  console.log(transactions)
 
   return (
     <React.Fragment>
@@ -37,7 +87,7 @@ const RecentTransactions = (props: Props) => {
         )}
 
         <Grid item maxHeight={250} xs={12} sx={{ overflow: "hidden" }}>
-          {props.isLoadingTransactions ? (
+          {isLoadingTransactions ? (
             "Loading..."
           ) : (
             <TableContainer
@@ -71,8 +121,8 @@ const RecentTransactions = (props: Props) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {props.transactionFound ? (
-                    props.transactions.map((row, index) => (
+                  {transactionFound ? (
+                    transactions.map((row, index) => (
                       <TableRow hover key={index}>
                         <TableCell
                           key={"date" + index}
@@ -81,18 +131,12 @@ const RecentTransactions = (props: Props) => {
                           onClick={() => {
                             transactionContext.setTransactionDetailHandler(
                               props.goBackPageName,
-                              row.blockNum,
-                              row.asset,
-                              row.hash,
-                              row.transactionType,
-                              row.from,
-                              row.to,
                               row.blockDate,
+                              "ethereum",
                               row.blockTime,
-                              "Completed",
-                              row.fiatSymbol,
-                              row.value,
-                              0,
+                              row.tokenSymbol,
+                              row.hash,
+                              row.tokenSymbol,
                               row.value
                             )
                             settingsContext.shownPageHandler(
@@ -108,26 +152,21 @@ const RecentTransactions = (props: Props) => {
                           onClick={() => {
                             transactionContext.setTransactionDetailHandler(
                               props.goBackPageName,
-                              row.blockNum,
-                              row.asset,
-                              row.hash,
-                              row.transactionType,
-                              row.from,
-                              row.to,
                               row.blockDate,
+                              "ethereum",
                               row.blockTime,
-                              "Completed",
-                              row.fiatSymbol,
-                              row.value,
-                              0,
+                              row.tokenSymbol,
+                              row.hash,
+                              row.tokenSymbol,
                               row.value
                             )
                             settingsContext.shownPageHandler(
                               "transactionDetail"
                             )
                           }}>
-                          {row.asset} {row.transactionType === "0" && "+"}
-                          {row.transactionType === "1" && "-"}
+                          {row.tokenSymbol}{" "}
+                          {row.transactionType === "in" && "+"}
+                          {row.transactionType === "out" && "-"}
                           {row.value.toFixed(2)}
                         </TableCell>
                       </TableRow>

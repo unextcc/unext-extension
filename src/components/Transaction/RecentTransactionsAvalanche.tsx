@@ -10,9 +10,9 @@ import {
 } from "@mui/material"
 import React, { useContext } from "react"
 
-import type { accountTokenTransactionType } from "~hooks/use-snow"
 import { SettingsContext } from "~store/settings-context"
 import { TransactionContext } from "~store/transaction-context"
+import type { AccountTokenTransactionsType } from "~types/transaction"
 
 interface Props {
   children?: React.ReactNode
@@ -20,13 +20,12 @@ interface Props {
   title: string
   isLoadingTransactions: boolean
   transactionFound: boolean
-  transactions: accountTokenTransactionType
+  transactions: AccountTokenTransactionsType
 }
 
 const RecentTransactionsAvalanche = (props: Props) => {
   const settingsContext = useContext(SettingsContext)
   const transactionContext = useContext(TransactionContext)
-  let transactionsTransformed: {}[] = []
 
   return (
     <React.Fragment>
@@ -73,7 +72,7 @@ const RecentTransactionsAvalanche = (props: Props) => {
                 </TableHead>
                 <TableBody>
                   {props.transactionFound ? (
-                    props.transactions.result.map((row, index) => (
+                    props.transactions.map((row, index) => (
                       <TableRow hover key={index}>
                         <TableCell
                           key={"date" + index}
@@ -82,25 +81,19 @@ const RecentTransactionsAvalanche = (props: Props) => {
                           onClick={() => {
                             transactionContext.setTransactionDetailHandler(
                               props.goBackPageName,
-                              row.blockNumber,
-                              row.tokenSymbol,
+                              row.blockDate,
+                              "avalanche",
+                              row.blockTime,
+                              row.tokenSymbol /* for title */,
                               row.hash,
-                              "0",
-                              row.from,
-                              row.to,
-                              row.timeStamp,
-                              row.timeStamp,
-                              "Completed",
                               row.tokenSymbol,
-                              Number(row.value),
-                              0,
-                              Number(row.value)
+                              row.value
                             )
                             settingsContext.shownPageHandler(
                               "transactionDetail"
                             )
                           }}>
-                          {row.timeStamp}
+                          {row.blockDate} {row.blockTime}
                         </TableCell>
                         <TableCell
                           key={"amount" + index}
@@ -109,27 +102,22 @@ const RecentTransactionsAvalanche = (props: Props) => {
                           onClick={() => {
                             transactionContext.setTransactionDetailHandler(
                               props.goBackPageName,
-                              row.blockNumber,
-                              row.tokenSymbol,
+                              row.blockDate,
+                              "avalanche",
+                              row.blockTime,
+                              row.tokenSymbol /* for title */,
                               row.hash,
-                              "0",
-                              row.from,
-                              row.to,
-                              row.timeStamp,
-                              row.timeStamp,
-                              "Completed",
-                              "USDC",
-                              Number(row.value),
-                              0,
-                              Number(row.value)
+                              row.tokenSymbol,
+                              row.value
                             )
                             settingsContext.shownPageHandler(
                               "transactionDetail"
                             )
                           }}>
-                          {row.tokenSymbol} {"0" === "0" && "+"}
-                          {"0" !== "0" && "+"}
-                          {Number(row.value).toFixed(2)}
+                          {row.tokenSymbol}{" "}
+                          {row.transactionType === "in" && "+"}
+                          {row.transactionType === "out" && "-"}
+                          {row.value.toFixed(2)}
                         </TableCell>
                       </TableRow>
                     ))
