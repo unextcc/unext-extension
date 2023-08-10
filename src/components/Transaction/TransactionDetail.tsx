@@ -148,7 +148,9 @@ const TransactionDetail = (props: Props) => {
                   Network:
                 </TableCell>
                 <TableCell align="right">
-                  {transactionDetail?.network}
+                  {transactionDetail?.network == NetworkId.ETHEREUM && "Ethereum"}
+                  {transactionDetail?.network == NetworkId.POLYGON && "Polygon"}
+                  {transactionDetail?.network == NetworkId.AVALANCE && "Avalanche"}
                 </TableCell>
               </TableRow>
 
@@ -180,7 +182,7 @@ const TransactionDetail = (props: Props) => {
         xs={12}>
         <Button
           target="_blank"
-          href={config.tokens[0].networks[0].scannerUrl + "/tx/" + transactionDetail?.hash}
+          href={config.tokens[0].networks[transactionContext.transactionDetail?.network].scannerUrl + "/tx/" + transactionContext.transactionDetail.transactionHash}
           variant="outlined"
           color="info"
           size="small">
