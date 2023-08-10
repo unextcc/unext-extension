@@ -174,7 +174,7 @@ export const useAlchemyGetTransactionReceipt = () => {
     from: "",
     hash: "default",
     network: -1,
-    networkFee: 0,
+    networkFee: "",
     status: "",
     time: "",
     to: "",
@@ -211,23 +211,33 @@ export const useAlchemyGetTransactionReceipt = () => {
       setStatus("loading")
       const data = await alchemy.core.getTransactionReceipt(transactionHash)
 
-      let networkFeeConverted: number = 0
+      let networkFeeConverted: string = ""
 
       if (network === NetworkId.AVALANCE) {
         // avalanche fee calculation
       } else if (network === NetworkId.ETHEREUM) {
         // ethererum fee calculation
-        networkFeeConverted =
-          Number(data?.effectiveGasPrice) * Number(data?.gasUsed)
+
+        console.log(
+          "toBN " +
+            Web3.utils.fromWei(
+              Web3.utils.toBN(
+                Number(data?.effectiveGasPrice) * Number(data?.gasUsed)
+              )
+            )
+        )
+
+        networkFeeConverted = Web3.utils.fromWei(
+          Web3.utils.toBN(
+            Number(data?.effectiveGasPrice) * Number(data?.gasUsed)
+          ),
+          "ether"
+        )
       } else if (network === NetworkId.POLYGON) {
         // polygon fee calculation
-        networkFeeConverted = Number(
-          Web3.utils.fromWei(
-            (
-              Number(data?.effectiveGasPrice) * Number(data?.gasUsed)
-            ).toString(),
-            "ether"
-          )
+        networkFeeConverted = Web3.utils.fromWei(
+          (Number(data?.effectiveGasPrice) * Number(data?.gasUsed)).toString(),
+          "ether"
         )
       }
 

@@ -15,7 +15,7 @@ export type TransactionDetail = {
   from: string
   hash: string
   network: number
-  networkFee: number
+  networkFee: string
   status: string
   time: string
   to: string

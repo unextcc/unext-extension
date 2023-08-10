@@ -26,7 +26,7 @@ const TransactionDetail = (props: Props) => {
     from: "",
     hash: "default",
     network: -1,
-    networkFee: 0,
+    networkFee: "",
     status: "",
     time: "",
     to: "",
