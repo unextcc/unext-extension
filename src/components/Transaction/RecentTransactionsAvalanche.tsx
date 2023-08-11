@@ -10,22 +10,38 @@ import {
 } from "@mui/material"
 import React, { useContext } from "react"
 
+import { NetworkId, TokenId } from "~contents/config"
+import { useSnowGetAccountTokenTransactions } from "~hooks/use-snow"
 import { SettingsContext } from "~store/settings-context"
 import { TransactionContext } from "~store/transaction-context"
-import type { AccountTokenTransactionsType } from "~types/transaction"
+import { WalletContext } from "~store/wallet-context"
 
 interface Props {
   children?: React.ReactNode
   goBackPageName: string
   title: string
-  isLoadingTransactions: boolean
-  transactionFound: boolean
-  transactions: AccountTokenTransactionsType
+  networkId: number
+  tokenId: number
 }
 
 const RecentTransactionsAvalanche = (props: Props) => {
   const settingsContext = useContext(SettingsContext)
   const transactionContext = useContext(TransactionContext)
+  const walletContext = useContext(WalletContext)
+  //@ts-ignore
+  const wallet = walletContext.wallets[0][0]
+
+  const { error, status, transactionFound, transactions } =
+    useSnowGetAccountTokenTransactions(
+      wallet.address,
+      1,
+      20,
+      0,
+      99999999,
+      "desc",
+      NetworkId.AVALANCE,
+      props.tokenId
+    )
 
   return (
     <React.Fragment>
@@ -37,7 +53,7 @@ const RecentTransactionsAvalanche = (props: Props) => {
         )}
 
         <Grid item maxHeight={250} xs={12} sx={{ overflow: "hidden" }}>
-          {props.isLoadingTransactions ? (
+          {status === "loading" ? (
             "Loading..."
           ) : (
             <TableContainer
@@ -71,8 +87,8 @@ const RecentTransactionsAvalanche = (props: Props) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {props.transactionFound ? (
-                    props.transactions.map((row, index) => (
+                  {transactionFound ? (
+                    transactions.map((row, index) => (
                       <TableRow hover key={index}>
                         <TableCell
                           key={"date" + index}
@@ -82,7 +98,7 @@ const RecentTransactionsAvalanche = (props: Props) => {
                             transactionContext.setTransactionDetailHandler(
                               props.goBackPageName,
                               row.blockDate,
-                              "avalanche",
+                              props.networkId,
                               row.blockTime,
                               row.tokenSymbol /* for title */,
                               row.hash,
@@ -103,7 +119,7 @@ const RecentTransactionsAvalanche = (props: Props) => {
                             transactionContext.setTransactionDetailHandler(
                               props.goBackPageName,
                               row.blockDate,
-                              "avalanche",
+                              props.networkId,
                               row.blockTime,
                               row.tokenSymbol /* for title */,
                               row.hash,

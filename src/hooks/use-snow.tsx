@@ -9,7 +9,7 @@ import type {
   TokenTransactionsType,
   TransactionDetail
 } from "~types/transaction"
-import { getFiatSymbol } from "~utils/other"
+import { getFiatSymbol, timeout } from "~utils/other"
 
 export type accountBalanceType = {
   status: string
@@ -199,14 +199,14 @@ export const useSnowGetAccountTokenBalance = () => {
 }
 
 export const useSnowGetAccountTokenTransactions = (
-  contractAddress: string,
   accountAddress: string,
   page: number = 1,
   offset: number = 10,
   startBlock: number = 0,
   endBlock: number = 99999999,
   sort: string = "desc",
-  apiUrl: string
+  network: number,
+  token: number
 ) => {
   const walletContext = useContext(WalletContext)
   // @ts-ignore
@@ -242,33 +242,25 @@ export const useSnowGetAccountTokenTransactions = (
   }
 
   const getAccountTokenTransfers = async (
-    contractAddress: string,
     accountAddress: string,
     page: number = 1,
     offset: number = 10,
     startBlock: number = 0,
     endBlock: number = 99999999,
     sort: string = "desc",
-    apiUrl: string
+    network: number,
+    token: number
   ) => {
     try {
-      if (!contractAddress) {
-        throw new Error("contractAddress not set")
-        return
-      }
+      setStatus("loading")
 
       if (!accountAddress) {
         throw new Error("accountAddress not set")
         return
       }
 
-      if (!apiUrl) {
-        throw new Error("apiUrl not set")
-        return
-      }
-
       const encodedApiUrl = encodeURI(
-        `${apiUrl}?module=account&action=tokentx&contractaddress=${contractAddress}&address=${accountAddress}&page=${page}&offset=${offset}&startblock=${startBlock}&endblock=${endBlock}&sort=${sort}`
+        `${config.tokens[token].networks[network].snowTraceApiUrl}?module=account&action=tokentx&contractaddress=${config.tokens[token].networks[network].contractAddress}&address=${accountAddress}&page=${page}&offset=${offset}&startblock=${startBlock}&endblock=${endBlock}&sort=${sort}`
       )
 
       const response = await fetch(encodedApiUrl)
@@ -319,22 +311,20 @@ export const useSnowGetAccountTokenTransactions = (
   useEffect(() => {
     if (transactions[0].hash === "default") {
       getAccountTokenTransfers(
-        contractAddress,
         accountAddress,
         page,
         offset,
         startBlock,
         endBlock,
         sort,
-        apiUrl
+        network,
+        token
       )
     }
   }, [transactions])
 
   return {
     error,
-    isLoading: status === "loading",
-    isLoaded: status === "loaded",
     status,
     transactionFound,
     transactions,
@@ -344,40 +334,37 @@ export const useSnowGetAccountTokenTransactions = (
 
 export const useSnowEthGetTransactionReceipt = () => {
   const transactionContext = useContext(TransactionContext)
+  const walletContext = useContext(WalletContext)
+  //@ts-ignore
+  const wallet = walletContext.wallets[0][0]
 
   const [error, setError] = useState<any>()
   const [status, setStatus] = useState("idle")
-  const [transactionDetail, setTransactionDetail] = useState<TransactionDetail>(
-    {
-      date: "",
-      from: "",
-      hash: "default",
-      network: "",
-      networkFee: 0,
-      status: "",
-      time: "",
-      to: "",
-      transactionType: "",
-      value: 0
-    }
-  )
+  const [transaction, setTransaction] = useState<TransactionDetail>({
+    date: "",
+    from: "",
+    hash: "default",
+    network: -1,
+    networkFee: "",
+    status: "",
+    time: "",
+    to: "",
+    transactionType: "",
+    value: 0
+  })
 
   const ethGetTransactionReceipt = async (
     transactionHash: string,
-    apiUrl: string,
-    network: string
+    network: number,
+    token: number
   ) => {
     try {
       if (!transactionHash) {
         throw new Error("transactionHash can not be empty")
       }
 
-      if (!apiUrl) {
-        throw new Error("apiUrl can not be emtpry")
-      }
-
       const encodedApiUrl = encodeURI(
-        `${apiUrl}?module=proxy&action=eth_getTransactionReceipt&txhash=${transactionHash}`
+        `${config.tokens[token].networks[network].snowTraceApiUrl}?module=proxy&action=eth_getTransactionReceipt&txhash=${transactionHash}`
       )
 
       const response = await fetch(encodedApiUrl)
@@ -388,23 +375,29 @@ export const useSnowEthGetTransactionReceipt = () => {
 
       const data: transactionDetailRawType = await response.json()
 
-      const calculatedNetworkFee: number =
-        Number(Web3.utils.hexToNumber(data.result.effectiveGasPrice)) *
-        Number(Web3.utils.hexToNumber(data.result.gasUsed))
+      let networkFeeConverted: string = ""
 
-      setTransactionDetail({
+      networkFeeConverted = Web3.utils.fromWei(
+        Web3.utils.toBN(
+          Number(Web3.utils.hexToNumber(data.result.effectiveGasPrice)) *
+            Number(Number(Web3.utils.hexToNumber(data.result.gasUsed)))
+        ),
+        "ether"
+      )
+
+      setTransaction({
         date: transactionContext.transactionDetail.date,
         time: transactionContext.transactionDetail.time,
         from: data.result.from,
         hash: data.result.transactionHash,
         network: network,
-        networkFee: calculatedNetworkFee,
-        status: Web3.utils.hexToString(data.result.status),
-        to: data.result.to,
-        transactionType: "",
+        networkFee: networkFeeConverted,
+        status: data.result.status === "0x1" ? "Success" : "Failed",
+        to: "0x" + data.result.logs[0].topics[2].substring(26, 66),
+        transactionType:
+          data.result.from === wallet.address ? "Sent" : "Received",
         value: transactionContext.transactionDetail.value
       })
-
       setStatus("done")
     } catch (err: any) {
       setStatus("error")
@@ -415,6 +408,7 @@ export const useSnowEthGetTransactionReceipt = () => {
   return {
     error,
     status,
+    transaction,
     ethGetTransactionReceipt: ethGetTransactionReceipt
   }
 }

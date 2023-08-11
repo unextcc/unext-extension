@@ -10,8 +10,9 @@ import { Table, TableBody, TableRow } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
 
 import HeaderLight from "~components/Layout/HeaderLight"
-import { NetworkId, config } from "~contents/config"
+import { NetworkId, TokenId, config } from "~contents/config"
 import { useAlchemyGetTransactionReceipt } from "~hooks/use-alchemy"
+import { useSnowEthGetTransactionReceipt } from "~hooks/use-snow"
 import { TransactionContext } from "~store/transaction-context"
 import type { TransactionDetail } from "~types/transaction"
 
@@ -34,12 +35,23 @@ const TransactionDetail = (props: Props) => {
     value: 0
   })
 
-  const { error, getTransactionReceipt, status, transaction: transactionEthereum } = useAlchemyGetTransactionReceipt()
+  const { 
+    error, 
+    getTransactionReceipt, 
+    status, 
+    transaction: transactionEthereum 
+  } = useAlchemyGetTransactionReceipt()
 
+
+  const { 
+    error: errorAvalanche, 
+    ethGetTransactionReceipt, 
+    status: statusAvalanche, 
+    transaction: transactionAvalanche 
+  } = useSnowEthGetTransactionReceipt()
 
   useEffect(() => {
     if (transactionContext.transactionDetail.network === NetworkId.ETHEREUM && transactionDetail.hash === "default") {
-      console.log("transactionContext.transactionDetail.network " + transactionContext.transactionDetail.network)
       getTransactionReceipt(
         transactionContext.transactionDetail.transactionHash, 
         NetworkId.ETHEREUM, 
@@ -56,11 +68,14 @@ const TransactionDetail = (props: Props) => {
       )
       setTransactionDetail(transactionEthereum)
     } else if (transactionContext.transactionDetail.network === NetworkId.AVALANCE && transactionDetail.hash === "default") {
-      // avalanche
+      ethGetTransactionReceipt(
+        transactionContext.transactionDetail.transactionHash, 
+        NetworkId.AVALANCE, 
+        TokenId.USDC
+      )
+      setTransactionDetail(transactionAvalanche)
     }
-  }, [transactionEthereum])
-
-  console.log(transactionDetail)
+  }, [transactionEthereum, transactionAvalanche])
 
   return (
     <Grid container item xs={12} display="block">

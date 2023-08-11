@@ -217,16 +217,6 @@ export const useAlchemyGetTransactionReceipt = () => {
         // avalanche fee calculation
       } else if (network === NetworkId.ETHEREUM) {
         // ethererum fee calculation
-
-        console.log(
-          "toBN " +
-            Web3.utils.fromWei(
-              Web3.utils.toBN(
-                Number(data?.effectiveGasPrice) * Number(data?.gasUsed)
-              )
-            )
-        )
-
         networkFeeConverted = Web3.utils.fromWei(
           Web3.utils.toBN(
             Number(data?.effectiveGasPrice) * Number(data?.gasUsed)

@@ -97,8 +97,6 @@ const RecentTransactions = (props: Props) => {
     }
   }, [transactions])
 
-  console.log(transactions)
-
   return (
     <React.Fragment>
       <Grid container item xs={12}>
