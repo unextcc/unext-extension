@@ -3,20 +3,15 @@ import type React from "react"
 import { useContext } from "react"
 
 import { SettingsContext } from "~store/settings-context"
-import { WalletContext } from "~store/wallet-context"
+
+import AccountTotalBalanceValueUSDC from "./AccountTotalBalanceValueUSDC"
 
 interface Props {
   children?: React.ReactNode
-  title: string
-  balance: string
-  accountPageName: string
 }
 
-const AccountBalanceItem = (props: Props) => {
+const AccountBalanceItemUSDC = (props: Props) => {
   const settingContext = useContext(SettingsContext)
-  const walletContext = useContext(WalletContext)
-  // @ts-ignore
-  const wallet = walletContext.wallets[0][0]
 
   return (
     <Grid item>
@@ -30,19 +25,17 @@ const AccountBalanceItem = (props: Props) => {
           width: "160px"
         }}>
         <Typography component="p" color="primary" sx={{ fontSize: 12 }}>
-          {props.title}
+          USDC / USD
         </Typography>
 
         <Typography component="h6" variant="h6">
-          {props.balance}
+          <AccountTotalBalanceValueUSDC />
         </Typography>
 
         <Link
           color="primary"
           sx={{ cursor: "pointer", fontSize: 12 }}
-          onClick={() =>
-            settingContext.shownPageHandler(props.accountPageName)
-          }>
+          onClick={() => settingContext.shownPageHandler("accountUSDC")}>
           View Account
         </Link>
       </Paper>
@@ -50,4 +43,4 @@ const AccountBalanceItem = (props: Props) => {
   )
 }
 
-export default AccountBalanceItem
+export default AccountBalanceItemUSDC

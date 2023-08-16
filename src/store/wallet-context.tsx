@@ -7,15 +7,17 @@ import { decryptAES, encryptAES } from "~utils/encryption"
 import { timeout } from "~utils/other"
 
 type walletType = {
-  [x: string]: any
   id: number
   address: string
-  chain: string
-  network: string
+  avalancheCAddress: string
+  avalanchePAddress: string
+  avalancheXAddress: string
   tokens: number[]
+  cryptoTokens: number[]
 }[]
 
 type WalletContextType = {
+  avalancheEncryptedPrivateKey: string
   encryptedPrivateKey: string
   changeWalletPassword: (
     currentEncryptedPrivateKey: string,
@@ -27,6 +29,9 @@ type WalletContextType = {
   isWalletConfigured: boolean
   isWalletConfiguredLoaded: boolean
   saveWallet: (wallet: walletType) => void
+  saveAvalancheEncryptedPrivateKey: (
+    avalancheEncryptedPrivateKey: string
+  ) => void
   saveEncryptedPrivateKey: (encryptedPrivateKey: string) => void
   wallets: walletType
 }
@@ -36,6 +41,7 @@ interface Props {
 }
 
 export const WalletContext = createContext<WalletContextType>({
+  avalancheEncryptedPrivateKey: "",
   encryptedPrivateKey: "",
   changeWalletPassword(currentLockPassword, newLockPassword): void {},
   deleteWallet(): void {},
@@ -45,6 +51,7 @@ export const WalletContext = createContext<WalletContextType>({
   isWalletConfigured: false,
   isWalletConfiguredLoaded: false,
   saveWallet(wallet: walletType): void {},
+  saveAvalancheEncryptedPrivateKey(avalancheEncryptedPrivateKey): void {},
   saveEncryptedPrivateKey(encryptedPrivateKey: string): void {},
   wallets: [] as walletType
 })
@@ -58,14 +65,23 @@ const WalletContextProvider: React.FC<Props> = (props) => {
             [
               {
                 address: "0x0000000000000000000000000000000000000000",
-                chain: "MATIC",
+                chain: "none",
                 id: 0,
-                network: "polygon",
-                tokens: [0]
+                network: "none",
+                tokens: [],
+                cryptoTokens: []
               }
             ]
           ]
         : v
+  )
+
+  const [
+    avalancheEncryptedPrivateKey,
+    setAvalancheEncryptedPrivateKey,
+    { remove: removeAvalancheEncryptedPrivateKey }
+  ] = useStorage("avalanche-encrypted-private-key", (v) =>
+    typeof v === "undefined" ? "" : v
   )
 
   const [
@@ -117,6 +133,12 @@ const WalletContextProvider: React.FC<Props> = (props) => {
     return decryptAES(encryptedPrivateKey, lockPassword)
   }
 
+  const saveAvalancheEncryptedPrivateKey = async (
+    avalancheEncryptedPrivateKey: string
+  ) => {
+    await setAvalancheEncryptedPrivateKey(avalancheEncryptedPrivateKey)
+  }
+
   const saveEncryptedPrivateKey = async (encryptedPrivateKey: string) => {
     await setEncryptedPrivateKey(encryptedPrivateKey)
   }
@@ -147,6 +169,7 @@ const WalletContextProvider: React.FC<Props> = (props) => {
   }
 
   const walletContextValue: WalletContextType = {
+    avalancheEncryptedPrivateKey: avalancheEncryptedPrivateKey,
     encryptedPrivateKey: encryptedPrivateKey,
     changeWalletPassword: changeWalletPassword,
     deleteWallet: deleteWallet,
@@ -154,6 +177,7 @@ const WalletContextProvider: React.FC<Props> = (props) => {
     isWalletConfigured: isWalletConfigured,
     isWalletConfiguredLoaded: isWalletConfiguredLoaded,
     saveWallet: saveWallet,
+    saveAvalancheEncryptedPrivateKey: saveAvalancheEncryptedPrivateKey,
     saveEncryptedPrivateKey: saveEncryptedPrivateKey,
     wallets: wallets
   }

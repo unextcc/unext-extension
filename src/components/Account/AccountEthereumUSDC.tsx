@@ -1,30 +1,26 @@
 import { Alert, Grid } from "@mui/material"
-import { AssetTransfersCategory } from "alchemy-sdk"
+import { AssetTransfersCategory, SortingOrder } from "alchemy-sdk"
 import type React from "react"
 import { useContext } from "react"
 
 import ActionMenu from "~components/Layout/ActionMenu"
 import Footer from "~components/Layout/Footer"
 import HeaderLight from "~components/Layout/HeaderLight"
-import { config } from "~contents/config"
+import RecentTransactions from "~components/Transaction/RecentTransactions"
+import { NetworkId, TokenId, config } from "~contents/config"
 import { useAlchemyGetAssetTransfers } from "~hooks/use-alchemy"
 import { WalletContext } from "~store/wallet-context"
 
-import AccountBalanceItemUSDC from "./AccountBalanceItemUSDC"
-import AccountNetworkBalanceItemUSDC from "./AccountNetworkBalanceItemUSDC"
+import AccountDetailItemUSDC from "./AccountDetailItemUSDC"
 
 interface Props {
   children?: React.ReactNode
 }
 
-const Account = (props: Props) => {
-  const walletContext = useContext(WalletContext)
-  // @ts-ignore
-  const wallet = walletContext.wallets[0][0]
-
+const AccountEthereumUSDC = (props: Props) => {
   return (
     <Grid container item xs={12}>
-      <HeaderLight title={"Accounts"} />
+      <HeaderLight goBackPage="accountUSDC" title={"USDC Account - Ethereum"} />
 
       <Grid
         container
@@ -33,9 +29,7 @@ const Account = (props: Props) => {
         marginTop={7.5}
         display="block"
         alignItems="flex-start">
-        <Grid container item xs={12} display="flex" spacing={1}>
-          <AccountBalanceItemUSDC />
-        </Grid>
+        <AccountDetailItemUSDC balanceType="usdc" network="ethereum" />
 
         <ActionMenu />
 
@@ -43,18 +37,24 @@ const Account = (props: Props) => {
           item
           xs={12}
           sx={{
-            height: 20,
+            height: 10,
             borderTop: 1,
             borderColor: "lightgray",
             marginTop: 2
           }}
         />
 
-        <AccountNetworkBalanceItemUSDC />
+        <RecentTransactions
+          goBackPageName="account"
+          title={"Recent Transactions"}
+          networkId={NetworkId.ETHEREUM}
+          tokenId={TokenId.USDC}
+        />
       </Grid>
 
       <Footer />
     </Grid>
   )
 }
-export default Account
+
+export default AccountEthereumUSDC

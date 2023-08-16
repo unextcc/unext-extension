@@ -7,13 +7,14 @@ import {
   Typography
 } from "@mui/material"
 import { Table, TableBody, TableRow } from "@mui/material"
-import { useContext, useEffect } from "react"
-import Web3 from "web3"
+import { useContext, useEffect, useState } from "react"
 
 import HeaderLight from "~components/Layout/HeaderLight"
-import { config } from "~contents/config"
-import { useAlchemyGetTransactionReceipts } from "~hooks/use-alchemy"
+import { NetworkId, TokenId, config } from "~contents/config"
+import { useAlchemyGetTransactionReceipt } from "~hooks/use-alchemy"
+import { useSnowEthGetTransactionReceipt } from "~hooks/use-snow"
 import { TransactionContext } from "~store/transaction-context"
+import type { TransactionDetail } from "~types/transaction"
 
 interface Props {
   children?: React.ReactNode
@@ -21,56 +22,66 @@ interface Props {
 
 const TransactionDetail = (props: Props) => {
   const transactionContext = useContext(TransactionContext)
-  const blockNumber = transactionContext.transactionDetail.blockNumber
-  const goBackPageName = transactionContext.transactionDetail.goBackPageName
-  const goBackPageTitle = transactionContext.transactionDetail.title
-  const transactionHash = transactionContext.transactionDetail.transactionHash
-  const from = transactionContext.transactionDetail.from
-  const to = transactionContext.transactionDetail.to
-  const date = transactionContext.transactionDetail.date
-  const time = transactionContext.transactionDetail.time
-  const transactionStatus =
-    transactionContext.transactionDetail.transactionStatus
-  const fiatSymbol = transactionContext.transactionDetail.fiatSymbol
-  const value = transactionContext.transactionDetail.value
-  const networkFee = transactionContext.transactionDetail.networkFee
-  const total = transactionContext.transactionDetail.total
+  const [transactionDetail, setTransactionDetail] = useState<TransactionDetail>({
+    date: "",
+    from: "",
+    hash: "default",
+    network: -1,
+    networkFee: "",
+    status: "",
+    time: "",
+    to: "",
+    transactionType: "",
+    value: 0
+  })
 
-  let transactionType
-  if (transactionContext.transactionDetail.transactionType === "1") {
-    transactionType = "Sent"
-  } else if (transactionContext.transactionDetail.transactionType === "0") {
-    transactionType = "Received"
-  }
+  const { 
+    error, 
+    getTransactionReceipt, 
+    status, 
+    transaction: transactionEthereum 
+  } = useAlchemyGetTransactionReceipt()
 
-  const {
-    getTransactionReceipts,
-    error,
-    isLoaded,
-    isLoading,
-    transaction,
-    transactionFound
-  } = useAlchemyGetTransactionReceipts()
+
+  const { 
+    error: errorAvalanche, 
+    ethGetTransactionReceipt, 
+    status: statusAvalanche, 
+    transaction: transactionAvalanche 
+  } = useSnowEthGetTransactionReceipt()
 
   useEffect(() => {
-    getTransactionReceipts(blockNumber, transactionHash)
-  }, [])
-
-  const web3 = new Web3(new Web3.providers.HttpProvider(""))
-
-  const gasUsed =
-    parseInt(transaction!.gasUsed, 16).toString() !== "NaN"
-      ? web3.utils.fromWei(
-          web3.utils.toBN(parseInt(transaction!.gasUsed, 16)),
-          "ether"
-        )
-      : ""
+    if (transactionContext.transactionDetail.network === NetworkId.ETHEREUM && transactionDetail.hash === "default") {
+      getTransactionReceipt(
+        transactionContext.transactionDetail.transactionHash, 
+        NetworkId.ETHEREUM, 
+        config.tokens[0].networks[1].alchemyMaxRetries, 
+        config.tokens[0].networks[1].alchemyUrl
+      )
+      setTransactionDetail(transactionEthereum)
+    } else if (transactionContext.transactionDetail.network === NetworkId.POLYGON && transactionDetail.hash === "default") {
+      getTransactionReceipt(
+        transactionContext.transactionDetail.transactionHash,
+        NetworkId.POLYGON,
+        config.tokens[0].networks[2].alchemyMaxRetries,
+        config.tokens[0].networks[2].alchemyUrl
+      )
+      setTransactionDetail(transactionEthereum)
+    } else if (transactionContext.transactionDetail.network === NetworkId.AVALANCE && transactionDetail.hash === "default") {
+      ethGetTransactionReceipt(
+        transactionContext.transactionDetail.transactionHash, 
+        NetworkId.AVALANCE, 
+        TokenId.USDC
+      )
+      setTransactionDetail(transactionAvalanche)
+    }
+  }, [transactionEthereum, transactionAvalanche])
 
   return (
     <Grid container item xs={12} display="block">
       <HeaderLight
-        goBackPage={goBackPageName}
-        goBackPageTitle={transactionType + " " + goBackPageTitle}
+        goBackPage={transactionContext.transactionDetail.goBackPageName}
+        goBackPageTitle={transactionDetail?.transactionType + " " + transactionContext.transactionDetail.tokenSymbol}
       />
 
       <Grid container item xs={12} display="block">
@@ -90,8 +101,7 @@ const TransactionDetail = (props: Props) => {
             variant="h4"
             fontWeight="bold"
             sx={{ textAlign: "center", width: "100%", marginBottom: 1 }}>
-            {fiatSymbol}
-            {value.toFixed(2)}
+            {transactionDetail?.value.toFixed(2)}
           </Typography>
 
           <Typography
@@ -114,7 +124,7 @@ const TransactionDetail = (props: Props) => {
               fontSize: 14,
               marginBottom: 1
             }}>
-            {to}
+            {transactionDetail?.to}
           </Typography>
         </Paper>
       </Grid>
@@ -128,9 +138,9 @@ const TransactionDetail = (props: Props) => {
                   From:
                 </TableCell>
                 <TableCell align="right">
-                  {from.substring(0, 6)}
+                  {transactionDetail?.from.substring(0, 6)}
                   {"..."}
-                  {from.substring(38, 42)}
+                  {transactionDetail?.from.substring(38, 42)}
                 </TableCell>
               </TableRow>
 
@@ -138,14 +148,14 @@ const TransactionDetail = (props: Props) => {
                 <TableCell component="th" scope="row">
                   Date:
                 </TableCell>
-                <TableCell align="right">{date + " " + time}</TableCell>
+                <TableCell align="right">{transactionDetail?.date + " " + transactionDetail?.time}</TableCell>
               </TableRow>
 
               <TableRow>
                 <TableCell component="th" scope="row">
                   Status:
                 </TableCell>
-                <TableCell align="right">{transactionStatus}</TableCell>
+                <TableCell align="right">{transactionDetail?.status}</TableCell>
               </TableRow>
 
               <TableRow>
@@ -153,7 +163,9 @@ const TransactionDetail = (props: Props) => {
                   Network:
                 </TableCell>
                 <TableCell align="right">
-                  {config.tokens[0].blockchain}
+                  {transactionDetail?.network == NetworkId.ETHEREUM && "Ethereum"}
+                  {transactionDetail?.network == NetworkId.POLYGON && "Polygon"}
+                  {transactionDetail?.network == NetworkId.AVALANCE && "Avalanche"}
                 </TableCell>
               </TableRow>
 
@@ -161,7 +173,12 @@ const TransactionDetail = (props: Props) => {
                 <TableCell component="th" scope="row">
                   Network Fee:
                 </TableCell>
-                <TableCell align="right">MATIC {gasUsed}</TableCell>
+                <TableCell align="right">
+                  {transactionDetail?.network === NetworkId.ETHEREUM && "ETH "} 
+                  {transactionDetail?.network === NetworkId.POLYGON && "MATIC "} 
+                  {transactionDetail?.network === NetworkId.AVALANCE && "AVAX "}  
+                  {transactionDetail?.networkFee}
+                  </TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -180,7 +197,7 @@ const TransactionDetail = (props: Props) => {
         xs={12}>
         <Button
           target="_blank"
-          href={config.tokens[0].scannerUrl + "/tx/" + transactionHash}
+          href={config.tokens[0].networks[transactionContext.transactionDetail?.network].scannerUrl + "/tx/" + transactionContext.transactionDetail.transactionHash}
           variant="outlined"
           color="info"
           size="small">

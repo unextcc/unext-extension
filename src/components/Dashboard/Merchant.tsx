@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Link, Typography } from "@mui/material"
+import { Box, Card, Link, Typography } from "@mui/material"
 import React from "react"
 
 interface Props {

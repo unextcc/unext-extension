@@ -2,8 +2,13 @@ import { CircularProgress, Container, Grid } from "@mui/material"
 import React, { useContext, useEffect } from "react"
 
 import Account from "~components/Account/Account"
-import AccountMATIC from "~components/Account/AccountMATIC"
+import AccountAvalancheUSDC from "~components/Account/AccountAvalancheUSDC"
+import AccountEthereumUSDC from "~components/Account/AccountEthereumUSDC"
+import AccountPolygonUSDC from "~components/Account/AccountPolygonUSDC"
 import AccountUSDC from "~components/Account/AccountUSDC"
+import CryptoAccountAVAX from "~components/Account/CryptoAccountAVAX"
+import CryptoAccountETH from "~components/Account/CryptoAccountETH"
+import CryptoAccountMATIC from "~components/Account/CryptoAccountMATIC"
 import Add from "~components/Actions/Add"
 import Convert from "~components/Actions/Convert"
 import More from "~components/Actions/More"
@@ -101,13 +106,30 @@ const App = () => {
                   <RequirePasswordWhenSend />
                 )) ||
                 /* settings - end */
+                /* account - start */
                 (settingsContext.shownPage === "account" && <Account />) ||
                 (settingsContext.shownPage === "accountUSDC" && (
                   <AccountUSDC />
                 )) ||
-                (settingsContext.shownPage === "accountMATIC" && (
-                  <AccountMATIC />
+                (settingsContext.shownPage === "accountAvalancheUSDC" && (
+                  <AccountAvalancheUSDC />
                 )) ||
+                (settingsContext.shownPage === "accountEthereumUSDC" && (
+                  <AccountEthereumUSDC />
+                )) ||
+                (settingsContext.shownPage === "accountPolygonUSDC" && (
+                  <AccountPolygonUSDC />
+                )) ||
+                (settingsContext.shownPage === "accountAVAX" && (
+                  <CryptoAccountAVAX />
+                )) ||
+                (settingsContext.shownPage === "accountETH" && (
+                  <CryptoAccountETH />
+                )) ||
+                (settingsContext.shownPage === "accountMATIC" && (
+                  <CryptoAccountMATIC />
+                )) ||
+                /* account - end */
                 (settingsContext.shownPage === "transactionDetail" && (
                   <TransactionDetail />
                 )) ||

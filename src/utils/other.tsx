@@ -7,3 +7,16 @@ export const getTimeNow = () => {
   const now: number = date.getTime()
   return now
 }
+
+export const getFiatSymbol = (tokenSymbol: string) => {
+  switch (tokenSymbol) {
+    case "USDC":
+      return "$"
+    case "EUROC":
+      return "€"
+    case "GBPC":
+      return "£"
+  }
+
+  return ""
+}

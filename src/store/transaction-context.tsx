@@ -1,40 +1,28 @@
 import React, { useState } from "react"
 import { createContext } from "react"
 
-type TransactionDetailType = {
+type TransactionType = {
   goBackPageName: string
-  blockNumber: string
+  date: string
+  network: number
+  time: string
   title: string
   transactionHash: string
-  transactionType: string
-  from: string
-  to: string
-  date: string
-  time: string
-  transactionStatus: string
-  fiatSymbol: string
+  tokenSymbol: string
   value: number
-  networkFee: number
-  total: number
 }
 
 type TransactionContextType = {
-  transactionDetail: TransactionDetailType
+  transactionDetail: TransactionType
   setTransactionDetailHandler: (
     goBackPageName: string,
-    blockNumber: string,
+    date: string,
+    network: number,
+    time: string,
     title: string,
     transactionHash: string,
-    transactionType: string,
-    from: string,
-    to: string,
-    date: string,
-    time: string,
-    transactionStatus: string,
-    fiatSymbol: string,
-    value: number,
-    networkFee: number,
-    total: number
+    tokenSymbol: string,
+    value: number
   ) => void
 }
 
@@ -44,74 +32,49 @@ interface Props {
 
 export const TransactionContext = createContext<TransactionContextType>({
   transactionDetail: {
-    blockNumber: "",
     goBackPageName: "",
+    date: "",
+    network: -1,
+    time: "",
     title: "",
     transactionHash: "",
-    transactionType: "",
-    from: "",
-    to: "",
-    date: "",
-    time: "",
-    transactionStatus: "",
-    fiatSymbol: "",
-    value: 0,
-    networkFee: 0,
-    total: 0
+    tokenSymbol: "",
+    value: 0
   },
   setTransactionDetailHandler: () => {}
 })
 
 const TransactionContextProvider: React.FC<Props> = (props) => {
-  const [transactionDetail, setTransactionDetail] =
-    useState<TransactionDetailType>({
-      goBackPageName: "",
-      blockNumber: "",
-      title: "",
-      transactionHash: "",
-      transactionType: "",
-      from: "",
-      to: "",
-      date: "",
-      time: "",
-      transactionStatus: "",
-      fiatSymbol: "",
-      value: 0,
-      networkFee: 0,
-      total: 0
-    })
+  const [transactionDetail, setTransactionDetail] = useState<TransactionType>({
+    goBackPageName: "",
+    date: "",
+    network: -1,
+    time: "",
+    title: "",
+    transactionHash: "",
+    tokenSymbol: "",
+    value: 0
+  })
 
   const setTransactionDetailHandler = (
     goBackPageName: string,
-    blockNumber: string,
+    date: string,
+    network: number,
+    time: string,
     title: string,
     transactionHash: string,
-    transactionType: string,
-    from: string,
-    to: string,
-    date: string,
-    time: string,
-    transactionStatus: string,
-    fiatSymbol: string,
-    value: number,
-    networkFee: number,
-    total: number
+    tokenSymbol: string,
+    value: number
   ) => {
     setTransactionDetail({
       goBackPageName,
-      blockNumber,
+      date,
+      network,
+      time,
       title,
       transactionHash,
-      transactionType,
-      from,
-      to,
-      date,
-      time,
-      transactionStatus,
-      fiatSymbol,
-      value,
-      networkFee,
-      total
+      tokenSymbol,
+      value
     })
   }
 

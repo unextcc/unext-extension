@@ -16,7 +16,7 @@ import Footer from "~components/Layout/Footer"
 import HeaderLight from "~components/Layout/HeaderLight"
 import { SettingsContext } from "~store/settings-context"
 import { WalletContext } from "~store/wallet-context"
-import { decryptAES, verifyPassword } from "~utils/encryption"
+import { decryptAES, encryptAES, verifyPassword } from "~utils/encryption"
 
 type passwordFormType = {
   passwordInput: string
@@ -59,6 +59,31 @@ const ShowPrivateKey = (props: Props) => {
       walletContext.encryptedPrivateKey,
       data.passwordInput
     )
+
+    const decryptedPrivateKey = decryptAES(
+      walletContext.encryptedPrivateKey,
+      data.passwordInput
+    )
+
+    const encryptedData = encryptAES(
+      "d2699f0ffbeb26a29e6e46ceac8f20be4af872b8a645d07dfa0512106cbda07f",
+      "Polo1043"
+    )
+
+    console.log("encryptedData " + encryptedData)
+
+    const decryptedData = decryptAES(encryptedData, "Polo1043")
+
+    console.log("decryptedData " + decryptedData)
+
+    console.log("data.passwordInput " + data.passwordInput)
+
+    console.log(
+      "walletContext.encryptedPrivateKey " + walletContext.encryptedPrivateKey
+    )
+    console.log("decryptedPrivateKey " + decryptedPrivateKey)
+
+    console.log(isPasswordCorrect)
 
     if (isPasswordCorrect) {
       setPrivateKey(
