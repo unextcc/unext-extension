@@ -22,6 +22,7 @@ import ConfigureWallet from "~components/Landing/ConfigureWallet"
 import CreateNewWallet from "~components/Landing/CreateNewWallet"
 import ImportWallet from "~components/Landing/ImportWallet"
 import Landing from "~components/Landing/Landing"
+import LoginPage from "~components/Landing/Login"
 import ConnectionError from "~components/Layout/ConnectionError"
 import LockPassword from "~components/LockPassword/LockPassword"
 import ChangeWalletPassword from "~components/Settings/ChangeWalletPassword"
@@ -31,15 +32,19 @@ import ManageNotification from "~components/Settings/ManageNotification"
 import RequirePasswordWhenSend from "~components/Settings/RequirePasswordSend"
 import Settings from "~components/Settings/Settings"
 import ShowPrivateKey from "~components/Settings/ShowPrivateKey"
+//@ts-ignore
 import TransactionDetail from "~components/Transaction/TransactionDetail"
 import Transactions from "~components/Transaction/Transactions"
+import { config } from "~contents/config"
 import { useAlchemyCheckConnection } from "~hooks/use-alchemy"
 import { SettingsContext } from "~store/settings-context"
 import { WalletContext } from "~store/wallet-context"
+import { Web3AuthContext } from "~store/web3auth-context"
 
 const App = () => {
   const settingsContext = useContext(SettingsContext)
   const walletContext = useContext(WalletContext)
+  const web3authContext = useContext(Web3AuthContext)
 
   const date: Date = new Date()
   const now = date.getTime()
@@ -61,7 +66,24 @@ const App = () => {
     if (isLockPasswordExpired) {
       settingsContext.lockPasswordHandler("", 0)
     }
+
+    web3authContext.initWeb3auth(
+      "BDt0goadT_ranJPDFQOFQ99lyxgztp6bwD07ebFkoHN3KvEdZlKuDPJ6ivtqoSABlzB6QlaBJgpZU0o7xztLjpQ",
+      "eip155",
+      "0x5",
+      config.tokens[0].networks[1].providerUrl,
+      "Ethereum Mainnet",
+      config.tokens[0].networks[1].scannerUrl,
+      "ETH",
+      "Ethereum",
+      "testnet"
+    )
   }, [])
+
+  if (web3authContext.provider && web3authContext.web3auth?.connected) {
+    web3authContext.getAddresse()
+    web3authContext.getUserInfo()
+  }
 
   return (
     <React.Fragment>
@@ -73,89 +95,98 @@ const App = () => {
           minWidth={375}
           maxWidth={720}
           height={580}>
-          {/* first check if wallet is loaded */}
-          {walletContext.isWalletConfiguredLoaded ? (
-            /* if wallet is loaded, check if wallet is configured  */
-            walletContext.isWalletConfigured ? (
-              /* if wallet is loaded & configured, check if wallet is locked */
-              isLockPasswordSet && !isLockPasswordExpired ? (
-                /* if wallet is loaded, configred & is NOT locked, load pages */
-                (settingsContext.shownPage === "dashboard" && <Dashboard />) ||
-                (settingsContext.shownPage === "transactions" && (
-                  <Transactions />
+          {/* check if wallet and web3auth loaded */}
+          {walletContext.isWalletConfiguredLoaded &&
+          !web3authContext.isLoading ? (
+            web3authContext.web3auth?.connected && web3authContext.provider ? (
+              /* if wallet is loaded, check if wallet is configured  */
+              walletContext.isWalletConfigured ? (
+                /* if wallet is loaded & configured, check if wallet is locked */
+                isLockPasswordSet && !isLockPasswordExpired ? (
+                  /* if wallet is loaded, configred & is NOT locked, load pages */
+                  (settingsContext.shownPage === "dashboard" && (
+                    <Dashboard />
+                  )) ||
+                  (settingsContext.shownPage === "transactions" && (
+                    <Transactions />
+                  )) ||
+                  /* settings - start */
+                  (settingsContext.shownPage === "settings" && <Settings />) ||
+                  (settingsContext.shownPage === "importWallet" && (
+                    <ImportWallet />
+                  )) ||
+                  (settingsContext.shownPage === "manageNotification" && (
+                    <ManageNotification />
+                  )) ||
+                  (settingsContext.shownPage === "showPrivateKey" && (
+                    <ShowPrivateKey />
+                  )) ||
+                  (settingsContext.shownPage === "logout" && <Logout />) ||
+                  (settingsContext.shownPage === "lockPasswordTtl" && (
+                    <LockPasswordTtl />
+                  )) ||
+                  (settingsContext.shownPage === "changeWalletPassword" && (
+                    <ChangeWalletPassword />
+                  )) ||
+                  (settingsContext.shownPage === "requirePasswordWhenSend" && (
+                    <RequirePasswordWhenSend />
+                  )) ||
+                  /* settings - end */
+                  /* account - start */
+                  (settingsContext.shownPage === "account" && <Account />) ||
+                  (settingsContext.shownPage === "accountUSDC" && (
+                    <AccountUSDC />
+                  )) ||
+                  (settingsContext.shownPage === "accountAvalancheUSDC" && (
+                    <AccountAvalancheUSDC />
+                  )) ||
+                  (settingsContext.shownPage === "accountEthereumUSDC" && (
+                    <AccountEthereumUSDC />
+                  )) ||
+                  (settingsContext.shownPage === "accountPolygonUSDC" && (
+                    <AccountPolygonUSDC />
+                  )) ||
+                  (settingsContext.shownPage === "accountAVAX" && (
+                    <CryptoAccountAVAX />
+                  )) ||
+                  (settingsContext.shownPage === "accountETH" && (
+                    <CryptoAccountETH />
+                  )) ||
+                  (settingsContext.shownPage === "accountMATIC" && (
+                    <CryptoAccountMATIC />
+                  )) ||
+                  /* account - end */
+                  (settingsContext.shownPage === "transactionDetail" && (
+                    <TransactionDetail />
+                  )) ||
+                  (settingsContext.shownPage === "add" && <Add />) ||
+                  (settingsContext.shownPage === "convert" && <Convert />) ||
+                  (settingsContext.shownPage === "spend" && <SpendPage />) ||
+                  (settingsContext.shownPage === "send" && <Send />) ||
+                  (settingsContext.shownPage === "request" && <Request />) ||
+                  (settingsContext.shownPage === "receive" && <Receive />) ||
+                  (settingsContext.shownPage === "more" && <More />)
+                ) : (
+                  /* if wallet is loaded, configred & is locked, load lock password page */
+                  <LockPassword />
+                )
+              ) : /* if wallet is NOT configured & loaded, check if shown page is in ignore list & load the pages*/
+              shownPageIgnoreList.includes(settingsContext.shownPage) ? (
+                (settingsContext.shownPage === "configureWallet" && (
+                  <ConfigureWallet />
                 )) ||
-                /* settings - start */
-                (settingsContext.shownPage === "settings" && <Settings />) ||
+                (settingsContext.shownPage === "createNewWallet" && (
+                  <CreateNewWallet />
+                )) ||
                 (settingsContext.shownPage === "importWallet" && (
                   <ImportWallet />
-                )) ||
-                (settingsContext.shownPage === "manageNotification" && (
-                  <ManageNotification />
-                )) ||
-                (settingsContext.shownPage === "showPrivateKey" && (
-                  <ShowPrivateKey />
-                )) ||
-                (settingsContext.shownPage === "logout" && <Logout />) ||
-                (settingsContext.shownPage === "lockPasswordTtl" && (
-                  <LockPasswordTtl />
-                )) ||
-                (settingsContext.shownPage === "changeWalletPassword" && (
-                  <ChangeWalletPassword />
-                )) ||
-                (settingsContext.shownPage === "requirePasswordWhenSend" && (
-                  <RequirePasswordWhenSend />
-                )) ||
-                /* settings - end */
-                /* account - start */
-                (settingsContext.shownPage === "account" && <Account />) ||
-                (settingsContext.shownPage === "accountUSDC" && (
-                  <AccountUSDC />
-                )) ||
-                (settingsContext.shownPage === "accountAvalancheUSDC" && (
-                  <AccountAvalancheUSDC />
-                )) ||
-                (settingsContext.shownPage === "accountEthereumUSDC" && (
-                  <AccountEthereumUSDC />
-                )) ||
-                (settingsContext.shownPage === "accountPolygonUSDC" && (
-                  <AccountPolygonUSDC />
-                )) ||
-                (settingsContext.shownPage === "accountAVAX" && (
-                  <CryptoAccountAVAX />
-                )) ||
-                (settingsContext.shownPage === "accountETH" && (
-                  <CryptoAccountETH />
-                )) ||
-                (settingsContext.shownPage === "accountMATIC" && (
-                  <CryptoAccountMATIC />
-                )) ||
-                /* account - end */
-                (settingsContext.shownPage === "transactionDetail" && (
-                  <TransactionDetail />
-                )) ||
-                (settingsContext.shownPage === "add" && <Add />) ||
-                (settingsContext.shownPage === "convert" && <Convert />) ||
-                (settingsContext.shownPage === "spend" && <SpendPage />) ||
-                (settingsContext.shownPage === "send" && <Send />) ||
-                (settingsContext.shownPage === "request" && <Request />) ||
-                (settingsContext.shownPage === "receive" && <Receive />) ||
-                (settingsContext.shownPage === "more" && <More />)
+                ))
               ) : (
-                /* if wallet is loaded, configred & is locked, load lock password page */
-                <LockPassword />
+                /* if wallet is NOT configured, loaded & NOT in ignore list, load landing page */
+                <Landing />
               )
-            ) : /* if wallet is NOT configured & loaded, check if shown page is in ignore list & load the pages*/
-            shownPageIgnoreList.includes(settingsContext.shownPage) ? (
-              (settingsContext.shownPage === "configureWallet" && (
-                <ConfigureWallet />
-              )) ||
-              (settingsContext.shownPage === "createNewWallet" && (
-                <CreateNewWallet />
-              )) ||
-              (settingsContext.shownPage === "importWallet" && <ImportWallet />)
             ) : (
-              /* if wallet is NOT configured, loaded & NOT in ignore list, load landing page */
-              <Landing />
+              <LoginPage />
             )
           ) : (
             /* Show wallet is loading*/

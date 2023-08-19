@@ -3,6 +3,7 @@ import type React from "react"
 import { useContext, useEffect, useState } from "react"
 
 import { WalletContext } from "~store/wallet-context"
+import { Web3AuthContext } from "~store/web3auth-context"
 
 import AccountBalanceValueUSDC from "./AccountBalanceValueUSDC"
 import AccountTotalBalanceValueUSDC from "./AccountTotalBalanceValueUSDC"
@@ -15,9 +16,7 @@ interface Props {
 
 const AccountDetailItemUSDC = (props: Props) => {
   const [isCopied, setIsCopied] = useState<boolean>(false)
-  const walletContext = useContext(WalletContext)
-  // @ts-ignore
-  const wallet = walletContext.wallets[0][0]
+  const web3authContext = useContext(Web3AuthContext)
 
   return (
     <Grid item>
@@ -44,7 +43,7 @@ const AccountDetailItemUSDC = (props: Props) => {
           <Link
             sx={{ cursor: "pointer" }}
             onClick={() => {
-              navigator.clipboard.writeText(wallet.address)
+              navigator.clipboard.writeText(web3authContext.address)
               setIsCopied(true)
               setTimeout(() => {
                 setIsCopied(false)
@@ -55,7 +54,7 @@ const AccountDetailItemUSDC = (props: Props) => {
           ):
         </Typography>
         <Typography overflow="auto" sx={{ fontSize: 14 }}>
-          {wallet.address}
+          {web3authContext.address}
         </Typography>
       </Paper>
     </Grid>

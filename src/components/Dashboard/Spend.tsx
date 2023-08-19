@@ -1,7 +1,6 @@
-import React from "react";
-import { Grid } from "@mui/material";
-import Merchant from "~components/Dashboard/Merchant";
+import { Button, Grid } from "@mui/material"
 
+import Merchant from "~components/Dashboard/Merchant"
 
 const Spend = () => {
   return (
@@ -11,11 +10,13 @@ const Spend = () => {
       xs={12}
       sx={{
         overflowX: "hidden",
-        "&::-webkit-scrollbar": {width: 2},
-        "&::-webkit-scrollbar-track": {backgroundColor: "lightgray"},
-        "&::-webkit-scrollbar-thumb": {backgroundColor: "gray", borderRadius: 0}
-      }}
-    >
+        "&::-webkit-scrollbar": { width: 2 },
+        "&::-webkit-scrollbar-track": { backgroundColor: "lightgray" },
+        "&::-webkit-scrollbar-thumb": {
+          backgroundColor: "gray",
+          borderRadius: 0
+        }
+      }}>
       <Merchant
         title="APMEX"
         description="Buy gold, silver and other precious metals using USDC."
@@ -37,4 +38,4 @@ const Spend = () => {
   )
 }
 
-export default Spend;
+export default Spend
