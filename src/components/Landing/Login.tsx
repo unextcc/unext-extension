@@ -2,13 +2,14 @@ import { Button, Grid } from "@mui/material"
 import React, { useContext } from "react"
 
 import { Web3AuthContext } from "~store/web3auth-context"
+import { Web3TKContext } from "~store/web3tk-context"
 
 interface Props {
   children?: React.ReactNode
 }
 
 const LoginPage = () => {
-  const web3authContext = useContext(Web3AuthContext)
+  const web3TKContext = useContext(Web3TKContext)
 
   return (
     <React.Fragment>
@@ -18,7 +19,7 @@ const LoginPage = () => {
             variant={"outlined"}
             fullWidth={true}
             onClick={() => {
-              web3authContext.login()
+              web3TKContext.triggerLogin()
             }}>
             LOGIN
           </Button>

@@ -1,6 +1,7 @@
 import { Network } from "alchemy-sdk"
 
 type envType = {
+  web3TkAuthNetwork: string
   tokens: {
     id: number
     decimals: number
@@ -64,6 +65,7 @@ export enum NetworkId {
 }
 
 const prod: envType = {
+  web3TkAuthNetwork: "Cyan",
   tokens: [
     {
       id: 0,
@@ -95,7 +97,7 @@ const prod: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.ETH_MAINNET,
           alchemyUrl: "https://api.unext.cc/alchemy-ethereum",
-          chaindId: 0,
+          chaindId: 1,
           contractAddress: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
           enabled: true,
           gasStationUrl: "",
@@ -111,7 +113,7 @@ const prod: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.MATIC_MAINNET,
           alchemyUrl: "https://api.unext.cc/alchemy-polygon",
-          chaindId: 0,
+          chaindId: 1,
           contractAddress: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
           enabled: true,
           gasStationUrl: "",
@@ -154,7 +156,7 @@ const prod: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.ETH_MAINNET,
           alchemyUrl: "https://api.unext.cc/alchemy-ethereum",
-          chaindId: 0,
+          chaindId: 1,
           contractAddress: "0x1aBaEA1f7C830bD89Acc67eC4af516284b1bC33c",
           enabled: false,
           gasStationUrl: "",
@@ -170,7 +172,7 @@ const prod: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.MATIC_MAINNET,
           alchemyUrl: "https://api.unext.cc/alchemy-polygon",
-          chaindId: 0,
+          chaindId: 1,
           contractAddress: "",
           enabled: false,
           gasStationUrl: "",
@@ -197,7 +199,7 @@ const prod: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.ETH_MAINNET,
           alchemyUrl: "",
-          chaindId: 0,
+          chaindId: 1,
           contractAddress: "",
           enabled: true,
           gasStationUrl: "",
@@ -222,7 +224,7 @@ const prod: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.ETH_MAINNET,
           alchemyUrl: "https://api.unext.cc/alchemy-ethereum",
-          chaindId: 0,
+          chaindId: 1,
           contractAddress: "0x",
           enabled: true,
           gasStationUrl: "",
@@ -247,7 +249,7 @@ const prod: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.MATIC_MAINNET,
           alchemyUrl: "https://api.unext.cc/alchemy-polygon",
-          chaindId: 0,
+          chaindId: 1,
           contractAddress: "0x0000000000000000000000000000000000001010",
           enabled: true,
           gasStationUrl: "",
@@ -264,6 +266,7 @@ const prod: envType = {
 }
 
 const dev: envType = {
+  web3TkAuthNetwork: "Testnet",
   tokens: [
     {
       id: 0,
@@ -279,7 +282,7 @@ const dev: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.ETH_GOERLI,
           alchemyUrl: "none",
-          chaindId: 1,
+          chaindId: 5,
           contractAddress: "0x5425890298aed601595a70ab815c96711a31bc65",
           enabled: true,
           gasStationUrl: "",
@@ -295,7 +298,7 @@ const dev: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.ETH_GOERLI,
           alchemyUrl: "http://localhost:8000/alchemy-ethereum-goerli",
-          chaindId: 0,
+          chaindId: 5,
           contractAddress: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
           enabled: true,
           gasStationUrl:
@@ -312,7 +315,7 @@ const dev: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.MATIC_MUMBAI,
           alchemyUrl: "http://localhost:8000/alchemy-polygon-mumbai",
-          chaindId: 0,
+          chaindId: 5,
           contractAddress: "0x0FA8781a83E46826621b3BC094Ea2A0212e71B23",
           enabled: true,
           gasStationUrl: "",
@@ -339,7 +342,7 @@ const dev: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.ETH_GOERLI,
           alchemyUrl: "none",
-          chaindId: 1,
+          chaindId: 5,
           contractAddress: "0x5e44db7996c682e92a960b65ac713a54ad815c6b",
           enabled: false,
           name: "avalanche",
@@ -355,7 +358,7 @@ const dev: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.ETH_GOERLI,
           alchemyUrl: "http://localhost:8000/alchemy-ethereum-goerli",
-          chaindId: 0,
+          chaindId: 5,
           contractAddress: "0xa683d909e996052955500ddc45ca13e25c76e286",
           enabled: false,
           gasStationUrl:
@@ -383,7 +386,7 @@ const dev: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.ETH_GOERLI,
           alchemyUrl: "",
-          chaindId: 1,
+          chaindId: 5,
           contractAddress: "",
           gasStationUrl: "",
           enabled: true,
@@ -408,7 +411,7 @@ const dev: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.ETH_MAINNET,
           alchemyUrl: "http://localhost:8000/alchemy-ethereum-goerli",
-          chaindId: 0,
+          chaindId: 5,
           contractAddress: "0x",
           enabled: true,
           gasStationUrl:
@@ -434,7 +437,7 @@ const dev: envType = {
           alchemyMaxRetries: 3,
           alchemyNetwork: Network.ETH_MAINNET,
           alchemyUrl: "http://localhost:8000/alchemy-polygon-mumbai",
-          chaindId: 0,
+          chaindId: 5,
           contractAddress: "0x0000000000000000000000000000000000001010",
           enabled: true,
           gasStationUrl:

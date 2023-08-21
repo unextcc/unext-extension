@@ -40,11 +40,13 @@ import { useAlchemyCheckConnection } from "~hooks/use-alchemy"
 import { SettingsContext } from "~store/settings-context"
 import { WalletContext } from "~store/wallet-context"
 import { Web3AuthContext } from "~store/web3auth-context"
+import { Web3TKContext } from "~store/web3tk-context"
 
 const App = () => {
   const settingsContext = useContext(SettingsContext)
   const walletContext = useContext(WalletContext)
   const web3authContext = useContext(Web3AuthContext)
+  const web3TKContext = useContext(Web3TKContext)
 
   const date: Date = new Date()
   const now = date.getTime()
@@ -67,23 +69,14 @@ const App = () => {
       settingsContext.lockPasswordHandler("", 0)
     }
 
-    web3authContext.initWeb3auth(
-      "BDt0goadT_ranJPDFQOFQ99lyxgztp6bwD07ebFkoHN3KvEdZlKuDPJ6ivtqoSABlzB6QlaBJgpZU0o7xztLjpQ",
-      "eip155",
-      "0x5",
-      config.tokens[0].networks[1].providerUrl,
-      "Ethereum Mainnet",
-      config.tokens[0].networks[1].scannerUrl,
-      "ETH",
-      "Ethereum",
-      "testnet"
-    )
+    web3TKContext.init()
   }, [])
 
-  if (web3authContext.provider && web3authContext.web3auth?.connected) {
-    web3authContext.getAddresse()
-    web3authContext.getUserInfo()
+  if (web3TKContext.provider && web3TKContext.user) {
+    web3TKContext.getAccounts()
   }
+
+  console.log(web3TKContext.provider)
 
   return (
     <React.Fragment>
@@ -97,8 +90,8 @@ const App = () => {
           height={580}>
           {/* check if wallet and web3auth loaded */}
           {walletContext.isWalletConfiguredLoaded &&
-          !web3authContext.isLoading ? (
-            web3authContext.web3auth?.connected && web3authContext.provider ? (
+          !web3TKContext.isLoading ? (
+            web3TKContext.provider && web3TKContext.user ? (
               /* if wallet is loaded, check if wallet is configured  */
               walletContext.isWalletConfigured ? (
                 /* if wallet is loaded & configured, check if wallet is locked */

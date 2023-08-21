@@ -10,14 +10,11 @@ import "./style.css"
 import type { CHAIN_CONFIG_TYPE } from "~config/chainConfig"
 import type { WEB3AUTH_NETWORK_TYPE } from "~config/web3AuthNetwork"
 import { Web3AuthProvider } from "~store/web3auth-context"
+import { Web3TKContextProvider } from "~store/web3tk-context"
 
 function IndexPopup(): JSX.Element {
-  const [web3AuthNetwork, setWeb3AuthNetwork] =
-    useState<WEB3AUTH_NETWORK_TYPE>("mainnet")
-  const [chain, setChain] = useState<CHAIN_CONFIG_TYPE>("mainnet")
-
   return (
-    <Web3AuthProvider web3AuthNetwork={web3AuthNetwork} chain={chain}>
+    <Web3TKContextProvider>
       <SettingsContextProvider>
         <WalletContextProvider>
           <TransactionContextProvider>
@@ -25,7 +22,7 @@ function IndexPopup(): JSX.Element {
           </TransactionContextProvider>
         </WalletContextProvider>
       </SettingsContextProvider>
-    </Web3AuthProvider>
+    </Web3TKContextProvider>
   )
 }
 
