@@ -1,5 +1,5 @@
 import { CircularProgress, Container, Grid } from "@mui/material"
-import React, { useContext, useEffect } from "react"
+import React, { useContext, useEffect, useState } from "react"
 
 import Account from "~components/Account/Account"
 import AccountAvalancheUSDC from "~components/Account/AccountAvalancheUSDC"
@@ -46,6 +46,8 @@ const App = () => {
   const walletContext = useContext(WalletContext)
   const web3authContext = useContext(Web3AuthContext)
 
+  const [isFullPage, setIsFullPage] = useState(false)
+
   const date: Date = new Date()
   const now = date.getTime()
 
@@ -78,7 +80,11 @@ const App = () => {
       "Ethereum",
       "testnet"
     )
+
+    if (window.innerWidth > 375) setIsFullPage(true)
   }, [])
+
+  console.log("window.innerWidth " + window.innerWidth)
 
   if (web3authContext.provider && web3authContext.web3auth?.connected) {
     web3authContext.getAddresse()
@@ -98,7 +104,7 @@ const App = () => {
           {/* check if wallet and web3auth loaded */}
           {walletContext.isWalletConfiguredLoaded &&
           !web3authContext.isLoading ? (
-            web3authContext.web3auth?.connected && web3authContext.provider ? (
+            web3authContext.provider && web3authContext.loggedIn ? (
               /* if wallet is loaded, check if wallet is configured  */
               walletContext.isWalletConfigured ? (
                 /* if wallet is loaded & configured, check if wallet is locked */
@@ -186,7 +192,10 @@ const App = () => {
                 <Landing />
               )
             ) : (
-              <LoginPage />
+              <LoginPage
+                isFullPage={isFullPage}
+                isLoggedIn={web3authContext.loggedIn}
+              />
             )
           ) : (
             /* Show wallet is loading*/

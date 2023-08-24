@@ -1,6 +1,7 @@
 import { Network } from "alchemy-sdk"
 
 type envType = {
+  web3AuthNetwork: string
   tokens: {
     id: number
     decimals: number
@@ -64,6 +65,7 @@ export enum NetworkId {
 }
 
 const prod: envType = {
+  web3AuthNetwork: "cyan",
   tokens: [
     {
       id: 0,
@@ -264,6 +266,7 @@ const prod: envType = {
 }
 
 const dev: envType = {
+  web3AuthNetwork: "testnet",
   tokens: [
     {
       id: 0,

@@ -29,7 +29,6 @@
     "@types/material-ui": "^0.21.12",
     "@web3auth/base": "^6.1.7",
     "@web3auth/ethereum-provider": "^6.1.7",
-    "@web3auth/modal": "^6.1.7",
     "@web3auth/no-modal": "^6.1.7",
     "@web3auth/openlogin-adapter": "^6.1.7",
     "alchemy-sdk": "^2.9.2",
@@ -45,6 +44,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.45.1",
+    "react-social-icons": "^5.15.0",
     "web3": "^1.10.0",
     "yup": "^1.2.0"
   },
@@ -88,7 +88,10 @@
       "http://localhost:8000/infura-polygon-mumbai"
     ],
     "cross_origin_opener_policy": {
-      "value": "same-origin"
-    }
+      "value": "same-origin-allow-popups"
+    },
+    "permissions": [
+      "tabs"
+    ]
   }
 }

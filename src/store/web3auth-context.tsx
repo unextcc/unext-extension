@@ -25,6 +25,7 @@ export interface IWeb3AuthContext {
   privateKey: string | null
   error: any | null
   isLoading: boolean
+  loggedIn: boolean
   provider: SafeEventEmitterProvider | null
   web3auth: Web3AuthNoModal | null
   initWeb3auth: (
@@ -39,7 +40,8 @@ export interface IWeb3AuthContext {
     web3AuthNetwork: WEB3AUTH_NETWORK_TYPE
   ) => Promise<void> | null
   authenticateUser: () => Promise<void> | null
-  login: () => Promise<void> | null
+  login: (provider: string) => Promise<void> | null
+  loginEmail: (email: string) => Promise<void> | null
   logout: () => Promise<void> | null
   getChainId: () => Promise<void> | null
   getAddresse: () => Promise<void> | null
@@ -61,6 +63,7 @@ export const Web3AuthContext = createContext<IWeb3AuthContext>({
   privateKey: "",
   error: {},
   isLoading: false,
+  loggedIn: false,
   provider: {
     //@ts-ignore
     sendAsync: undefined,
@@ -142,6 +145,7 @@ export const Web3AuthContext = createContext<IWeb3AuthContext>({
   initWeb3auth: () => null,
   authenticateUser: () => null,
   login: () => null,
+  loginEmail: () => null,
   logout: () => null,
   getChainId: () => null,
   getAddresse: () => null,
@@ -165,6 +169,7 @@ export const Web3AuthProvider: React.FC<Props> = (props) => {
   const [chainIdFromRPC, setChainIdFromRPC] = useState<string | null>(null)
   const [address, setAddress] = useState<string>("")
   const [privateKey, setPrivateKey] = useState<string | null>(null)
+  const [loggedIn, setLoggedIn] = useState<boolean>(false)
 
   const initWeb3auth = async (
     clientId: string,
@@ -193,7 +198,10 @@ export const Web3AuthProvider: React.FC<Props> = (props) => {
       const web3auth = new Web3AuthNoModal({
         clientId,
         web3AuthNetwork,
-        chainConfig: chainConfig
+        chainConfig: chainConfig,
+        enableLogging: true,
+        storageKey: "local",
+        sessionTime: 3600
       })
 
       const privateKeyProvider = new EthereumPrivateKeyProvider({
@@ -202,13 +210,65 @@ export const Web3AuthProvider: React.FC<Props> = (props) => {
 
       const openloginAdapter = new OpenloginAdapter({
         adapterSettings: {
+          storageKey: "local",
+          loginConfig: {
+            google: {
+              verifier: "tkey-google-test",
+              typeOfLogin: "google",
+              clientId:
+                "635149666301-lgpmqrs6gnmh5pj297hph0kvertqm5fb.apps.googleusercontent.com"
+            },
+            facebook: {
+              verifier: "unext-testing-facebook",
+              typeOfLogin: "facebook",
+              clientId: "314373137759612"
+            },
+            twitch: {
+              verifier: "unext-test-twitch",
+              typeOfLogin: "twitch",
+              clientId: "grg8pb0o1uuuqnq43cjy9i5typed2v"
+            },
+            discord: {
+              verifier: "unext-test-discord",
+              typeOfLogin: "discord",
+              clientId: "1143580750394961941"
+            }
+          },
+          sessionTime: 3600,
+          uxMode: "popup",
           whiteLabel: {
             name: "uNeXT",
-            logoLight: "https://web3auth.io/images/w3a-L-Favicon-1.svg",
-            logoDark: "https://web3auth.io/images/w3a-D-Favicon-1.svg",
+            url: "https://unext.cc",
+            logoLight: "https://unext.cc/img/usdn_logo.svg",
+            logoDark: "https://unext.cc/img/usdn_logo.svg",
             defaultLanguage: "en",
             dark: false
+          },
+          mfaSettings: {
+            deviceShareFactor: {
+              enable: true,
+              priority: 1,
+              mandatory: true
+            },
+            backUpShareFactor: {
+              enable: true,
+              priority: 2,
+              mandatory: true
+            },
+            socialBackupFactor: {
+              enable: false,
+              priority: 3,
+              mandatory: false
+            },
+            passwordFactor: {
+              enable: true,
+              priority: 4,
+              mandatory: true
+            }
           }
+        },
+        loginSettings: {
+          mfaLevel: "mandatory"
         },
         privateKeyProvider: privateKeyProvider
       })
@@ -217,8 +277,10 @@ export const Web3AuthProvider: React.FC<Props> = (props) => {
 
       await web3auth.init()
 
-      if (web3auth.provider) {
-        setProvider(web3auth.provider)
+      setProvider(web3auth.provider)
+
+      if (web3auth.connected) {
+        setLoggedIn(true)
       }
     } catch (error) {
       setError(error)
@@ -228,7 +290,7 @@ export const Web3AuthProvider: React.FC<Props> = (props) => {
     }
   }
 
-  const login = async () => {
+  const login = async (provider: string) => {
     if (!web3auth) {
       console.error("web3auth not initialized yet!")
       return
@@ -236,11 +298,32 @@ export const Web3AuthProvider: React.FC<Props> = (props) => {
     const web3authProvider = await web3auth.connectTo(
       WALLET_ADAPTERS.OPENLOGIN,
       {
-        mfaLevel: "none",
-        loginProvider: "google"
+        loginProvider: provider
       }
     )
     setProvider(web3authProvider)
+    setLoggedIn(true)
+  }
+
+  const loginWithEmail = async (email: string) => {
+    if (!web3auth) {
+      console.log("web3auth not initialized yet")
+      return
+    }
+    const web3authProvider = await web3auth.connectTo(
+      WALLET_ADAPTERS.OPENLOGIN,
+      {
+        loginProvider: "email_passwordless",
+        extraLoginOptions: {
+          login_hint: email
+        }
+      }
+    )
+    setProvider(web3authProvider)
+
+    if (web3auth.connected) {
+      setLoggedIn(true)
+    }
   }
 
   const authenticateUser = async () => {
@@ -269,6 +352,7 @@ export const Web3AuthProvider: React.FC<Props> = (props) => {
     }
     await web3auth.logout()
     setProvider(null)
+    setLoggedIn(true)
   }
 
   const getChainId = async () => {
@@ -311,7 +395,9 @@ export const Web3AuthProvider: React.FC<Props> = (props) => {
     getPrivateKey,
     getUserInfo,
     isLoading,
+    loggedIn,
     login,
+    loginEmail: loginWithEmail,
     logout,
     privateKey,
     provider,
