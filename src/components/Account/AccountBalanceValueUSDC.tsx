@@ -4,6 +4,7 @@ import { config } from "~contents/config"
 import { useSnowGetAccountTokenBalance } from "~hooks/use-snow"
 import { useWeb3TokenBalance } from "~hooks/use-web3"
 import { WalletContext } from "~store/wallet-context"
+import { Web3AuthContext } from "~store/web3auth-context"
 
 interface Props {
   children?: React.ReactNode
@@ -12,6 +13,8 @@ interface Props {
 
 const AccountBalanceValueUSDC = (props: Props) => {
   const walletContext = useContext(WalletContext)
+  const web3authContext = useContext(Web3AuthContext)
+
   // @ts-ignore
   const wallet = walletContext.wallets[0][0]
 
@@ -43,7 +46,7 @@ const AccountBalanceValueUSDC = (props: Props) => {
     // avalanche
     if (config.tokens[0].networks[0].enabled && props.network === "avalanche") {
       getAccountTokenBalanceUsdcAvalanche(
-        wallet.address,
+        web3authContext.address,
         config.tokens[0].networks[0].snowTraceApiUrl,
         config.tokens[0].networks[0].contractAddress,
         config.tokens[0].decimals

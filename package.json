@@ -20,9 +20,17 @@
     "@mui/icons-material": "^5.13.7",
     "@mui/material": "^5.13.7",
     "@plasmohq/storage": "^1.6.2",
+    "@tkey/default": "^11.0.0",
+    "@tkey/security-questions": "^11.0.0",
+    "@tkey/web-storage": "^11.0.0",
+    "@toruslabs/openlogin": "^4.7.2",
     "@types/crypto-js": "^4.1.1",
     "@types/lodash": "^4.14.195",
     "@types/material-ui": "^0.21.12",
+    "@web3auth/base": "^6.1.7",
+    "@web3auth/ethereum-provider": "^6.1.7",
+    "@web3auth/no-modal": "^6.1.7",
+    "@web3auth/openlogin-adapter": "^6.1.7",
     "alchemy-sdk": "^2.9.2",
     "crypto-js": "^4.1.1",
     "ethereumjs-util": "^7.1.5",
@@ -30,12 +38,13 @@
     "hook": "link:@plasmohq/storage/hook",
     "human-standard-token-abi": "^2.0.0",
     "lodash": "^4.17.21",
-    "plasmo": "0.82.0",
+    "plasmo": "0.82.1",
     "pnpm": "^8.6.7",
     "qrcode.react": "^3.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.45.1",
+    "react-social-icons": "^5.15.0",
     "web3": "^1.10.0",
     "yup": "^1.2.0"
   },
@@ -51,8 +60,17 @@
     "@types/node": "18.11.18",
     "@types/react": "18.0.27",
     "@types/react-dom": "18.0.10",
+    "assert": "2.0.0",
+    "buffer": "6.0.3",
+    "crypto-browserify": "3.12.0",
+    "https-browserify": "^1.0.0",
+    "os-browserify": "^0.3.0",
     "prettier": "2.8.3",
-    "typescript": "5.1.6"
+    "process": "^0.11.10",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "typescript": "5.1.6",
+    "url": "^0.11.1"
   },
   "manifest": {
     "host_permissions": [
@@ -68,6 +86,12 @@
       "http://localhost:8000/alchemy-ethereum-mumbai",
       "http://localhost:8000/infura-ethereum-mumbai",
       "http://localhost:8000/infura-polygon-mumbai"
+    ],
+    "cross_origin_opener_policy": {
+      "value": "same-origin-allow-popups"
+    },
+    "permissions": [
+      "tabs"
     ]
   }
 }

@@ -45,8 +45,6 @@ export const verifyPassword = (
 ): boolean => {
   const decrypted = CryptoJS.AES.decrypt(encryptedBase64, key)
 
-  console.log(decrypted)
-
   if (decrypted) {
     try {
       const str = decrypted.toString(CryptoJS.enc.Utf8)
